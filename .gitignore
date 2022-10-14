@@ -34,3 +34,5 @@ build/
 
 ## Java ##
 *.jar
+mvnw
+mvnw.cmd
