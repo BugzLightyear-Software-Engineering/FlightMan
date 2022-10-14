@@ -16,7 +16,7 @@ public class FlightmanApplication {
 
         @GetMapping("/")
         public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
-                return String.format("Hello %s, the great!", name);
+                return String.format("Hello %s!", name);
         }
 
 }
