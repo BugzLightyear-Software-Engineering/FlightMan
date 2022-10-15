@@ -9,6 +9,6 @@ An air travel management system.
     * Install Maven - https://maven.apache.org/download.cgi. This is a project build, reporting and documentation management tool.
 3. Add Maven binaries to system path, as directed in https://maven.apache.org/install.html
 4. Install Maven Wrapper - run "mvn -N wrapper:wrapper" from the project root directory. This simplifies building and running the server.
-4. Run "mvnw.cmd clean install && mvnw.cmd spring-boot:run" (windows) 
+4. Run "mvnw.cmd clean install" and then "mvnw.cmd spring-boot:run" (windows) 
   (or) "./mvnw clean install && ./mvnw spring-boot:run"     (linux) 
   from the project root directory to run the server on your local system.
