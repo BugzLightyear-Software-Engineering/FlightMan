@@ -20,7 +20,6 @@ jobs:
       - run:
           name: Test
           command: mvn test
-  static-code-analysis:
       - run:
           name: Analyze Code  
           command: mvn verify sonar:sonar -Dsonar.projectKey=BugzLightyear-Software-Engineering_FlightMan
@@ -30,6 +29,5 @@ jobs:
 workflows:
   flightman-main:
     jobs:
-      - build-and-test
-      - static-code-analysis:
+      - build-and-test:
           context: SonarCloud
