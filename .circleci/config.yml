@@ -14,18 +14,25 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
+
       - run:
           name: Build
           command: mvn -B -DskipTests clean package
+
       - run:
           name: Test
           command: mvn test
+      - store_test_results:
+          path: target/surefire-reports
+
       - run:
           name: Check Style
-          command: mvn site
-      - store_test_results:
-          path: target/site
-          # destination: checkstyle
+          command: mvn checkstyle:checkstyle
+      - store_artifacts:
+          path: target/checkstyle-results.xml
+      - store_artifacts:
+          path: target/site/checkstyle.html
+          
       - run:
           name: Analyze Code  
           command: mvn verify sonar:sonar -Dsonar.projectKey=BugzLightyear-Software-Engineering_FlightMan
