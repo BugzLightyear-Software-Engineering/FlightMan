@@ -27,7 +27,7 @@ jobs:
 
       - run:
           name: Check Style
-          command: mvn checkstyle:check
+          command: mvn checkstyle:checkstyle #change this line to mvn checkstyle:check to fail build
       - store_test_results:
           path: target/checkstyle-results.xml
       - store_artifacts:
