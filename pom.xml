@@ -51,7 +51,7 @@
                                 <groupId>org.apache.maven.plugins</groupId>
                                 <artifactId>maven-checkstyle-plugin</artifactId>
                                 <version>3.0.0</version>
-                                <executions>
+                                <!-- <executions>
                                         <execution>
                                                 <?m2e execute onConfiguration,onIncremental?>
                                                 <id>validate</id>
@@ -66,7 +66,7 @@
                                                         <goal>check</goal>
                                                 </goals>
                                         </execution>
-                                </executions>
+                                </executions> -->
                         </plugin>
 		</plugins>
 	</build>
