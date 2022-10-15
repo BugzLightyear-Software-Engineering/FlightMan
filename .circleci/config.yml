@@ -20,11 +20,12 @@ jobs:
       - run:
           name: Test
           command: mvn test
+      - run:
+          name: Check Style
+          command: mvn site
       - store_test_results:
-          path: build/test-results
-      - store_artifacts:
-          path: build/reports/checkstyle
-          destination: checkstyle
+          path: target/site
+          # destination: checkstyle
       - run:
           name: Analyze Code  
           command: mvn verify sonar:sonar -Dsonar.projectKey=BugzLightyear-Software-Engineering_FlightMan
