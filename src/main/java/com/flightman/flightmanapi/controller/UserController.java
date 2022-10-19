@@ -22,7 +22,6 @@ import com.flightman.flightmanapi.repositories.UserRepository;
 import com.flightman.flightmanapi.services.UserService;
 
 @RestController
-@RequestMapping("/api")
 public class UserController {
 
         @Autowired
