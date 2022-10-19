@@ -36,3 +36,4 @@ build/
 *.jar
 mvnw
 mvnw.cmd
+.mvn/*
