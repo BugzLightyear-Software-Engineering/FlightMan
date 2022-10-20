@@ -11,26 +11,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.flightman.flightmanapi.model.Airport;
-import com.flightman.flightmanapi.repositories.AirportRepository;
-// import com.flightman.flightmanapi.repositories.AirportRepository;
-// import com.flightman.flightmanapi.services.AirportService;
+import com.flightman.flightmanapi.services.AirportService;
 
 @RestController
 public class AirportController {
 
         @Autowired
-        private AirportRepository airportRepository;
+        private AirportService airportService;
 
 	@GetMapping("/airports")
 	public ResponseEntity<List<Airport>> getAirports(@RequestParam(required = false) String airportName) {
 		try {
-                        // AirportService airportService = new AirportService();
                         List<Airport> airportsList = new ArrayList<Airport>();
-                        if (airportName == null)
-                                this.airportRepository.findAll().forEach(airportsList::add);
-                        else
-                                this.airportRepository.findByAirportNameContaining(airportName).forEach(airportsList::add);
-                        if(airportsList.size() > 0)
+                        airportsList = airportService.find(airportName);
+                        if(!airportsList.isEmpty())
                                 return new ResponseEntity<>(airportsList, HttpStatus.OK);
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {

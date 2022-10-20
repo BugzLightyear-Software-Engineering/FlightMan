@@ -15,7 +15,7 @@ public class AirportService {
     @Autowired
     private AirportRepository airportRepository;
 
-    public List<Airport> list(String airportName) {
+    public List<Airport> find(String airportName) {
         List<Airport> airportsList = new ArrayList<Airport>();
         // airportRepository = new AirportRepository();
         if (airportName == null)
