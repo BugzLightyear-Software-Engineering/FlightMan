@@ -1,4 +1,5 @@
 package com.flightman.flightmanapi.model;
+import java.util.UUID;
 
 import javax.persistence.*;
 
@@ -8,7 +9,7 @@ public class Airport {
         
         @Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private String airportId;
+	private UUID airportId;
 
 	@Column(name = "airportName")
         private String airportName;
@@ -61,5 +62,9 @@ public class Airport {
 
         public void setLongitude(String longitude) {
                 this.longitude = longitude;
+        }
+
+        public UUID getAirportId() {
+                return airportId;
         }
 }

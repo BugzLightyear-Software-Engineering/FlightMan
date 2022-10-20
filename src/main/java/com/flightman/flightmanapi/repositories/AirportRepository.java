@@ -10,4 +10,5 @@ import com.flightman.flightmanapi.model.Airport;
 @Repository
 public interface AirportRepository extends JpaRepository<Airport, Long> {
   List<Airport> findByAirportNameContaining(String airportName);
+  List<Airport> findByAirportAbvName(String airportAbvName);
 }
