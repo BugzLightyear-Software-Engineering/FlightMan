@@ -1,11 +1,13 @@
 package com.flightman.flightmanapi.controller;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -15,13 +17,12 @@ import com.flightman.flightmanapi.model.Flight;
 import com.flightman.flightmanapi.services.FlightService;
 
 @RestController
-@RequestMapping("/flights")
 public class FlightController {
     
     @Autowired
     private FlightService flightService;
 
-    @GetMapping("/sourcedest")
+    @GetMapping("/flights")
     public ResponseEntity<List<Flight>> getFlightsBySourceDest(@RequestParam(required = false) String sourceAbv, @RequestParam(required = false) String destAbv){
 
         try {
@@ -37,6 +38,20 @@ public class FlightController {
             System.out.println(e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/flight")
+    public ResponseEntity<UUID> createFlight(@RequestBody Flight flight)   
+    {  
+            try {
+                    flightService.save(flight);
+                    UUID flightId =flight.getFlightId();
+                    return new ResponseEntity<>(flightId, HttpStatus.OK);
+            } catch (Exception e) {
+                    e.printStackTrace(new java.io.PrintStream(System.out));
+                    System.out.println(e);
+                    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
     }
 
 }

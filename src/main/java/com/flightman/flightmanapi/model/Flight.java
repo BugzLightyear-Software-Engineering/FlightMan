@@ -13,14 +13,17 @@ public class Flight {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID flightId;
 
-    @Column(name = "sourceAirportId")
-    private UUID sourceAirportId;
+    @ManyToOne
+    @JoinColumn(name = "sourceAirportId")
+    private Airport sourceAirport;
 
-    @Column(name= "destAirportId")
-    private UUID destAirportId;
+    @ManyToOne
+    @JoinColumn(name = "destAirportId")
+    private Airport destAirport;
 
-    @Column(name = "flightModelId")
-    private UUID flightModelId;
+    @ManyToOne
+    @JoinColumn(name = "flightModelId")
+    private FlightModel flightModel;
 
     @Column(name = "departureTime")
     private Time departureTime;
@@ -36,11 +39,11 @@ public class Flight {
 
     public Flight(){};
 
-    public Flight(UUID sourceAirportId, UUID destAirportId, UUID flightModelId, Time departureTime, Time estArrivalTime,
+    public Flight(Airport sourceAirport, Airport destAirport, FlightModel flightModel, Time departureTime, Time estArrivalTime,
                         Integer numAvailableSeats, Time delayTime) {
-		this.sourceAirportId = sourceAirportId;
-        this.destAirportId = destAirportId;
-        this.flightModelId = flightModelId;
+		this.sourceAirport = sourceAirport;
+        this.destAirport = destAirport;
+        this.flightModel = flightModel;
         this.departureTime = departureTime;
         this.estArrivalTime = estArrivalTime;
         this.numAvailableSeats = numAvailableSeats;
@@ -53,30 +56,6 @@ public class Flight {
 
     public void setFlightId(UUID flightId) {
         this.flightId = flightId;
-    }
-
-    public UUID getSourceAirportId() {
-        return sourceAirportId;
-    }
-
-    public void setSourceAirportId(UUID sourceAirportId) {
-        this.sourceAirportId = sourceAirportId;
-    }
-
-    public UUID getDestAirportId() {
-        return destAirportId;
-    }
-
-    public void setDestAirportId(UUID destAirportId) {
-        this.destAirportId = destAirportId;
-    }
-
-    public UUID getFlightModelId() {
-        return flightModelId;
-    }
-
-    public void setFlightModelId(UUID flightModelId) {
-        this.flightModelId = flightModelId;
     }
 
     public Time getDepartureTime() {
@@ -111,7 +90,29 @@ public class Flight {
         this.delayTime = delayTime;
     }
 
-   
+    public Airport getSourceAirport() {
+        return sourceAirport;
+    }
+
+    public void setSourceAirport(Airport sourceAirport) {
+        this.sourceAirport = sourceAirport;
+    }
+
+    public Airport getDestAirport() {
+        return destAirport;
+    }
+
+    public void setDestAirport(Airport destAirport) {
+        this.destAirport = destAirport;
+    }
+
+    public FlightModel getFlightModel() {
+        return flightModel;
+    }
+
+    public void setFlightModel(FlightModel flightModel) {
+        this.flightModel = flightModel;
+    }
 
 }
 
