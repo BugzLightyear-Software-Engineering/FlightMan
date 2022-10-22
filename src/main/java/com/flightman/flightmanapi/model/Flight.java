@@ -10,8 +10,8 @@ import javax.persistence.*;
 public class Flight {
 
     @Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID flightId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID flightId;
 
     @ManyToOne
     @JoinColumn(name = "sourceAirportId")

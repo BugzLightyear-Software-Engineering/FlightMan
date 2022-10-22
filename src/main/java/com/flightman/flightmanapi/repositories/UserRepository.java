@@ -1,7 +1,6 @@
 package com.flightman.flightmanapi.repositories;
 
-import java.util.Optional;
-import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,9 +13,9 @@ import com.flightman.flightmanapi.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-	Optional<User> findById(int id);
+	User findByUserId(UUID userId);
 
-	Optional<User> findByEmail(String email);
+	User findByEmail(String email);
 
 	// findAll
 

@@ -1,6 +1,6 @@
 package com.flightman.flightmanapi.controller;
 
-import java.util.Optional;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,13 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.flightman.flightmanapi.model.User;
 import com.flightman.flightmanapi.repositories.UserRepository;
-import com.flightman.flightmanapi.services.UserService;
 
 @RestController
 public class UserController {
@@ -45,12 +42,12 @@ public class UserController {
 	}
 
         @GetMapping("/user/id/{id}")
-        public ResponseEntity<User> getUserById(@PathVariable("id") int id) {
+        public ResponseEntity<User> getUserById(@PathVariable("id") UUID id) {
                 try {
-                        Optional<User> user = this.userRepository.findById(id);
+                        User user = this.userRepository.findByUserId(id);
 
-                        if(user.isPresent())
-                                return new ResponseEntity<>(user.get(), HttpStatus.OK);
+                        if(user != null)
+                                return new ResponseEntity<>(user, HttpStatus.OK);
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 } catch (Exception e) {
                         e.printStackTrace(new java.io.PrintStream(System.out));
@@ -62,10 +59,10 @@ public class UserController {
         @GetMapping("/user/email/{email}")
         public ResponseEntity<User> getUserByEmail(@PathVariable("email") String email) {
                 try {
-                        Optional<User> user = this.userRepository.findByEmail(email);
+                        User user = this.userRepository.findByEmail(email);
 
-                        if(user.isPresent())
-                                return new ResponseEntity<>(user.get(), HttpStatus.OK);
+                        if(user != null)
+                                return new ResponseEntity<>(user, HttpStatus.OK);
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 } catch (Exception e) {
                         e.printStackTrace(new java.io.PrintStream(System.out));
@@ -75,12 +72,12 @@ public class UserController {
         }
 
         @PostMapping("/user")
-        public ResponseEntity<Integer> createUser(@RequestBody User user)   
+        public ResponseEntity<UUID> createUser(@RequestBody User user)   
         {  
                 try {
                         this.userRepository.save(user);
 
-                        return new ResponseEntity<>(Integer.valueOf(user.getID()), HttpStatus.OK);
+                        return new ResponseEntity<>(user.getID(), HttpStatus.OK);
                 } catch (Exception e) {
                         e.printStackTrace(new java.io.PrintStream(System.out));
                         System.out.println(e);
