@@ -1,20 +1,17 @@
 # FlightMan
 
-An air travel management system.
+An air travel management server.
 
-## Instructions to setup dev env
-1. Clone this repository
-2. If not already installed:
-    * Install Java Standard Edition Development Kit - https://www.oracle.com/java/technologies/downloads. This is used to build  apps using the Java Programming Language. 
-    * Install Maven - https://maven.apache.org/download.cgi. This is a project build, reporting and documentation management tool.
-3. Add Maven binaries to system path, as directed in https://maven.apache.org/install.html
-4. Install Maven Wrapper - run "mvn -N wrapper:wrapper" from the project root directory. This simplifies building and running the server.
-4. Run "mvnw.cmd clean install" and then "mvnw.cmd spring-boot:run" (windows) 
-  (or) "./mvnw clean install && ./mvnw spring-boot:run"     (linux) 
-  from the project root directory to run the server on your local system.
+## Instructions to set-up this server:
+1. Use the Ubuntu Operating System. For ensured reproducibility, use Ubuntu 22.04.
+2. Install Java. For ensured reproducibility, use the steps described here: https://linuxhint.com/install-java-ubuntu-22-04/ to install at least version 17.
+3. Install Maven. For ensured reproducibility, use the steps described here: https://linuxhint.com/install_apache_maven_ubuntu/ to install the latest version.
+4. Clone this repository (say, using `git clone git@github.com:BugzLightyear-Software-Engineering/FlightMan.git`).
+5. Run `cd FlightMan`.
+6. Install the Maven Wrapper by running `mvn -N wrapper:wrapper`. This simplifies building and running the server.
+7. Finally, run the server on your local system using the command: `./mvnw clean install && ./mvnw spring-boot:run`.
   
- ## How this app is deployed
-
+## How this application is deployed:
 1. Developer pushes code to remote git repository.
 2. A GitHub hook informs CircleCI of a push event. CircleCI uses the configuration file in the repository to execute a sequence of actions/stages, essentially invoking the CI pipeline.
 3. In the pipeline, after we clone the project, 
