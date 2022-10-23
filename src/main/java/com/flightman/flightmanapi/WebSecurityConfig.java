@@ -13,35 +13,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        String encoded = "$2a$10$crpxHWNDARalaJuJdwxKbOrLmIozjWTMiM3M.zRHfSt02ELd/mxDe";
         auth.inMemoryAuthentication()
             .passwordEncoder(new BCryptPasswordEncoder())
                 .withUser("srishti")
-                .password(encoded)
-                .roles("USER")
-            .and()
-                .withUser("ajay")
-                .password(encoded)
-                .roles("USER")
-            .and()
-                .withUser("abhilash")
-                .password(encoded)
-                .roles("USER")
-            .and()
-                .withUser("miloni")
-                .password(encoded)
-                .roles("USER")
-            .and()
-                .withUser("otito")
-                .password(encoded)
-                .roles("USER")
-            .and()
-                .withUser("peter")
-                .password(encoded)
-                .roles("USER")
-            .and()
-                .withUser("professor_kaiser")
-                .password(encoded)
+                .password("$2a$10$crpxHWNDARalaJuJdwxKbOrLmIozjWTMiM3M.zRHfSt02ELd/mxDe")
                 .roles("USER")
             ;
     }
