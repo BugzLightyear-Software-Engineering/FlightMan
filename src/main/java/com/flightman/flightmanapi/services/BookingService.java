@@ -26,6 +26,9 @@ public class BookingService {
     @Autowired
     private UserRepository userRepository;
 
+    /* 
+     * Method that returns a list of all bookings in the database.
+     */
     public List<Booking> get(UUID userId) {
         List<Booking> bookingsList = new ArrayList<Booking>();
         if (userId == null) {
@@ -39,6 +42,10 @@ public class BookingService {
         return bookingsList;
     }
 
+    /* 
+     * Method that creates a record in the booking table of the database 
+     * after processing changes on the flight table.
+     */
     public Booking book(String userId, String flightId, String seatNumber, Boolean paymentStatus) {
         try {
                 User u = this.userRepository.findByUserId(UUID.fromString(userId));

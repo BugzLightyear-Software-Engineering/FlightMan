@@ -17,20 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.flightman.flightmanapi.model.User;
 import com.flightman.flightmanapi.repositories.UserRepository;
+import com.flightman.flightmanapi.services.UserService;
 
 @RestController
 public class UserController {
 
         @Autowired
-        // private UserService userService;
+        private UserService userService;
         private UserRepository userRepository;
 
 	@GetMapping("/users")
 	public ResponseEntity<List<User>> getUsers() {
 		try {
-                        List<User> usersList = new ArrayList<User>();
-                        this.userRepository.findAll().forEach(usersList::add);
-
+                        List<User> usersList = userService.getAllUsers();
                         if(usersList.size() > 0)
                                 return new ResponseEntity<>(usersList, HttpStatus.OK);
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -44,7 +43,7 @@ public class UserController {
         @GetMapping("/user/id/{id}")
         public ResponseEntity<User> getUserById(@PathVariable("id") UUID id) {
                 try {
-                        User user = this.userRepository.findByUserId(id);
+                        User user = this.userService.getUserById(id);
 
                         if(user != null)
                                 return new ResponseEntity<>(user, HttpStatus.OK);
@@ -59,7 +58,7 @@ public class UserController {
         @GetMapping("/user/email/{email}")
         public ResponseEntity<User> getUserByEmail(@PathVariable("email") String email) {
                 try {
-                        User user = this.userRepository.findByEmail(email);
+                        User user = this.userService.getUserByEmail(email);
 
                         if(user != null)
                                 return new ResponseEntity<>(user, HttpStatus.OK);
@@ -75,9 +74,9 @@ public class UserController {
         public ResponseEntity<UUID> createUser(@RequestBody User user)   
         {  
                 try {
-                        this.userRepository.save(user);
-
-                        return new ResponseEntity<>(user.getID(), HttpStatus.OK);
+                        if(this.userService.saveUser(user))
+                                return new ResponseEntity<>(user.getID(), HttpStatus.OK);
+                        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 } catch (Exception e) {
                         e.printStackTrace(new java.io.PrintStream(System.out));
                         System.out.println(e);
@@ -89,9 +88,9 @@ public class UserController {
         public ResponseEntity<Boolean> updateUser(@RequestBody User user)   
         {  
                 try {
-                        this.userRepository.save(user);
-
-                        return new ResponseEntity<>(true, HttpStatus.OK);
+                        if(this.userService.saveUser(user))
+                                return new ResponseEntity<>(true, HttpStatus.OK);
+                        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 } catch (Exception e) {
                         e.printStackTrace(new java.io.PrintStream(System.out));
                         System.out.println(e);
@@ -100,11 +99,11 @@ public class UserController {
         }
 
         @DeleteMapping("/user/id/{id}")
-        public ResponseEntity<Boolean> deleteUserById(@PathVariable("id") int id) {
+        public ResponseEntity<Boolean> deleteUserById(@PathVariable("id") UUID id) {
                 try {
-                        this.userRepository.deleteById(id);
-
-                        return new ResponseEntity<>(true, HttpStatus.OK);
+                        if(this.userService.deleteUserById(id))
+                                return new ResponseEntity<>(true, HttpStatus.OK);
+                        return new ResponseEntity<>(false, HttpStatus.OK);
                 } catch (Exception e) {
                         e.printStackTrace(new java.io.PrintStream(System.out));
                         System.out.println(e);
@@ -115,9 +114,9 @@ public class UserController {
         @DeleteMapping("/user/email/{email}")
         public ResponseEntity<Boolean> deleteUserByEmail(@PathVariable("email") String email) {
                 try {
-                        this.userRepository.deleteByEmail(email);
-
-                        return new ResponseEntity<>(true, HttpStatus.OK);
+                        if(this.userService.deleteUserByEmail(email))
+                                return new ResponseEntity<>(true, HttpStatus.OK);
+                        return new ResponseEntity<>(false, HttpStatus.OK);
                 } catch (Exception e) {
                         e.printStackTrace(new java.io.PrintStream(System.out));
                         System.out.println(e);

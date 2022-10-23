@@ -21,11 +21,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Modifying
 	@Query(value = "DELETE FROM User WHERE user_id = :id")
-	int deleteById(@Param("id") int id);
+	Boolean deleteById(@Param("id") UUID id);
 
 	@Modifying
 	@Query(value = "DELETE FROM User WHERE email = :email")
-	int deleteByEmail(@Param("email") String email);
+	Boolean deleteByEmail(@Param("email") String email);
 
 	// deleteAll
 

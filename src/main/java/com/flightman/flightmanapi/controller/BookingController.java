@@ -20,6 +20,10 @@ public class BookingController {
         @Autowired
         private BookingService bookingService;
 
+        /* 
+         * Method to retrieve bookings present in the database for a userId. 
+         * If userId is not supplied, all bookings are returned. 
+        */
 	@GetMapping("/bookings")
 	public ResponseEntity<List<Booking>> getBookings(@RequestParam(required = false) UUID userId) {
 		try {
@@ -35,6 +39,10 @@ public class BookingController {
 		}
 	}
 
+        /* 
+         * Method that creates a new record in the Booking table by associating the supplied userId and flightId. 
+         * If failure occurs during booking, returns HTTP NO_CONTENT 
+        */
         @PostMapping("/bookings")
 	public ResponseEntity<Booking> createBooking(String userId, String flightId, String seatNumber) {
 		try {
