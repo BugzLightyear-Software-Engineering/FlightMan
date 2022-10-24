@@ -58,8 +58,8 @@ public class FlightController {
     public ResponseEntity<UUID> createFlight(@RequestBody Flight flight)   
     {  
             try {
-                    flightService.save(flight);
-                    UUID flightId =flight.getFlightId();
+                    Flight createdFlight = flightService.save(flight);
+                    UUID flightId = createdFlight.getFlightId();
                     return new ResponseEntity<>(flightId, HttpStatus.OK);
             } catch (Exception e) {
                     e.printStackTrace(new java.io.PrintStream(System.out));
