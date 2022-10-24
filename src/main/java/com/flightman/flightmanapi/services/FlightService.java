@@ -39,8 +39,8 @@ public class FlightService {
         return flightList;
     }
 
-    public void save(Flight flight) {
-        flightRepository.save(flight);
+    public Flight save(Flight flight) {
+        return flightRepository.save(flight);
     }
 
     public Integer deleteFlightById(UUID id) {
