@@ -14,7 +14,7 @@ public class Airport {
 	@Column(name = "airportName")
         private String airportName;
         
-        @Column(name = "airportAbvName")
+        @Column(name = "airportAbvName", unique = true)
         private String airportAbvName;
 
         @Column(name = "latitude")

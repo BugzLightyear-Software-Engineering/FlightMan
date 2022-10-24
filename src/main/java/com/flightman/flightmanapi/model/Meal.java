@@ -2,6 +2,7 @@ package com.flightman.flightmanapi.model;
 
 import java.util.UUID;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "meals")
@@ -10,9 +11,11 @@ public class Meal {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID mealId;
 
+    @NotNull
     @Column(name = "mealName")
     private String mealName;
 
+    @NotNull
     @Column(name = "mealDesc")
     private String mealDesc;
 

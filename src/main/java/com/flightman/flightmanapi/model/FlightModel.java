@@ -1,62 +1,67 @@
 package com.flightman.flightmanapi.model;
 
-import java.util.UUID;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "flightModel")
 public class FlightModel{
     @Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID flightModelId;
+	private Integer flightModelId;
 
-    @Column(name = "modelName")
-    private String modelName;
+    @NotNull
+    @Column(name = "flightManufacturerName")
+    private String flightManufacturerName;
 
-    @Column(name = "modelNumber")
-    private Integer modelNumber;
+    @NotNull
+    @Column(name = "flightModelNumber")
+    private String flightModelNumber;
 
+    @NotNull
     @Column(name = "seatCapacity")
     private Integer seatCapacity;
 
+    @NotNull
     @Column(name = "seatRowCount")
     private Integer seatRowCount;
 
+    @NotNull
     @Column(name = "seatColCount")
     private Integer seatColCount;
 
     public FlightModel(){}
 
-    public FlightModel(String modelName, Integer modelNumber, Integer seatCapacity, Integer seatRowCount, Integer seatColCount){
-        this.modelName = modelName;
-        this.modelNumber = modelNumber;
+    public FlightModel(String flightManufacturerName, String flightModelNumber, Integer seatCapacity, Integer seatRowCount, Integer seatColCount){
+        this.flightManufacturerName = flightManufacturerName;
+        this.flightModelNumber = flightModelNumber;
         this.seatCapacity = seatCapacity;
         this.seatRowCount = seatRowCount;
         this.seatColCount = seatColCount;
     }
 
-    public UUID getFlightModelId() {
+    public Integer getFlightModelId() {
         return flightModelId;
     }
 
-    public void setFlightModelId(UUID flightModelId) {
+    public void setFlightModelId(Integer flightModelId) {
         this.flightModelId = flightModelId;
     }
 
-    public String getModelName() {
-        return modelName;
+    public String getFlightManufacturerName() {
+        return flightManufacturerName;
     }
 
-    public void setModelName(String modelName) {
-        this.modelName = modelName;
+    public void setFlightManufacturerName(String flightManufacturerName) {
+        this.flightManufacturerName = flightManufacturerName;
     }
 
-    public Integer getModelNumber() {
-        return modelNumber;
+    public String getFlightModelNumber() {
+        return flightModelNumber;
     }
 
-    public void setModelNumber(Integer modelNumber) {
-        this.modelNumber = modelNumber;
+    public void setFlightModelNumber(String flightModelNumber) {
+        this.flightModelNumber = flightModelNumber;
     }
 
     public Integer getSeatCapacity() {
@@ -81,7 +86,10 @@ public class FlightModel{
 
     public void setSeatColCount(Integer seatColCount) {
         this.seatColCount = seatColCount;
-    };
+    }
+
+    
+   
 
     
 }

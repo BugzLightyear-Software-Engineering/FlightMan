@@ -3,6 +3,7 @@ package com.flightman.flightmanapi.model;
 import java.sql.Time;
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
 import javax.persistence.*;
 
 @Entity
@@ -13,24 +14,30 @@ public class Flight {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID flightId;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "sourceAirportId")
     private Airport sourceAirport;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "destAirportId")
     private Airport destAirport;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "flightModelId")
     private FlightModel flightModel;
 
+    @NotNull
     @Column(name = "departureTime")
     private Time departureTime;
 
+    @NotNull
     @Column(name = "estArrivalTime")
     private Time estArrivalTime;
 
+    @NotNull
     @Column(name = "numAvailableSeats")
     private Integer numAvailableSeats;
 
