@@ -1,6 +1,9 @@
 package com.flightman.flightmanapi.controller;
 
 import java.util.UUID;
+
+import javax.transaction.Transactional;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +98,7 @@ public class UserController {
                 }
         }
 
+        @Transactional
         @DeleteMapping("/user/id/{id}")
         public ResponseEntity<Boolean> deleteUserById(@PathVariable("id") UUID id) {
                 try {
@@ -108,6 +112,7 @@ public class UserController {
                 }
         }
 
+        @Transactional
         @DeleteMapping("/user/email/{email}")
         public ResponseEntity<Boolean> deleteUserByEmail(@PathVariable("email") String email) {
                 try {

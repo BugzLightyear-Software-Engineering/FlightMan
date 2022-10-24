@@ -19,4 +19,6 @@ public interface FlightModelRepository extends JpaRepository<FlightModel, Long>{
 	@Query(value = "DELETE FROM FlightModel WHERE flightModelId = :id")
 	Integer deleteByFlightModelId(@Param("id") Integer id);
 
+    FlightModel findByFlightModelId(Integer flightModelId);
+
 }

@@ -18,8 +18,8 @@ public class FlightModelService {
         return (List<FlightModel>) flightModelRepository.findAll();
     }
 
-    public void save(FlightModel flightModel) {
-        flightModelRepository.save(flightModel);
+    public Boolean save(FlightModel flightModel) {
+        return flightModelRepository.save(flightModel) != null ? true : false;
     }
 
     public Integer deleteModelById(Integer id) {
