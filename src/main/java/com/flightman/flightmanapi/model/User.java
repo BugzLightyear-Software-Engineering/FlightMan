@@ -1,23 +1,25 @@
 package com.flightman.flightmanapi.model;
 
+import java.util.UUID;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user", schema = "public")
 public class User {
         
         @Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
         @Column(name = "user_id")
-	private int id;
+	private UUID userId;
 
         @NotNull
-	@Column(name = "user_firstname")
+	@Column(name = "first_name")
         private String firstName;
 
         @NotNull
-        @Column(name = "user_lastname")
+        @Column(name = "last_name")
         private String lastName;
 
         @NotNull
@@ -32,12 +34,12 @@ public class User {
         @Column(name = "passport_number")
         private String passportNumber;
 
-        @NotNull
-        @Column(name = "address")
-        private String address;
+        // @NotNull
+        // @Column(name = "address")
+        // private String address;
 
         @NotNull
-        @Column(name = "diet")
+        @Column(name = "diet_id")
         private String diet;
 
         @NotNull
@@ -53,13 +55,13 @@ public class User {
                 this.phoneNumber = phoneNumber;
                 this.email = email;
                 this.passportNumber = passportNumber;
-                this.address = address;
+                // this.address = address;
                 this.diet = diet;
                 this.rewardsMiles = rewardsMiles;
         }
 
-        public int getID() {
-                return this.id;
+        public UUID getID() {
+                return this.userId;
         }
 
         public String getFirstName() {
@@ -102,13 +104,13 @@ public class User {
                 this.passportNumber = passportNumber;
         }
 
-        public String getAddress() {
-                return this.address;
-        }
+        // public String getAddress() {
+        //         return this.address;
+        // }
 
-        public void setAddress(String address) {
-                this.address = address;
-        }
+        // public void setAddress(String address) {
+        //         this.address = address;
+        // }
 
         public String getDiet() {
                 return this.diet;

@@ -1,7 +1,6 @@
 package com.flightman.flightmanapi.repositories;
 
-import java.util.Optional;
-import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,19 +13,19 @@ import com.flightman.flightmanapi.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-	Optional<User> findById(int id);
+	User findByUserId(UUID userId);
 
-	Optional<User> findByEmail(String email);
+	User findByEmail(String email);
 
 	// findAll
 
 	@Modifying
 	@Query(value = "DELETE FROM User WHERE user_id = :id")
-	int deleteById(@Param("id") int id);
+	Boolean deleteById(@Param("id") UUID id);
 
 	@Modifying
 	@Query(value = "DELETE FROM User WHERE email = :email")
-	int deleteByEmail(@Param("email") String email);
+	Boolean deleteByEmail(@Param("email") String email);
 
 	// deleteAll
 
