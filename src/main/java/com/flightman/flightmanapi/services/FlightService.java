@@ -2,6 +2,7 @@ package com.flightman.flightmanapi.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,5 +41,9 @@ public class FlightService {
 
     public void save(Flight flight) {
         flightRepository.save(flight);
+    }
+
+    public Integer deleteFlightById(UUID id) {
+        return this.flightRepository.deleteByFlightId(id);
     }
 }

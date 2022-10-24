@@ -1,7 +1,6 @@
 package com.flightman.flightmanapi.controller;
 
 import java.util.UUID;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.flightman.flightmanapi.model.User;
-import com.flightman.flightmanapi.repositories.UserRepository;
 import com.flightman.flightmanapi.services.UserService;
 
 @RestController
@@ -24,7 +22,6 @@ public class UserController {
 
         @Autowired
         private UserService userService;
-        private UserRepository userRepository;
 
 	@GetMapping("/users")
 	public ResponseEntity<List<User>> getUsers() {
