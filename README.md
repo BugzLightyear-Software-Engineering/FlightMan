@@ -83,14 +83,14 @@ are there.
 
 --------------------------------------------------------------------------------
 
-## A basic ER diagram conceptualizing our databse can be found below:
+## A basic ER diagram conceptualizing our database can be found below:
 
 ![alt text](https://github.com/BugzLightyear-Software-Engineering/FlightMan/blob/main/ER_Diagram.png)
 
 --------------------------------------------------------------------------------
 
 ## Third-party code:
-As of now, We do not have any third-party code in our repository other than the
+As of now, we do not have any third-party code in our repository other than the
 SpringBoot library code
 
 --------------------------------------------------------------------------------
