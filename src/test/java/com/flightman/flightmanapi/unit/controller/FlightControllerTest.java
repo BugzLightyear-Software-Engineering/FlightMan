@@ -20,12 +20,9 @@ import com.flightman.flightmanapi.model.Flight;
 import com.flightman.flightmanapi.model.FlightModel;
 import com.flightman.flightmanapi.services.AirportService;
 import com.flightman.flightmanapi.services.FlightService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.util.Base64Utils;
 
-// import com.flightman.flightmanapi.services.airportService;
-
-
-// import java.util.ArrayList;
-// import java.util.List;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -41,6 +38,9 @@ public class FlightControllerTest {
     @MockBean
     private FlightService flightService;
 
+    private String user = "abhilash";
+    private String password = "securedpasswordofsrishti";
+
     private Airport source = new Airport("SourceName", "SN", "Lat", "Long");
     private Airport dest = new Airport("DestName", "DN", "Lat", "Long");
     private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
@@ -53,7 +53,10 @@ public class FlightControllerTest {
         List<Flight> created = new ArrayList<Flight>();
         created.add(flight);
         given(flightService.getFlights(null, null)).willReturn(created);
-        mockMvc.perform(get("/api/flights").accept(MediaType.ALL)).andExpect(status().isOk());
+        mockMvc.perform(
+                        get("/api/flights")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                        .accept(MediaType.ALL)).andExpect(status().isOk());
     }
 
     @Test
@@ -61,7 +64,10 @@ public class FlightControllerTest {
         List<Flight> created = new ArrayList<Flight>();
         created.add(flight);
         when(flightService.getFlights(flight.getSourceAirport().getAirportAbvName(), flight.getDestAirport().getAirportAbvName())).thenReturn(created);
-        mockMvc.perform(get("/api/flights?sourceAbv=SN&destAbv=DN").accept(MediaType.ALL)).andExpect(status().isOk());
+        mockMvc.perform(
+                        get("/api/flights?sourceAbv=SN&destAbv=DN")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                        .accept(MediaType.ALL)).andExpect(status().isOk());
     }
 
 }

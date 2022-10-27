@@ -7,10 +7,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.Base64Utils;
 
 import com.flightman.flightmanapi.controller.AirportController;
 import com.flightman.flightmanapi.model.Airport;
@@ -33,18 +35,30 @@ public class AirportControllerTest {
 
     private Airport source = new Airport("SourceName", "SN", "Lat", "Long");
 
+    private String user = "abhilash";
+    private String password = "securedpasswordofsrishti";
+
     @Test
     public void createAirport() throws Exception {
         when(airportService.saveAirport(any())).thenReturn(true);
-        mockMvc.perform(post("/api/airports").contentType(MediaType.APPLICATION_JSON).content("{\"airportName\": \"SourceName\",\"airportAbvName\": \"SN\",\"latitude\": \"Lat\",\"longitude\": \"Long\"}")).andExpect(status().isOk());
+        mockMvc.perform(
+                post("/api/airports")
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"airportName\": \"SourceName\",\"airportAbvName\": \"SN\",\"latitude\": \"Lat\",\"longitude\": \"Long\"}"))
+                .andExpect(status().isOk());
     }
 
     @Test
     public void getAirport() throws Exception {
-        List<Airport> created = new ArrayList<Airport>();
-        created.add(source);
-        given(airportService.find(null)).willReturn(created);
-        mockMvc.perform(get("/api/airports").accept(MediaType.ALL)).andExpect(status().isOk());
+        List<Airport> temp = new ArrayList<Airport>();
+        temp.add(source);
+        given(airportService.find(null)).willReturn(temp);
+        mockMvc.perform(
+                get("/api/airports")
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                .accept(MediaType.ALL))
+                .andExpect(status().isOk());
     }
 }
 

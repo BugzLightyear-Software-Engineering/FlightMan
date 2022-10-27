@@ -20,6 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.util.Base64Utils;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = UserController.class)
@@ -32,21 +34,28 @@ public class UserControllerTest {
     private UserService userService;
 
     User user = new User("FN", "LN", "1", "EM", "PN", "AD", "1", 0);
-    User user2 = new User();
     
+    private String auth_user = "abhilash";
+    private String password = "securedpasswordofsrishti";
 
     @Test
     public void getUser() throws Exception {
         List<User> created = new ArrayList<User>();
         created.add(user);
         given(userService.getAllUsers()).willReturn(created);
-        mockMvc.perform(get("/api/users").accept(MediaType.ALL)).andExpect(status().isOk());
+        mockMvc.perform(
+                        get("/api/users")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.auth_user + ":" + this.password).getBytes()))
+                        .accept(MediaType.ALL)).andExpect(status().isOk());
     }
 
     @Test
     public void getUserByEmail() throws Exception {
         given(userService.getUserByEmail(user.getEmail())).willReturn(user);
-        mockMvc.perform(get("/api/user/email/{email}", user.getEmail()).accept(MediaType.ALL)).andExpect(status().isOk());
+        mockMvc.perform(
+                        get("/api/user/email/{email}", user.getEmail())
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.auth_user + ":" + this.password).getBytes()))
+                        .accept(MediaType.ALL)).andExpect(status().isOk());
     }
 
 }

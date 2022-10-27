@@ -19,7 +19,8 @@ import com.flightman.flightmanapi.services.FlightModelService;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
+import org.springframework.http.HttpHeaders;
+import org.springframework.util.Base64Utils;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = FlightModelController.class)
@@ -33,13 +34,18 @@ public class FlightModelControllerTest {
 
     private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
 
+    private String user = "abhilash";
+    private String password = "securedpasswordofsrishti";
 
     @Test
     public void getModels() throws Exception {
         List<FlightModel> created = new ArrayList<FlightModel>();
         created.add(model);
         given(flightModelService.getAllFlightModels()).willReturn(created);
-        mockMvc.perform(get("/api/models").accept(MediaType.ALL)).andExpect(status().isOk());
+        mockMvc.perform(
+                        get("/api/models")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                        .accept(MediaType.ALL)).andExpect(status().isOk());
     }
     
 }

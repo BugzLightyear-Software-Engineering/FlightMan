@@ -19,7 +19,8 @@ import com.flightman.flightmanapi.services.BookingService;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
+import org.springframework.http.HttpHeaders;
+import org.springframework.util.Base64Utils;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = BookingController.class)
@@ -31,12 +32,17 @@ public class BookingControllerTest {
     @MockBean
     private BookingService bookingService;
 
+    private String user = "abhilash";
+    private String password = "securedpasswordofsrishti";
 
     @Test
     public void getBooking() throws Exception {
         List<Booking> created = new ArrayList<Booking>();
         created.add(new Booking());
         given(bookingService.get(null)).willReturn(created);
-        mockMvc.perform(get("/api/bookings").accept(MediaType.ALL)).andExpect(status().isOk());
+        mockMvc.perform(
+                        get("/api/bookings")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                        .accept(MediaType.ALL)).andExpect(status().isOk());
     }
 }
