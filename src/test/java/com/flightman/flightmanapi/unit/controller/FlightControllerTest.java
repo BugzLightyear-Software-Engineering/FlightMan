@@ -1,33 +1,39 @@
 package com.flightman.flightmanapi.unit.controller;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.flightman.flightmanapi.controller.AirportController;
 import com.flightman.flightmanapi.controller.FlightController;
 import com.flightman.flightmanapi.model.Airport;
 import com.flightman.flightmanapi.model.Flight;
 import com.flightman.flightmanapi.model.FlightModel;
-import com.flightman.flightmanapi.repositories.FlightRepository;
+import com.flightman.flightmanapi.services.AirportService;
 import com.flightman.flightmanapi.services.FlightService;
-import org.springframework.test.web.servlet.ResultActions;
+
+// import com.flightman.flightmanapi.services.airportService;
+
 
 // import java.util.ArrayList;
 // import java.util.List;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {FlightService.class, FlightRepository.class})
-@WebMvcTest(FlightController.class)
+@WebMvcTest(controllers = FlightController.class)
+@ActiveProfiles
 public class FlightControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -43,22 +49,25 @@ public class FlightControllerTest {
     private Flight flight = new Flight(source, dest, model, departure_time,arrival_time, 120, null);
 
     @Test
-    public void createFlight_whenPostMethod() throws Exception {
-    given(flightService.save(flight)).willAnswer((invocation)-> invocation.getArgument(0));
-    ResultActions response = mockMvc.perform(post("/api/flight"));
-
-    // response.andDo(print()).andExpect(status().isNotFound());
+    public void getFlights() throws Exception {
+        List<Flight> created = new ArrayList<Flight>();
+        created.add(flight);
+        given(flightService.getFlights(null, null)).willReturn(created);
+        mockMvc.perform(get("/api/flights").accept(MediaType.ALL)).andExpect(status().isOk());
     }
 
     @Test
-    public void givenFlightId_whendelete_thenReturn200() throws Exception{
-        // given - precondition or setup
-        // willDoNothing().given(flightService).deleteFlightById(flight.getFlightId());
-        // when -  action or the behaviour that we are going test
-        ResultActions response = mockMvc.perform(delete("/api/flight/id/{id}",flight.getFlightId()));
-
-        // then - verify the output
-        // response.andExpect(status().isNotFound())
-        //         .andDo(print());
+    public void getFlightByAbv() throws Exception {
+        List<Flight> created = new ArrayList<Flight>();
+        created.add(flight);
+        when(flightService.getFlights(flight.getSourceAirport().getAirportAbvName(), flight.getDestAirport().getAirportAbvName())).thenReturn(created);
+        mockMvc.perform(get("/api/flights?sourceAbv=SN&destAbv=DN").accept(MediaType.ALL)).andExpect(status().isOk());
     }
+
 }
+
+// @Test
+// public void createFlight() throws Exception {
+//     when(flightService.save(any())).thenReturn(flight);
+//     mockMvc.perform(post("/api/flight").contentType(MediaType.APPLICATION_JSON).content(flight.toString())).andExpect(status().isOk());
+// }

@@ -16,20 +16,13 @@ import com.flightman.flightmanapi.controller.AirportController;
 import com.flightman.flightmanapi.model.Airport;
 import com.flightman.flightmanapi.services.AirportService;
 
-// import com.flightman.flightmanapi.services.airportService;
-
-
-// import java.util.ArrayList;
-// import java.util.List;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
 @ExtendWith(SpringExtension.class)
-// @ContextConfiguration(classes = {AirportService.class, AirportRepository.class, AirportController.class})
 @WebMvcTest(controllers = AirportController.class)
-// @Import(AirportController.class)
 @ActiveProfiles
 public class AirportControllerTest {
     @Autowired
@@ -42,16 +35,15 @@ public class AirportControllerTest {
 
     @Test
     public void createAirport() throws Exception {
-        System.out.println(source.toString());
         when(airportService.saveAirport(any())).thenReturn(true);
         mockMvc.perform(post("/api/airports").contentType(MediaType.APPLICATION_JSON).content("{\"airportName\": \"SourceName\",\"airportAbvName\": \"SN\",\"latitude\": \"Lat\",\"longitude\": \"Long\"}")).andExpect(status().isOk());
     }
 
     @Test
     public void getAirport() throws Exception {
-        List<Airport> temp = new ArrayList<Airport>();
-        temp.add(source);
-        given(airportService.find(null)).willReturn(temp);
+        List<Airport> created = new ArrayList<Airport>();
+        created.add(source);
+        given(airportService.find(null)).willReturn(created);
         mockMvc.perform(get("/api/airports").accept(MediaType.ALL)).andExpect(status().isOk());
     }
 }
