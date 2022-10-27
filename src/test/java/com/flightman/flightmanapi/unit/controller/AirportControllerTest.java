@@ -24,9 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
 @ExtendWith(SpringExtension.class)
-// @ContextConfiguration(classes = {AirportService.class, AirportRepository.class, AirportController.class})
 @WebMvcTest(controllers = AirportController.class)
-// @Import(AirportController.class)
 @ActiveProfiles
 public class AirportControllerTest {
     @Autowired
@@ -42,7 +40,6 @@ public class AirportControllerTest {
 
     @Test
     public void createAirport() throws Exception {
-        System.out.println(source.toString());
         when(airportService.saveAirport(any())).thenReturn(true);
         mockMvc.perform(
                 post("/api/airports")
