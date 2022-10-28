@@ -34,7 +34,7 @@ public class UserServiceTest {
     private UserService userService;
     
     User user = new User("FN", "LN", "123456789", "r@domain.com",
-                "passportNumber", "Address", "diet", 0);
+                "passportNumber", "Address", 1, 0);
     @Test
     public void whenSaveUser_shouldReturnUser() {
         

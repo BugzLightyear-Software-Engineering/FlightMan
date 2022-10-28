@@ -33,7 +33,7 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
-    User user = new User("FN", "LN", "1", "EM", "PN", "AD", "1", 0);
+    User user = new User("FN", "LN", "1", "EM", "PN", "AD", 1, 0);
     
     private String auth_user = "abhilash";
     private String password = "securedpasswordofsrishti";

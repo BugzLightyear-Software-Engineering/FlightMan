@@ -34,13 +34,13 @@ public class User {
         @Column(name = "passport_number")
         private String passportNumber;
 
-        // @NotNull
-        // @Column(name = "address")
-        // private String address;
-
         @NotNull
+        @Column(name = "address")
+        private String address;
+        
+        // @NotNull
         @Column(name = "diet_id")
-        private String diet;
+        private Integer diet;
 
         @NotNull
         @Column(name = "rewards_miles")
@@ -49,13 +49,13 @@ public class User {
         public User(){};
 
         public User(String firstName, String lastName, String phoneNumber, String email,
-                String passportNumber, String address, String diet, int rewardsMiles) {
+                String passportNumber, String address, Integer diet, int rewardsMiles) {
                 this.firstName = firstName;
                 this.lastName = lastName;
                 this.phoneNumber = phoneNumber;
                 this.email = email;
                 this.passportNumber = passportNumber;
-                // this.address = address;
+                this.address = address;
                 this.diet = diet;
                 this.rewardsMiles = rewardsMiles;
         }
@@ -112,11 +112,11 @@ public class User {
         //         this.address = address;
         // }
 
-        public String getDiet() {
+        public Integer getDiet() {
                 return this.diet;
         }
 
-        public void setDiet(String diet) {
+        public void setDiet(Integer diet) {
                 this.diet = diet;
         }
 
@@ -126,5 +126,13 @@ public class User {
 
         public void setRewardsMiles(int rewardsMiles) {
                 this.rewardsMiles = rewardsMiles;
+        }
+
+        public String getAddress() {
+                return address;
+        }
+
+        public void setAddress(String address) {
+                this.address = address;
         }
 }
