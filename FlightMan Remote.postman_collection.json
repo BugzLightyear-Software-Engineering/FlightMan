@@ -1,0 +1,940 @@
+{
+	"info": {
+		"_postman_id": "cc3f9c18-fd8f-48c9-9ad9-aeaf5823525a",
+		"name": "FlightMan Remote",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24116691"
+	},
+	"item": [
+		{
+			"name": "Create Airport",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"airportName\": \"SourceName\",\"airportAbvName\": \"SN\",\"latitude\": \"Lat\",\"longitude\": \"Long\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/airports",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"airports"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Booking",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/bookings?userId=c5d67a9b-7d8b-4d4c-9842-a8aca15e3b4c&flightId=643b89ff-beec-4e8e-961a-932f33888948&seatNumber=1",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"bookings"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "c5d67a9b-7d8b-4d4c-9842-a8aca15e3b4c"
+						},
+						{
+							"key": "flightId",
+							"value": "643b89ff-beec-4e8e-961a-932f33888948"
+						},
+						{
+							"key": "seatNumber",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Airports",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/airports",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"airports"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Flights",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/flights",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"flights"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/users",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User By UserID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/user/id/c5d67a9b-7d8b-4d4c-9842-a8aca15e3b4c",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"id",
+						"c5d67a9b-7d8b-4d4c-9842-a8aca15e3b4c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User By UserID",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/user/id/47170951-de1f-4eeb-a285-f0371dec086e",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"id",
+						"47170951-de1f-4eeb-a285-f0371dec086e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User By Email",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/user/email/abc@gmail.com",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"email",
+						"abc@gmail.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User By Email",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/user/email/abc@gmail.com",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"email",
+						"abc@gmail.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"Demo\",\r\n    \"lastName\": \"Test\",\r\n    \"phoneNumber\": \"+1234567234230\",\r\n    \"email\": \"dt@gmail.com\",\r\n    \"passportNumber\": \"A12115678\",\r\n    \"address\": \"2 blocks from your mum's house\",\r\n    \"diet\": 1,\r\n    \"rewardsMiles\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/user",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"Demo\",\r\n    \"lastName\": \"Test\",\r\n    \"phoneNumber\": \"+123456723423910\",\r\n    \"email\": \"dt@gmail.com\",\r\n    \"passportNumber\": \"A123115678\",\r\n    \"diet\": \"1\",\r\n    \"rewardsMiles\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/user",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Flight Models (Aircrafts)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/models",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"models"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Flight Model (Aircrafts) Copy",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"flightManufacturerName\": \"boeing\",\r\n    \"flightModelNumber\": \"737a\",\r\n    \"seatCapacity\": 300,\r\n    \"seatRowCount\": 60,\r\n    \"seatColCount\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/model",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"model"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Flight Model (Aircrafts)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/model/id/6",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"model",
+						"id",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Flight",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sourceAirport\": {\r\n        \"airportId\": \"d4005cf1-7842-44a7-9c34-77314d432e64\"\r\n    },\r\n    \"destAirport\": {\r\n        \"airportId\": \"7199de04-60d7-45c4-9d01-d0a1ea807f73\"\r\n    },\r\n    \"flightModel\": {\r\n        \"flightModelId\": 1\r\n    },\r\n    \"departureTime\": \"01:00:00\",\r\n    \"estArrivalTime\": \"10:00:00\",\r\n    \"numAvailableSeats\": 5,\r\n    \"delayTime\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/flight",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"flight"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Flight",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/flight/id/421dbb72-9595-48ab-8b5e-b6fd8d253d1c",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"flight",
+						"id",
+						"421dbb72-9595-48ab-8b5e-b6fd8d253d1c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Flights (Source and/or Dest)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/flights?sourceAbv=GMR&destAbv=MM2",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"flights"
+					],
+					"query": [
+						{
+							"key": "sourceAbv",
+							"value": "GMR",
+							"description": "Source Airport Abbreviation"
+						},
+						{
+							"key": "destAbv",
+							"value": "MM2",
+							"description": "Destination Airport Abbreviation"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Bookings",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/bookings",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"bookings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Airport",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/airports?airportName=Murtala Mohammed",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"airports"
+					],
+					"query": [
+						{
+							"key": "airportName",
+							"value": "Murtala Mohammed"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Booking For UserID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "securedpasswordofsrishti",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "abhilash",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{FLIGHTMAN_REMOTE}}/api/bookings?userId=7199de04-60d7-45c4-9d01-d0a1ea807f73",
+					"host": [
+						"{{FLIGHTMAN_REMOTE}}"
+					],
+					"path": [
+						"api",
+						"bookings"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "7199de04-60d7-45c4-9d01-d0a1ea807f73"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "FLIGHTMAN_FQDN",
+			"value": "localhost:8080"
+		},
+		{
+			"key": "FLIGHTMAN_REMOTE",
+			"value": "bugzlightyear-flightman.herokuapp.com"
+		}
+	]
+}
