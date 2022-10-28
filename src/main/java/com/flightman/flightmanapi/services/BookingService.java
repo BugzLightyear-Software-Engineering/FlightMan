@@ -34,11 +34,10 @@ public class BookingService {
         if (userId == null) {
                 this.bookingRepository.findAll().forEach(bookingsList::add);
         }
-        // TODO - Get specific user's bookings
-        // } else {
-        //         Optional<User> u = this.UserRepository.findByUserId(userId);
-        //         this.BookingRepository.findByUser(u).forEach(bookingsList::add);
-        // }
+        else {
+                User u = this.userRepository.findByUserId(userId);
+                this.bookingRepository.findByUser(u).forEach(bookingsList::add);
+        }
         return bookingsList;
     }
 
