@@ -1,5 +1,8 @@
 package com.flightman.flightmanapi.model;
 import java.util.UUID;
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 
@@ -23,14 +26,23 @@ public class Booking {
 
         @Column(name = "paymentStatus")
         private Boolean paymentStatus;
+
+        @Column(name = "useRewardPoints")
+        private Boolean useRewardPoints;
+
+        @DateTimeFormat(pattern = "yyyy-mm-dd")
+        @Column(name = "date")
+        private Date date;
         
         public Booking(){}
 
-        public Booking(User user, Flight flight, String seatNumber, Boolean paymentStatus){
+        public Booking(User user, Flight flight, String seatNumber, Boolean paymentStatus, Boolean useRewardPoints, Date date){
                 this.user = user;
                 this.flight = flight;
                 this.seatNumber = seatNumber;
                 this.paymentStatus = paymentStatus;
+                this.useRewardPoints = useRewardPoints;
+                this.date = date;
         }
 
         public UUID getBookingId() {
@@ -73,4 +85,19 @@ public class Booking {
                 this.paymentStatus = paymentStatus;
         }
 
+        public Boolean getUseRewardPoints() {
+                return this.useRewardPoints;
+        }
+
+        public void setUseRewardPoints(Boolean useRewardPoints) {
+                this.useRewardPoints = useRewardPoints;
+        }
+
+        public Date getDate() {
+                return this.date;
+        }
+
+        public void setDate(Date date) {
+                this.date = date;
+        }
 }

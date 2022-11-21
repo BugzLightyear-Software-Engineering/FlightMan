@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,9 +47,9 @@ public class BookingController {
          * If failure occurs during booking, returns HTTP NO_CONTENT 
         */
         @PostMapping("/bookings")
-	public ResponseEntity<Booking> createBooking(String userId, String flightId, String seatNumber) {
+	public ResponseEntity<Booking> createBooking(String userId, String flightId, String seatNumber, Boolean useRewardPoints, String date) {
 		try {
-                        Booking booking = this.bookingService.book(userId, flightId, seatNumber, true);
+                        Booking booking = this.bookingService.book(userId, flightId, seatNumber, true, useRewardPoints, date);
                         if (booking != null){
                                 return new ResponseEntity<>(booking, HttpStatus.OK);
                         }
@@ -59,4 +60,16 @@ public class BookingController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+    @DeleteMapping("/bookings")
+    public ResponseEntity<Boolean> deleteBooking(String bookingId, String userId) {
+        try {
+                        Boolean ret = this.bookingService.deleteBooking(bookingId, userId);
+                        return new ResponseEntity<>(ret, HttpStatus.OK);
+        } catch (Exception e) {
+                        e.printStackTrace(new java.io.PrintStream(System.out));
+                        System.out.println(e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
