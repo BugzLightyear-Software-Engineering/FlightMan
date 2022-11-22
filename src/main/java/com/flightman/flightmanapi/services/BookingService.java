@@ -60,7 +60,6 @@ public class BookingService {
                 DateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
                 Date dateObj = formatter.parse(date);
 
-
                 if(availableSeats > 0) {
                         if (useRewardPoints) {
                             if (u.getRewardsMiles() < pointsToReturn) {
