@@ -22,20 +22,28 @@ import org.springframework.http.ResponseEntity;
 import com.flightman.flightmanapi.model.Flight;
 import com.flightman.flightmanapi.services.FlightService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RequestMapping("/api")
 @RestController
+@Api(description = "Set of endpoints for Creating, Finding, and Deleting Flights.")
 public class FlightController {
     
     @Autowired
     private FlightService flightService;
 
-    /*
-     * Method to get all the flights given the source or/and destination airport abreiviation
-     * If, source or destination airport is not in database we return NO_CONTENT
-     * If, source or destination airport is not provided we return all flights for the given destination or source airport respectively
-     */
+    @ApiOperation(value = "Get flight by Source or/and Destination", notes = "Finds the flights connecting a source and destination airport")
+    @ApiResponses({@ApiResponse(code = 200, message = "Successfully found the flights"), 
+                   @ApiResponse(code = 204, message = "If source or destination airport is not in database"), 
+                   @ApiResponse(code = 500, message = "If any other error occurs")})
     @GetMapping("/flights")
-    public ResponseEntity<List<Flight>> getFlightsBySourceDest(@RequestParam(required = false) String sourceAbv, @RequestParam(required = false) String destAbv){
+    public ResponseEntity<List<Flight>> getFlightsBySourceDest(
+        @ApiParam(name = "Source Abbreviation", value = "Abbreviation of the Source Airport") @RequestParam(required = false) String sourceAbv, 
+        @ApiParam(name = "Destination Abbreviation", value = "Abbreviation of the Destination Airport") @RequestParam(required = false) String destAbv){
 
         try {
             List<Flight> flightList = new ArrayList<Flight>();
@@ -52,10 +60,9 @@ public class FlightController {
         }
     }
 
-    /* 
-    * Method that creates a new record in the Flight table by supplying the required flight object
-    * If failure occurs during creation, returns HTTP NO_CONTENT 
-    */
+    @ApiOperation(value = "Create flight", notes = "Takes in the details of the flights and creates a new flight in the database")
+    @ApiResponses({@ApiResponse(code = 200, message = "Flight is successfully created"),
+                   @ApiResponse(code = 500, message = "If any other error occurs")})
     @PostMapping("/flight")
     public ResponseEntity<UUID> createFlight(@RequestBody Flight flight)   
     {  
@@ -70,16 +77,15 @@ public class FlightController {
             }
     }
 
-    /* 
-    * Method that delets a record in the Flight table by FlightId
-    * If failure occurs during deletion, returns HTTP NO_CONTENT 
-    */
+    @ApiOperation(value = "Delete flight", notes = "Deletes a flight by the given Flight Id")
+    @ApiResponses({@ApiResponse(code = 200, message = "Flight is successfully deleted"),
+                   @ApiResponse(code = 500, message = "If any other error occurs")})
     @Transactional
     @DeleteMapping("/flight/id/{id}")
-    public ResponseEntity<Boolean> deleteFlightById(@PathVariable("id") UUID id) {
+    public ResponseEntity<Boolean> deleteFlightById(@ApiParam(name = "Id", value = "Id of the flight to be deleted") @PathVariable("id") UUID id) {
         try {
                 if(this.flightService.deleteFlightById(id)==1)
-                        return new ResponseEntity<>(true, HttpStatus.OK);
+                    return new ResponseEntity<>(true, HttpStatus.OK);
                 return new ResponseEntity<>(false, HttpStatus.OK);
         } catch (Exception e) {
                 e.printStackTrace(new java.io.PrintStream(System.out));
