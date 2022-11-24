@@ -38,8 +38,8 @@ public class Flight {
     private Time estArrivalTime;
 
     @NotNull
-    @Column(name = "numAvailableSeats")
-    private Integer numAvailableSeats;
+    @Column(name = "numSeats")
+    private Integer numSeats;
 
     @Column(name = "delayTime")
     private Time delayTime;
@@ -47,13 +47,13 @@ public class Flight {
     public Flight(){};
 
     public Flight(Airport sourceAirport, Airport destAirport, FlightModel flightModel, Time departureTime, Time estArrivalTime,
-                        Integer numAvailableSeats, Time delayTime) {
+                        Integer numSeats, Time delayTime) {
 		this.sourceAirport = sourceAirport;
         this.destAirport = destAirport;
         this.flightModel = flightModel;
         this.departureTime = departureTime;
         this.estArrivalTime = estArrivalTime;
-        this.numAvailableSeats = numAvailableSeats;
+        this.numSeats = numSeats;
         this.delayTime = delayTime;
 	}
 
@@ -81,12 +81,12 @@ public class Flight {
         this.estArrivalTime = estArrivalTime;
     }
 
-    public Integer getNumAvailableSeats() {
-        return numAvailableSeats;
+    public Integer getNumSeats() {
+        return numSeats;
     }
 
-    public void setNumAvailableSeats(Integer numAvailableSeats) {
-        this.numAvailableSeats = numAvailableSeats;
+    public void setNumSeats(Integer numSeats) {
+        this.numSeats = numSeats;
     }
 
     public Time getDelayTime() {
