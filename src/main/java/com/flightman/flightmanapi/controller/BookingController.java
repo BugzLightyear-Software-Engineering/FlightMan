@@ -1,10 +1,12 @@
 package com.flightman.flightmanapi.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,9 +48,9 @@ public class BookingController {
          * If failure occurs during booking, returns HTTP NO_CONTENT 
         */
         @PostMapping("/bookings")
-	public ResponseEntity<Booking> createBooking(String userId, String flightId, String seatNumber) {
+	public ResponseEntity<Booking> createBooking(String userId, String flightId, @RequestParam(required = false) String seatNumber, @DateTimeFormat(pattern = "MM-dd-yyyy") Date date) {
 		try {
-                        Booking booking = this.bookingService.book(userId, flightId, seatNumber, true);
+                        Booking booking = this.bookingService.book(userId, flightId, seatNumber, date, true);
                         if (booking != null){
                                 return new ResponseEntity<>(booking, HttpStatus.OK);
                         }

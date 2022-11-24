@@ -1,4 +1,5 @@
 package com.flightman.flightmanapi.model;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.*;
@@ -23,14 +24,20 @@ public class Booking {
 
         @Column(name = "paymentStatus")
         private Boolean paymentStatus;
+
+        @Column(name = "flight_date")
+        private Date flightDate;
         
+        // TODO : Use libs to generate get/set at runtime - LOMBOK
+
         public Booking(){}
 
-        public Booking(User user, Flight flight, String seatNumber, Boolean paymentStatus){
+        public Booking(User user, Flight flight, String seatNumber, Date date, Boolean paymentStatus){
                 this.user = user;
                 this.flight = flight;
                 this.seatNumber = seatNumber;
                 this.paymentStatus = paymentStatus;
+                this.flightDate = date;
         }
 
         public UUID getBookingId() {
@@ -73,4 +80,11 @@ public class Booking {
                 this.paymentStatus = paymentStatus;
         }
 
+        public Date getFlightDate() {
+                return this.flightDate;
+        }
+
+        public void setFlightDate(Date flightDate) {
+                this.flightDate = flightDate;
+        }
 }

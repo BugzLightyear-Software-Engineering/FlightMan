@@ -53,7 +53,7 @@ public class FlightServiceTest {
         assert(created.getFlightModel().getFlightModelId()) == (flight.getFlightModel().getFlightModelId());
         assert(created.getDepartureTime() == flight.getDepartureTime());
         assert(created.getEstArrivalTime() == flight.getEstArrivalTime());
-        assert(created.getNumAvailableSeats() == flight.getNumAvailableSeats());
+        assert(created.getNumSeats() == flight.getNumSeats());
         verify(flightRepository).save(flight);
         }
 
