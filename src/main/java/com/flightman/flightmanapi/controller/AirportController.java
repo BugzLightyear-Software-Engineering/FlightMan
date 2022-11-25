@@ -36,8 +36,8 @@ public class AirportController {
                                 return new ResponseEntity<>(airportsList, HttpStatus.OK);
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
-                        e.printStackTrace(new java.io.PrintStream(System.out));
-                        System.out.println(e);
+                        e.printStackTrace(new java.io.PrintStream(System.err));
+                        System.err.println(e);
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -55,8 +55,8 @@ public class AirportController {
                         }
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 } catch (Exception e) {
-                        e.printStackTrace(new java.io.PrintStream(System.out));
-                        System.out.println(e);
+                        e.printStackTrace(new java.io.PrintStream(System.err));
+                        System.err.println(e);
                         return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
                 }
         }

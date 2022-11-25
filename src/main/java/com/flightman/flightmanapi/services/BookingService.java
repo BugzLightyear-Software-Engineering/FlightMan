@@ -54,8 +54,8 @@ public class BookingService {
                 takenSeats.add(0, booking.getSeatNumber());
         }
         // subtract taken seats from possible seat and return random string from possible seats
-        System.out.println("HOI");
-        System.out.println(takenSeats);
+        System.err.println("HOI");
+        System.err.println(takenSeats);
         return "Hi";
     }
 
@@ -80,8 +80,8 @@ public class BookingService {
                 }
                 return null;
         } catch (Exception e) {
-                System.out.println("Error while booking!");
-                e.printStackTrace(new java.io.PrintStream(System.out));
+                System.err.println("Error while booking!");
+                e.printStackTrace(new java.io.PrintStream(System.err));
                 return null;
         }
     }
@@ -115,8 +115,8 @@ public class BookingService {
                         
                 }
         } catch (Exception e) {
-                System.out.println("Error while checking in!");
-                e.printStackTrace(new java.io.PrintStream(System.out));
+                System.err.println("Error while checking in!");
+                e.printStackTrace(new java.io.PrintStream(System.err));
                 return "Error occurred";
         }
     }

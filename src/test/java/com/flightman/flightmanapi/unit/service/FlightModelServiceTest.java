@@ -38,8 +38,8 @@ public class FlightModelServiceTest {
         
         
         Mockito.when(flightModelRepository.save(ArgumentMatchers.any(FlightModel.class))).thenReturn(model);
-        Boolean created = flightModelService.save(model);
-        assert(created == true);
+        FlightModel created = flightModelService.save(model);
+        assert(created != null);
         verify(flightModelRepository).save(model);
         }
 
