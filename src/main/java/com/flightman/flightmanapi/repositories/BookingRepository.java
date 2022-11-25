@@ -10,9 +10,9 @@ import com.flightman.flightmanapi.model.Booking;
 import com.flightman.flightmanapi.model.Flight;
 import com.flightman.flightmanapi.model.User;
 
-
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
         List<Booking> findByUser(User user);
+
         List<Booking> findByFlightAndFlightDate(Flight f, Date d);
 }

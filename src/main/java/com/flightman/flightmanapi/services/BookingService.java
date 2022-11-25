@@ -1,5 +1,6 @@
 package com.flightman.flightmanapi.services;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -94,18 +95,20 @@ public class BookingService {
          * Method that creates a record in the booking table of the database
          * after processing changes on the flight table.
          */
-        public Booking book(String userId, String flightId, String seatNumber, Date date, Boolean paymentStatus) {
+        public Booking book(String userId, String flightId, String seatNumber, String date, Boolean paymentStatus) {
                 try {
+                        Date d = new SimpleDateFormat("MM-dd-yyyy").parse(date);
                         User u = this.userRepository.findByUserId(UUID.fromString(userId));
                         Flight f = this.flightRepository.findByFlightId(UUID.fromString(flightId));
                         Integer totalSeatCount = f.getNumSeats();
-                        Integer bookedSeatCount = this.bookingRepository.findByFlightAndFlightDate(f, date).size();
+                        Integer bookedSeatCount = this.bookingRepository.findByFlightAndFlightDate(f, d).size();
                         Integer availableSeats = totalSeatCount - bookedSeatCount;
                         if (seatNumber == null || seatNumber == "") {
-                                seatNumber = this.generateSeatNumber(f, date);
+                                seatNumber = this.generateSeatNumber(f, d);
                         }
                         if (availableSeats > 0 && seatNumber != "") {
-                                Booking booking = new Booking(u, f, seatNumber, date, true);
+                                Booking booking;
+                                booking = new Booking(u, f, seatNumber, d, true);
                                 booking = this.bookingRepository.save(booking);
                                 return booking;
                         }

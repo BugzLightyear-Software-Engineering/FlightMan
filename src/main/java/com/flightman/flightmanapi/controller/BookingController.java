@@ -1,12 +1,12 @@
 package com.flightman.flightmanapi.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,15 +58,22 @@ public class BookingController {
                         @ApiResponse(code = 500, message = "There was an unexpected problem while creating bookings") })
         @PostMapping("/bookings")
         public ResponseEntity<?> createBooking(String userId, String flightId,
-                        @RequestParam(required = false) String seatNumber,
-                        @DateTimeFormat(pattern = "MM-dd-yyyy") Date date) {
+                        @RequestParam(required = false) String seatNumber, String date) {
+                Date d;
                 if (!this.bookingService.validateUser(userId)) {
                         return new ResponseEntity<>("Invalid User ID", HttpStatus.BAD_REQUEST);
                 }
                 if (!this.bookingService.validateFlight(flightId)) {
                         return new ResponseEntity<>("Invalid Flight ID", HttpStatus.BAD_REQUEST);
                 }
-                if (date.before(new Date())) {
+                try {
+                        SimpleDateFormat DateFor = new SimpleDateFormat("MM-dd-yyyy");
+                        d = DateFor.parse(date);
+                        date = DateFor.format(d);
+                        if (d.before(new Date())) {
+                                return new ResponseEntity<>("Invalid Date", HttpStatus.BAD_REQUEST);
+                        }
+                } catch (Exception e) {
                         return new ResponseEntity<>("Invalid Date", HttpStatus.BAD_REQUEST);
                 }
                 try {
