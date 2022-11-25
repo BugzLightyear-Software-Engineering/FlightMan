@@ -6,10 +6,12 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.flightman.flightmanapi.model.FlightModel;
 import com.flightman.flightmanapi.services.FlightModelService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RequestMapping("/api")
 @RestController
+@Api(description = "Set of endpoints for Creating, Finding, and Deleting Flight Models.")
 public class FlightModelController {
     
     @Autowired
@@ -30,6 +38,10 @@ public class FlightModelController {
      * Method to get all the flight Models in the database if there are any
      * If no data, then we return NO_CONTENT
     */
+    @ApiOperation(value = "Get all flight models", notes = "Get all the flight models in the database")
+    @ApiResponses({@ApiResponse(code = 200, message = "Successfully found the flight models"), 
+                   @ApiResponse(code = 204, message = "If no flight models in the data"), 
+                   @ApiResponse(code = 500, message = "If any other error occurs")})
     @GetMapping("/models")
     public ResponseEntity<List<FlightModel>> getFlightModels(){
 
@@ -42,8 +54,8 @@ public class FlightModelController {
 
         } 
         catch (Exception e) {
-            e.printStackTrace(new java.io.PrintStream(System.out));
-            System.out.println(e);
+            e.printStackTrace(new java.io.PrintStream(System.err));
+            System.err.println(e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -52,24 +64,40 @@ public class FlightModelController {
     * Method that creates a new Flight Model in the Flight Model table by supplying the required flight Model object
     * If failure occurs during creation, returns HTTP NO_CONTENT 
     */
+    @ApiOperation(value = "Get create a flight model", notes = "Give the details to create a new flight model in the database")
+    @ApiResponses({@ApiResponse(code = 200, message = "Successfully created the flight model"), 
+                   @ApiResponse(code = 400, message = "If the input parameters are invalid"), 
+                   @ApiResponse(code = 500, message = "If any other error occurs")})
     @PostMapping("/model")
-    public ResponseEntity<Integer> createFlightModel(@RequestBody FlightModel flightModel)   
+    public ResponseEntity<?> createFlightModel(@RequestBody FlightModel flightModel)   
     {  
-            try {
-                    flightModelService.save(flightModel);
-                    Integer flightModelId = flightModel.getFlightModelId();
-                    return new ResponseEntity<>(flightModelId, HttpStatus.OK);
-            } catch (Exception e) {
-                    e.printStackTrace(new java.io.PrintStream(System.out));
-                    System.out.println(e);
-                    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        if(flightModel.getSeatCapacity() < 0){
+                return new ResponseEntity<String>("The seat capacity cannot be negative", HttpStatus.BAD_REQUEST);
+        }
+        if(flightModel.getSeatRowCount() < 0){
+                return new ResponseEntity<String>("The seat row count cannot be negative", HttpStatus.BAD_REQUEST);
+        }
+        if(flightModel.getSeatColCount() < 0){
+                return new ResponseEntity<String>("The seat col count cannot be negative", HttpStatus.BAD_REQUEST);
+        }
+        try {
+                FlightModel flightModelcreated = flightModelService.save(flightModel);
+                Integer flightModelId = flightModelcreated.getFlightModelId();
+                return new ResponseEntity<>(flightModelId, HttpStatus.OK);
+        } catch (Exception e) {
+                e.printStackTrace(new java.io.PrintStream(System.err));
+                System.err.println(e);
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
      /* 
     * Method that delets a record in the Flight Model table by FlightModelId
     * If failure occurs during deletion, returns HTTP NO_CONTENT 
     */
+    @ApiOperation(value = "Delete flight model", notes = "Deletes a flight model by the given Flight Model Id")
+    @ApiResponses({@ApiResponse(code = 200, message = "Flight Model is successfully deleted"),
+                   @ApiResponse(code = 500, message = "If any other error occurs")})
     @Transactional
     @DeleteMapping("/model/id/{id}")
     public ResponseEntity<Boolean> deleteModelById(@PathVariable("id") Integer id) {
@@ -78,8 +106,8 @@ public class FlightModelController {
                             return new ResponseEntity<>(true, HttpStatus.OK);
                     return new ResponseEntity<>(false, HttpStatus.OK);
             } catch (Exception e) {
-                    e.printStackTrace(new java.io.PrintStream(System.out));
-                    System.out.println(e);
+                    e.printStackTrace(new java.io.PrintStream(System.err));
+                    System.err.println(e);
                     return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
     }
