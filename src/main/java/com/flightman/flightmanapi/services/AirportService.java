@@ -31,9 +31,14 @@ public class AirportService {
     /* 
      * Method that saves an Airport object to the database.
      */
-    public Boolean saveAirport(Airport airport) {
-        if (this.airportRepository.save(airport) != null){
-                return true;
+    public Boolean saveAirport(String airportName, String airportAbvName, String latitude, String longitude) {
+        Airport airport = new Airport(airportName, airportAbvName, latitude, longitude);
+        try {
+                if (this.airportRepository.save(airport) != null){
+                        return true;
+                }
+        } catch (Exception e) {
+                return false;
         }
         return false;
     }
