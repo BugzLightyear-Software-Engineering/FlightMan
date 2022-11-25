@@ -189,6 +189,6 @@ public class BookingService {
 
         user.setRewardsMiles(user.getRewardsMiles() + pointsToReturn);
 
-        return this.userRepository.save(user) != null ? true : false;
+        return (this.userRepository.save(user) != null);
     }
 }

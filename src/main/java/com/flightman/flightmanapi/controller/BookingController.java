@@ -20,8 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.flightman.flightmanapi.model.Booking;
 import com.flightman.flightmanapi.services.BookingService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RequestMapping("/api")
 @RestController
+@Api(description = "Set of endpoints for Creating, Finding, and Deleting Bookings.")
 public class BookingController {
         @Autowired
         private BookingService bookingService;
@@ -30,6 +37,10 @@ public class BookingController {
          * Method to retrieve bookings present in the database for a userId. 
          * If userId is not supplied, all bookings are returned. 
         */
+    @ApiOperation(value = "Get All Bookings for a given user ID", notes = "Returns all the bookings for a user")
+    @ApiResponses({ @ApiResponse(code = 200, message = "Booking details are successfully retrieved"),
+                    @ApiResponse(code = 400, message = "No bookings where found for this user"),
+                    @ApiResponse(code = 500, message = "There was an unexpected problem during booking detail retrieval") })
 	@GetMapping("/bookings")
 	public ResponseEntity<List<Booking>> getBookings(@RequestParam(required = false) UUID userId) {
 		try {
@@ -49,6 +60,10 @@ public class BookingController {
      * Method that creates a new record in the Booking table by associating the supplied userId and flightId. 
      * If failure occurs during booking, returns HTTP NO_CONTENT 
     */
+    @ApiOperation(value = "Create a new booking", notes = "Create a new booking for a user")
+    @ApiResponses({ @ApiResponse(code = 200, message = "Booking was successfully created"),
+                    @ApiResponse(code = 400, message = "Incorrect or invalid data"),
+                    @ApiResponse(code = 500, message = "There was an unexpected problem during booking creation") })
     @PostMapping("/bookings")
 	public ResponseEntity<Booking> createBooking(String userId, String flightId, @RequestParam(required = false) String seatNumber, @DateTimeFormat(pattern = "MM-dd-yyyy") Date date, Boolean useRewardPoints) {
 		try {
@@ -64,6 +79,10 @@ public class BookingController {
 		}
 	}
 
+    @ApiOperation(value = "Delete a booking", notes = "Delete a booking for a user")
+    @ApiResponses({ @ApiResponse(code = 200, message = "Booking was successfully deleted"),
+                    @ApiResponse(code = 400, message = "Incorrect or invalid data"),
+                    @ApiResponse(code = 500, message = "There was an unexpected problem during booking deletion") })
     @DeleteMapping("/bookings")
     public ResponseEntity<Boolean> deleteBooking(String bookingId, String userId) {
         try {
@@ -76,7 +95,11 @@ public class BookingController {
         }
     }
 
-        @PostMapping("/bookings/id/{id}/usercheckin")
+    @ApiOperation(value = "Check in a user for their booking", notes = "Check a user in")
+    @ApiResponses({ @ApiResponse(code = 200, message = "User was successfully checked in"),
+                    @ApiResponse(code = 400, message = "Incorrect or invalid data"),
+                    @ApiResponse(code = 500, message = "There was an unexpected problem during check in") })
+    @PostMapping("/bookings/id/{id}/usercheckin")
 	public ResponseEntity<String> userCheckIn(@PathVariable("id") UUID bookingId) {
 		try {
                         String checkedIn = this.bookingService.update(bookingId);
