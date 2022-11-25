@@ -41,7 +41,7 @@ public class AirportControllerTest {
     @Test
     public void createAirport() throws Exception {
         /* Test happy path */
-        when(airportService.saveAirport("SourceName", "JFK", "1", "2")).thenReturn(true);
+        when(airportService.saveAirport(any())).thenReturn(true);
         mockMvc.perform(
                 post("/api/airports")
                 .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
@@ -50,7 +50,7 @@ public class AirportControllerTest {
                 .andExpect(status().isOk());
 
         /* Test sad path, incorrect latitude */
-        when(airportService.saveAirport("SourceName", "JFK", "-91", "2")).thenReturn(true);
+        when(airportService.saveAirport(any())).thenReturn(true);
         mockMvc.perform(
                 post("/api/airports")
                 .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
@@ -59,7 +59,7 @@ public class AirportControllerTest {
                 .andExpect(status().isBadRequest());
 
         /* Test sad path, incorrect airport ABV name */
-        when(airportService.saveAirport("SourceName", "AB", "1", "2")).thenReturn(true);
+        when(airportService.saveAirport(any())).thenReturn(true);
         mockMvc.perform(
                 post("/api/airports")
                 .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))

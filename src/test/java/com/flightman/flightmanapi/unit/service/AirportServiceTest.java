@@ -30,12 +30,12 @@ public class AirportServiceTest {
         @InjectMocks
         private AirportService airportService;
 
-        private Airport airport = new Airport("AirportName", "AN", "Lat", "Long");
+        private Airport airport = new Airport("AirportName", "APN", "1", "2");
 
         @Test
         public void whenSaveAirport_shouldReturnAirport() {
                 Mockito.when(airportRepository.save(ArgumentMatchers.any(Airport.class))).thenReturn(airport);
-                Boolean created = airportService.saveAirport("airportName", "APN", "1", "2");
+                Boolean created = airportService.saveAirport(airport);
                 assert (created == true);
                 verify(airportRepository).save(airport);
         }
