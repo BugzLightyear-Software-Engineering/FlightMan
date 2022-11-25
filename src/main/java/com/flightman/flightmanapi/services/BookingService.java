@@ -44,6 +44,22 @@ public class BookingService {
                 return bookingsList;
         }
 
+        public Boolean validateUser(String userId) {
+                User u = this.userRepository.findByUserId(UUID.fromString(userId));
+                if (u != null) {
+                        return true;
+                }
+                return false;
+        }
+
+        public Boolean validateFlight(String flightId) {
+                Flight f = this.flightRepository.findByFlightId(UUID.fromString(flightId));
+                if (f != null) {
+                        return true;
+                }
+                return false;
+        }
+
         public String generateSeatNumber(Flight f, Date d) {
                 String[] possibleSeatList = new String[] { "1A", "1B", "1C", "1D", "1E", "1F", "2A", "2B", "2C", "2D",
                                 "2E", "2F", "3A", "3B", "3C", "3D", "3E", "3F", "4A", "4B", "4C", "4D", "4E", "4F",
@@ -81,18 +97,20 @@ public class BookingService {
          * Method that creates a record in the booking table of the database
          * after processing changes on the flight table.
          */
-        public Booking book(String userId, String flightId, String seatNumber, Date date, Boolean paymentStatus) {
+        public Booking book(String userId, String flightId, String seatNumber, String date, Boolean paymentStatus) {
                 try {
+                        Date d = new SimpleDateFormat("MM-dd-yyyy").parse(date);
                         User u = this.userRepository.findByUserId(UUID.fromString(userId));
                         Flight f = this.flightRepository.findByFlightId(UUID.fromString(flightId));
                         Integer totalSeatCount = f.getNumSeats();
-                        Integer bookedSeatCount = this.bookingRepository.findByFlightAndFlightDate(f, date).size();
+                        Integer bookedSeatCount = this.bookingRepository.findByFlightAndFlightDate(f, d).size();
                         Integer availableSeats = totalSeatCount - bookedSeatCount;
                         if (seatNumber == null || seatNumber == "") {
-                                seatNumber = this.generateSeatNumber(f, date);
+                                seatNumber = this.generateSeatNumber(f, d);
                         }
                         if (availableSeats > 0 && seatNumber != "") {
-                                Booking booking = new Booking(u, f, seatNumber, date, true);
+                                Booking booking;
+                                booking = new Booking(u, f, seatNumber, d, true);
                                 booking = this.bookingRepository.save(booking);
                                 return booking;
                         }
@@ -104,38 +122,37 @@ public class BookingService {
                 }
         }
 
-    public String update(UUID bookingId) {
-        try {   
-                // TODO: Check if id exists
-                Booking b = this.bookingRepository.findByBookingId(bookingId);
-                if(b.getUserCheckIn()){
-                        return "User is checked in already!";
-                }
-                else{ 
-                        String date = b.getFlightDate().toString().substring(0, 10);
-                        String time = b.getFlight().getDepartureTime().toString();
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-                        Date flight_date_time = sdf.parse(date + " " + time);
+        public String update(UUID bookingId) {
+                try {
+                        // TODO: Check if id exists
+                        Booking b = this.bookingRepository.findByBookingId(bookingId);
+                        if (b.getUserCheckIn()) {
+                                return "User is checked in already!";
+                        } else {
+                                String date = b.getFlightDate().toString().substring(0, 10);
+                                String time = b.getFlight().getDepartureTime().toString();
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                                Date flight_date_time = sdf.parse(date + " " + time);
 
-                        String cur_date = LocalDate.now().toString();
-                        String cur_time = LocalTime.now().toString();
-                        Date cur_date_time = sdf.parse(cur_date + " " + cur_time);
-                        
-                        float diff = (cur_date_time.getTime() - flight_date_time.getTime()) / (float)(1000 * 60 * 60);
-                        if(diff < 2){
-                                b.setUserCheckIn(true);
-                                this.bookingRepository.save(b);
-                                return "Successfully checked in";
+                                String cur_date = LocalDate.now().toString();
+                                String cur_time = LocalTime.now().toString();
+                                Date cur_date_time = sdf.parse(cur_date + " " + cur_time);
+
+                                float diff = (cur_date_time.getTime() - flight_date_time.getTime())
+                                                / (float) (1000 * 60 * 60);
+                                if (diff < 2) {
+                                        b.setUserCheckIn(true);
+                                        this.bookingRepository.save(b);
+                                        return "Successfully checked in";
+                                } else {
+                                        return "Cannot check in right now";
+                                }
+
                         }
-                        else{
-                                return "Cannot check in right now";
-                        }
-                        
+                } catch (Exception e) {
+                        System.err.println("Error while checking in!");
+                        e.printStackTrace(new java.io.PrintStream(System.err));
+                        return "Error occurred";
                 }
-        } catch (Exception e) {
-                System.err.println("Error while checking in!");
-                e.printStackTrace(new java.io.PrintStream(System.err));
-                return "Error occurred";
         }
-    }
 }

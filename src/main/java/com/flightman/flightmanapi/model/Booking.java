@@ -1,4 +1,5 @@
 package com.flightman.flightmanapi.model;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -8,8 +9,8 @@ import javax.persistence.*;
 @Table(name = "booking")
 public class Booking {
         @Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID bookingId;
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private UUID bookingId;
 
         @OneToOne
         @JoinColumn(name = "user_id")
@@ -30,12 +31,13 @@ public class Booking {
 
         @Column(name = "user_check_in")
         private Boolean userCheckIn;
-        
+
         // TODO : Use libs to generate get/set at runtime - LOMBOK
 
-        public Booking(){}
+        public Booking() {
+        }
 
-        public Booking(User user, Flight flight, String seatNumber, Date date, Boolean paymentStatus){
+        public Booking(User user, Flight flight, String seatNumber, Date date, Boolean paymentStatus) {
                 this.user = user;
                 this.flight = flight;
                 this.seatNumber = seatNumber;
@@ -44,7 +46,8 @@ public class Booking {
                 this.userCheckIn = false;
         }
 
-        public Booking(User user, Flight flight, String seatNumber, Date date, Boolean paymentStatus, Boolean userCheckIn){
+        public Booking(User user, Flight flight, String seatNumber, Date date, Boolean paymentStatus,
+                        Boolean userCheckIn) {
                 this.user = user;
                 this.flight = flight;
                 this.seatNumber = seatNumber;
