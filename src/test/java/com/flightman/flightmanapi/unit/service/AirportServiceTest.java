@@ -20,39 +20,35 @@ import com.flightman.flightmanapi.model.Airport;
 import com.flightman.flightmanapi.repositories.AirportRepository;
 import com.flightman.flightmanapi.services.AirportService;
 
-
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {AirportService.class, AirportRepository.class})
+@ContextConfiguration(classes = { AirportService.class, AirportRepository.class })
 public class AirportServiceTest {
-    @MockBean
-    private AirportRepository airportRepository;
+        @MockBean
+        private AirportRepository airportRepository;
 
-    @Autowired
-    @InjectMocks
-    private AirportService airportService;
+        @Autowired
+        @InjectMocks
+        private AirportService airportService;
 
-    private Airport airport = new Airport("AirportName", "AN", "Lat", "Long");
-    
+        private Airport airport = new Airport("AirportName", "APN", "1", "2");
 
-    @Test
-    public void whenSaveAirport_shouldReturnAirport() {
-        
-        
-        Mockito.when(airportRepository.save(ArgumentMatchers.any(Airport.class))).thenReturn(airport);
-        Boolean created = airportService.saveAirport(airport);
-        assert(created == true);
-        verify(airportRepository).save(airport);
+        @Test
+        public void whenSaveAirport_shouldReturnAirport() {
+                Mockito.when(airportRepository.save(ArgumentMatchers.any(Airport.class))).thenReturn(airport);
+                Boolean created = airportService.saveAirport(airport);
+                assert (created == true);
+                verify(airportRepository).save(airport);
         }
 
-    @Test
-    public void shouldReturnAllAirports(){
-        List<Airport> airports = new ArrayList<Airport>();
-        airports.add(new Airport());
-        when(airportRepository.findAll()).thenReturn(airports);
-        List<Airport> expected = airportService.find(null);
-        assertEquals(expected, airports);
-        verify(airportRepository).findAll();
+        @Test
+        public void shouldReturnAllAirports() {
+                List<Airport> airports = new ArrayList<Airport>();
+                airports.add(new Airport());
+                when(airportRepository.findAll()).thenReturn(airports);
+                List<Airport> expected = airportService.find(null);
+                assertEquals(expected, airports);
+                verify(airportRepository).findAll();
 
-    }
+        }
 
 }

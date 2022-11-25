@@ -1,4 +1,5 @@
 package com.flightman.flightmanapi.unit.controller;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,54 +23,77 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = AirportController.class)
 @ActiveProfiles
 public class AirportControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    
-    @MockBean
-    private AirportService airportService;
+        @Autowired
+        private MockMvc mockMvc;
 
-    private Airport source = new Airport("SourceName", "SN", "Lat", "Long");
+        @MockBean
+        private AirportService airportService;
 
-    private String user = "abhilash";
-    private String password = "securedpasswordofsrishti";
+        private Airport source = new Airport("SourceName", "SN", "Lat", "Long");
+
+        private String user = "abhilash";
+        private String password = "securedpasswordofsrishti";
 
     @Test
     public void createAirport() throws Exception {
+        /* Test happy path */
         when(airportService.saveAirport(any())).thenReturn(true);
         mockMvc.perform(
                 post("/api/airports")
                 .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"airportName\": \"SourceName\",\"airportAbvName\": \"SN\",\"latitude\": \"Lat\",\"longitude\": \"Long\"}"))
+                .content("{\"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"}"))
                 .andExpect(status().isOk());
+
+        /* Test sad path, incorrect latitude */
+        when(airportService.saveAirport(any())).thenReturn(true);
+        mockMvc.perform(
+                post("/api/airports")
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"airportName\": \"SourceName\",\"airportAbvName\": \"SN\",\"latitude\": \"-91\",\"longitude\": \"2\"}"))
+                .andExpect(status().isBadRequest());
+
+        /* Test sad path, incorrect airport ABV name */
+        when(airportService.saveAirport(any())).thenReturn(true);
+        mockMvc.perform(
+                post("/api/airports")
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"airportName\": \"SourceName\",\"airportAbvName\": \"AB\",\"latitude\": \"1\",\"longitude\": \"2\"}"))
+                .andExpect(status().isBadRequest());
     }
 
-    @Test
-    public void getAirport() throws Exception {
-        List<Airport> temp = new ArrayList<Airport>();
-        temp.add(source);
-        given(airportService.find(null)).willReturn(temp);
-        mockMvc.perform(
-                get("/api/airports")
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
-                .accept(MediaType.ALL))
-                .andExpect(status().isOk());
-    }
+        @Test
+        public void getAirport() throws Exception {
+                List<Airport> temp = new ArrayList<Airport>();
+                temp.add(source);
+                given(airportService.find(null)).willReturn(temp);
+                mockMvc.perform(
+                                get("/api/airports")
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk());
+        }
 }
 
-//     @Test
-//     public void givenFlightId_whendelete_thenReturn200() throws Exception{
-//         // given - precondition or setup
-//         // willDoNothing().given(airportService).deleteFlightById(flight.getFlightId());
-//         // when -  action or the behaviour that we are going test
-//         ResultActions response = mockMvc.perform(delete("/api/flight/id/{id}",flight.getFlightId()));
+// @Test
+// public void givenFlightId_whendelete_thenReturn200() throws Exception{
+// // given - precondition or setup
+// //
+// willDoNothing().given(airportService).deleteFlightById(flight.getFlightId());
+// // when - action or the behaviour that we are going test
+// ResultActions response =
+// mockMvc.perform(delete("/api/flight/id/{id}",flight.getFlightId()));
 
-//         // then - verify the output
-//         // response.andExpect(status().isNotFound())
-//         //         .andDo(print());
-//     }
+// // then - verify the output
+// // response.andExpect(status().isNotFound())
+// // .andDo(print());
+// }

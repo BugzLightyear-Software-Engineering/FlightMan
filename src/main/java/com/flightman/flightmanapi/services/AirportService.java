@@ -12,29 +12,33 @@ import com.flightman.flightmanapi.repositories.AirportRepository;
 @Service
 public class AirportService {
 
-    @Autowired
-    private AirportRepository airportRepository;
+        @Autowired
+        private AirportRepository airportRepository;
 
-    /* 
-     * Method that returns a list of all airports if airport name is not supplied, 
-     * else returns airports whose name contains the supplied string.
-     */
-    public List<Airport> find(String airportName) {
-        List<Airport> airportsList = new ArrayList<Airport>();
-        if (airportName == null)
-                this.airportRepository.findAll().forEach(airportsList::add);
-        else
-                this.airportRepository.findByAirportNameContaining(airportName).forEach(airportsList::add);
-        return airportsList;
-    }
-
-    /* 
-     * Method that saves an Airport object to the database.
-     */
-    public Boolean saveAirport(Airport airport) {
-        if (this.airportRepository.save(airport) != null){
-                return true;
+        /*
+         * Method that returns a list of all airports if airport name is not supplied,
+         * else returns airports whose name contains the supplied string.
+         */
+        public List<Airport> find(String airportName) {
+                List<Airport> airportsList = new ArrayList<Airport>();
+                if (airportName == null)
+                        this.airportRepository.findAll().forEach(airportsList::add);
+                else
+                        this.airportRepository.findByAirportNameContaining(airportName).forEach(airportsList::add);
+                return airportsList;
         }
-        return false;
-    }
+
+        /*
+         * Method that saves an Airport object to the database.
+         */
+        public Boolean saveAirport(Airport airport) {
+                try {
+                        if (this.airportRepository.save(airport) != null) {
+                                return true;
+                        }
+                } catch (Exception e) {
+                        return false;
+                }
+                return false;
+        }
 }
