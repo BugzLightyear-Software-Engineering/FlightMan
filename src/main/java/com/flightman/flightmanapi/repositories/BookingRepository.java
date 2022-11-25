@@ -2,6 +2,7 @@ package com.flightman.flightmanapi.repositories;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,4 +16,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
         List<Booking> findByUser(User user);
 
         List<Booking> findByFlightAndFlightDate(Flight f, Date d);
+        Booking findByBookingId(UUID id);
+
 }

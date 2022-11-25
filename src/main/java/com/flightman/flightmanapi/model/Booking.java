@@ -29,6 +29,9 @@ public class Booking {
         @Column(name = "flight_date")
         private Date flightDate;
 
+        @Column(name = "user_check_in")
+        private Boolean userCheckIn;
+
         // TODO : Use libs to generate get/set at runtime - LOMBOK
 
         public Booking() {
@@ -40,6 +43,17 @@ public class Booking {
                 this.seatNumber = seatNumber;
                 this.paymentStatus = paymentStatus;
                 this.flightDate = date;
+                this.userCheckIn = false;
+        }
+
+        public Booking(User user, Flight flight, String seatNumber, Date date, Boolean paymentStatus,
+                        Boolean userCheckIn) {
+                this.user = user;
+                this.flight = flight;
+                this.seatNumber = seatNumber;
+                this.paymentStatus = paymentStatus;
+                this.flightDate = date;
+                this.userCheckIn = userCheckIn;
         }
 
         public UUID getBookingId() {
@@ -88,5 +102,13 @@ public class Booking {
 
         public void setFlightDate(Date flightDate) {
                 this.flightDate = flightDate;
+        }
+
+        public Boolean getUserCheckIn() {
+                return userCheckIn;
+        }
+
+        public void setUserCheckIn(Boolean userCheckIn) {
+                this.userCheckIn = userCheckIn;
         }
 }
