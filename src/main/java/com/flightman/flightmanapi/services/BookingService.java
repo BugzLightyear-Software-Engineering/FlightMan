@@ -41,6 +41,22 @@ public class BookingService {
                 return bookingsList;
         }
 
+        public Boolean validateUser(String userId) {
+                User u = this.userRepository.findByUserId(UUID.fromString(userId));
+                if (u != null) {
+                        return true;
+                }
+                return false;
+        }
+
+        public Boolean validateFlight(String flightId) {
+                Flight f = this.flightRepository.findByFlightId(UUID.fromString(flightId));
+                if (f != null) {
+                        return true;
+                }
+                return false;
+        }
+
         public String generateSeatNumber(Flight f, Date d) {
                 String[] possibleSeatList = new String[] { "1A", "1B", "1C", "1D", "1E", "1F", "2A", "2B", "2C", "2D",
                                 "2E", "2F", "3A", "3B", "3C", "3D", "3E", "3F", "4A", "4B", "4C", "4D", "4E", "4F",

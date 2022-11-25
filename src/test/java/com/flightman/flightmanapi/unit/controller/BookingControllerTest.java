@@ -1,4 +1,5 @@
 package com.flightman.flightmanapi.unit.controller;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,23 +27,39 @@ import org.springframework.util.Base64Utils;
 @WebMvcTest(controllers = BookingController.class)
 @ActiveProfiles
 public class BookingControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    
-    @MockBean
-    private BookingService bookingService;
+        @Autowired
+        private MockMvc mockMvc;
 
-    private String user = "abhilash";
-    private String password = "securedpasswordofsrishti";
+        @MockBean
+        private BookingService bookingService;
+
+        private String user = "abhilash";
+        private String password = "securedpasswordofsrishti";
+
+        @Test
+        public void getBooking() throws Exception {
+                List<Booking> created = new ArrayList<Booking>();
+                created.add(new Booking());
+                given(bookingService.get(null)).willReturn(created);
+                mockMvc.perform(
+                                get("/api/bookings")
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk());
+        }
 
     @Test
-    public void getBooking() throws Exception {
-        List<Booking> created = new ArrayList<Booking>();
-        created.add(new Booking());
-        given(bookingService.get(null)).willReturn(created);
+    public void createBooking() throws Exception {
+        /* Test happy path */
+        when(bookingService.book()).thenReturn(true);
         mockMvc.perform(
-                        get("/api/bookings")
-                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
-                        .accept(MediaType.ALL)).andExpect(status().isOk());
+                post("/api/airports")
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"}"))
+                .andExpect(status().isOk());
     }
 }
