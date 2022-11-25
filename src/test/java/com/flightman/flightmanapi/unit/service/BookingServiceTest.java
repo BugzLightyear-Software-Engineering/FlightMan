@@ -69,7 +69,7 @@ public class BookingServiceTest {
     }
 
     @Test
-    public void testUserRewardPointChangesForCreation() {
+    public void testUserRewardPointChangesForCreation() throws Exception {
         int initial = 100;
         User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
 
@@ -80,20 +80,23 @@ public class BookingServiceTest {
         when(bookingRepository.save(any())).thenReturn(new Booking());
         when(flightRepository.save(any())).thenReturn(true);
 
+        DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+        Date dateObj = formatter.parse("01-01-2022");
+
         Booking expected = bookingService.book(
             "7a9223a4-820e-42d8-922b-162cea9e5f6e",
             "7a9223a4-820e-42d8-922b-162cea9e5f6e",
-            "1",
+            "1A",
+            dateObj,
             true,
-            false,
-            "2000-01-01"
+            false
         );
 
         assert user.getRewardsMiles() > initial;
     }
 
     @Test
-    public void testUserRewardPointChangesForCreationUsingPoints_1() {
+    public void testUserRewardPointChangesForCreationUsingPoints_1() throws Exception {
         int initial = 100;
         User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
 
@@ -104,20 +107,23 @@ public class BookingServiceTest {
         when(bookingRepository.save(any())).thenReturn(true);
         when(flightRepository.save(any())).thenReturn(true);
 
+        DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+        Date dateObj = formatter.parse("01-01-2022");
+
         Booking expected = bookingService.book(
             "7a9223a4-820e-42d8-922b-162cea9e5f6e",
             "7a9223a4-820e-42d8-922b-162cea9e5f6e",
-            "1",
+            "1A",
+            dateObj,
             true,
-            true,
-            "2000-01-01"
+            true
         );
 
         assert user.getRewardsMiles() == 0;
     }
 
     @Test
-    public void testUserRewardPointChangesForCreationUsingPoints_2() {
+    public void testUserRewardPointChangesForCreationUsingPoints_2() throws Exception {
         int initial = 50;
         User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
 
@@ -128,13 +134,16 @@ public class BookingServiceTest {
         when(bookingRepository.save(any())).thenReturn(new Booking());
         when(flightRepository.save(any())).thenReturn(true);
 
+        DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+        Date dateObj = formatter.parse("01-01-2022");
+
         Booking expected = bookingService.book(
             "7a9223a4-820e-42d8-922b-162cea9e5f6e",
             "7a9223a4-820e-42d8-922b-162cea9e5f6e",
-            "1",
+            "1A",
+            dateObj,
             true,
-            true,
-            "2000-01-01"
+            true
         );
 
         assert user.getRewardsMiles() == 50;

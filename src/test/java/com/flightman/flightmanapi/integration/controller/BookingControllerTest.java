@@ -83,7 +83,7 @@ public class BookingControllerTest {
                         post("/api/bookings")
                         .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\": \"1\",\"useRewardPoints\": \"true\", \"date\": \"2022-01-01\"}"))
+                        .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\": \"1\",\"useRewardPoints\": \"true\", \"date\": \"01-01-2022\"}"))
                         .andExpect(status().isOk());
     }
 
@@ -114,7 +114,7 @@ public class BookingControllerTest {
                         post("/api/bookings")
                         .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\": \"1\",\"useRewardPoints\": \"true\", \"date\": \"2022-01-01\"}"));
+                        .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\": \"1\",\"useRewardPoints\": \"true\", \"date\": \"01-01-2022\"}"));
     }
 
     @Test
@@ -133,6 +133,6 @@ public class BookingControllerTest {
                         post("/api/bookings")
                         .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\": \"1\",\"useRewardPoints\": \"false\", \"date\": \"2022-01-01\"}"));
+                        .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\": \"1\",\"useRewardPoints\": \"false\", \"date\": \"01-01-2022\"}"));
     }
 }

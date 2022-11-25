@@ -1,4 +1,5 @@
 package com.flightman.flightmanapi.model;
+import java.util.Date;
 import java.util.UUID;
 import java.util.Date;
 
@@ -30,19 +31,35 @@ public class Booking {
         @Column(name = "useRewardPoints")
         private Boolean useRewardPoints;
 
-        @DateTimeFormat(pattern = "yyyy-mm-dd")
-        @Column(name = "date")
-        private Date date;
+        @DateTimeFormat(pattern = "MM-dd-yyyy")
+        @Column(name = "flight_date")
+        private Date flightDate;
+
+        @Column(name = "user_check_in")
+        private Boolean userCheckIn;
         
+        // TODO : Use libs to generate get/set at runtime - LOMBOK
+
         public Booking(){}
 
-        public Booking(User user, Flight flight, String seatNumber, Boolean paymentStatus, Boolean useRewardPoints, Date date){
+        public Booking(User user, Flight flight, String seatNumber, Boolean paymentStatus, Boolean useRewardPoints, Date date) {
                 this.user = user;
                 this.flight = flight;
                 this.seatNumber = seatNumber;
                 this.paymentStatus = paymentStatus;
                 this.useRewardPoints = useRewardPoints;
-                this.date = date;
+                this.flightDate = date;
+                this.userCheckIn = false;
+        }
+
+        public Booking(User user, Flight flight, String seatNumber, Boolean paymentStatus, Boolean useRewardPoints, Date date, Boolean userCheckIn) {
+                this.user = user;
+                this.flight = flight;
+                this.seatNumber = seatNumber;
+                this.paymentStatus = paymentStatus;
+                this.useRewardPoints = useRewardPoints;
+                this.flightDate = date;
+                this.userCheckIn = userCheckIn;
         }
 
         public UUID getBookingId() {
@@ -93,11 +110,19 @@ public class Booking {
                 this.useRewardPoints = useRewardPoints;
         }
 
-        public Date getDate() {
-                return this.date;
+        public Date getFlightDate() {
+                return this.flightDate;
         }
 
-        public void setDate(Date date) {
-                this.date = date;
+        public void setFlightDate(Date flightDate) {
+                this.flightDate = flightDate;
+        }
+
+        public Boolean getUserCheckIn() {
+                return userCheckIn;
+        }
+
+        public void setUserCheckIn(Boolean userCheckIn) {
+                this.userCheckIn = userCheckIn;
         }
 }
