@@ -1,5 +1,8 @@
 package com.flightman.flightmanapi.services;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -80,6 +83,41 @@ public class BookingService {
                 System.out.println("Error while booking!");
                 e.printStackTrace(new java.io.PrintStream(System.out));
                 return null;
+        }
+    }
+
+    public String update(UUID bookingId) {
+        try {   
+                // TODO: Check if id exists
+                Booking b = this.bookingRepository.findByBookingId(bookingId);
+                if(b.getUserCheckIn()){
+                        return "User is checked in already!";
+                }
+                else{ 
+                        String date = b.getFlightDate().toString().substring(0, 10);
+                        String time = b.getFlight().getDepartureTime().toString();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                        Date flight_date_time = sdf.parse(date + " " + time);
+
+                        String cur_date = LocalDate.now().toString();
+                        String cur_time = LocalTime.now().toString();
+                        Date cur_date_time = sdf.parse(cur_date + " " + cur_time);
+                        
+                        float diff = (cur_date_time.getTime() - flight_date_time.getTime()) / (float)(1000 * 60 * 60);
+                        if(diff < 2){
+                                b.setUserCheckIn(true);
+                                this.bookingRepository.save(b);
+                                return "Successfully checked in";
+                        }
+                        else{
+                                return "Cannot check in right now";
+                        }
+                        
+                }
+        } catch (Exception e) {
+                System.out.println("Error while checking in!");
+                e.printStackTrace(new java.io.PrintStream(System.out));
+                return "Error occurred";
         }
     }
 }
