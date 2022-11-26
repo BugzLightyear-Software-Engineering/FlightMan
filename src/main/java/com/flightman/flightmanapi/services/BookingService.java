@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import java.util.concurrent.TimeUnit;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +126,7 @@ public class BookingService {
                                 "33F", "34A", "34B", "34C", "34D", "34E", "34F" };
                 List<Booking> bookingsList;
                 bookingsList = this.bookingRepository.findByFlightAndFlightDate(f, d);
-                List<String> takenSeats = new ArrayList<>();
+                List<String> takenSeats = new ArrayList<String>();
                 for (Booking booking : bookingsList) {
                         takenSeats.add(0, booking.getSeatNumber());
                 }
@@ -149,7 +151,6 @@ public class BookingService {
                 String curDate = LocalDate.now().toString();
                 String curTime = LocalTime.now().toString();
                 Date curDateTime = sdf.parse(curDate + " " + curTime);
-
                 return (curDateTime.getTime() - flightDateTime.getTime()) / (float) (1000 * 60 * 60);
         }
 
@@ -158,14 +159,18 @@ public class BookingService {
          */
         public Boolean getLuggageCheckInStatus(String bookingId) {
                 Booking b = this.bookingRepository.findByBookingId(UUID.fromString(bookingId));
-                return b.getLuggage() != null;
+                if (b.getLuggage() != null) {
+                        return true;
+                }
+                return false;
         }
 
         /*
          * Method that creates a record in the booking table of the database
          * after processing changes on the flight table.
          */
-        public Booking book(String userId, String flightId, String seatNumber, String date) {
+        public Booking book(String userId, String flightId, String seatNumber, String date,
+                        Boolean useRewardPoints) {
                 try {
                         Date d = new SimpleDateFormat("MM-dd-yyyy").parse(date);
                         User u = this.userRepository.findByUserId(UUID.fromString(userId));
@@ -173,18 +178,28 @@ public class BookingService {
                         Integer totalSeatCount = f.getNumSeats();
                         Integer bookedSeatCount = this.bookingRepository.findByFlightAndFlightDate(f, d).size();
                         Integer availableSeats = totalSeatCount - bookedSeatCount;
+                        int pointsToReturn = f.getCost();
+
                         if (seatNumber == null || seatNumber.equals("")) {
                                 seatNumber = this.generateSeatNumber(f, d);
                         }
                         if (availableSeats > 0 && !seatNumber.equals("")) {
-                                Booking booking;
-                                booking = new Booking(u, f, seatNumber, d, true);
+                                if (Boolean.TRUE.equals(useRewardPoints)) {
+                                        if (u.getRewardsMiles() < pointsToReturn) {
+                                                return null;
+                                        }
+                                        u.setRewardsMiles(u.getRewardsMiles() - pointsToReturn);
+                                } else {
+                                        u.setRewardsMiles(u.getRewardsMiles() + pointsToReturn / 10);
+                                }
+
+                                this.userRepository.save(u);
+                                Booking booking = new Booking(u, f, seatNumber, true, useRewardPoints, d);
                                 booking = this.bookingRepository.save(booking);
                                 return booking;
                         }
                         return null;
                 } catch (Exception e) {
-                        logger.error("Error while booking!");
                         logger.error(e.getStackTrace());
                         logger.error(e);
                         return null;
@@ -222,10 +237,48 @@ public class BookingService {
                         b.setLuggage(luggage);
                         this.bookingRepository.save(b);
                         return true;
+
                 } catch (Exception e) {
                         logger.error(e.getStackTrace());
                         logger.error(e);
                 }
                 return false;
+        }
+
+        public Boolean deleteBooking(String bookingID, String userID) {
+                Booking booking = this.bookingRepository.findByBookingId(UUID.fromString(bookingID));
+
+                if (UUID.fromString(userID) != booking.getUser().getID()) {
+                        return false;
+                }
+
+                this.bookingRepository.deleteById(UUID.fromString(bookingID));
+                updateRewardPointsForBookingDeletion(booking.getUser().getID(), booking.getFlight().getCost(),
+                                booking.getFlightDate());
+
+                return true;
+        }
+
+        public Boolean updateRewardPointsForBookingDeletion(UUID id, int numPointsUsed, Date flightDate) {
+                Date currentDate = new Date();
+
+                if ((currentDate.compareTo(flightDate) >= 0) || (numPointsUsed == 0)) {
+                        return true;
+                }
+
+                int timeDiff = (int) Math.abs(flightDate.getTime() - currentDate.getTime());
+                int daysDiff = (int) TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS);
+
+                int pointsToReturn = numPointsUsed;
+
+                if (daysDiff < 7) {
+                        pointsToReturn /= 2;
+                }
+
+                User user = this.userRepository.findByUserId(id);
+
+                user.setRewardsMiles(user.getRewardsMiles() + pointsToReturn);
+
+                return (this.userRepository.save(user) != null);
         }
 }

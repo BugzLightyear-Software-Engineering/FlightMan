@@ -44,7 +44,7 @@ public class FlightControllerTest {
         private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
         private Time departure_time = new Time(100);
         private Time arrival_time = new Time(500);
-        private Flight flight = new Flight(source, dest, model, departure_time, arrival_time, null);
+        private Flight flight = new Flight(source, dest, model, departure_time, arrival_time, null, 100);
 
         @Test
         public void getFlights() throws Exception {

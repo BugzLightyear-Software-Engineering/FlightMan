@@ -52,25 +52,25 @@ public class Flight {
         @ApiModelProperty(notes = "The time the flight might be delayed by")
         private Time delayTime;
 
+        @Column(name = "cost")
+        private int cost;
+
         public Flight() {
         }
 
         public Flight(Airport sourceAirport, Airport destAirport, FlightModel flightModel, Time departureTime,
-                        Time estArrivalTime, Time delayTime) {
+                        Time estArrivalTime, Time delayTime, int cost) {
                 this.sourceAirport = sourceAirport;
                 this.destAirport = destAirport;
                 this.flightModel = flightModel;
                 this.departureTime = departureTime;
                 this.estArrivalTime = estArrivalTime;
                 this.delayTime = delayTime;
+                this.cost = cost;
         }
 
         public UUID getFlightId() {
                 return flightId;
-        }
-
-        public void setFlightId(UUID flightId) {
-                this.flightId = flightId;
         }
 
         public Time getDepartureTime() {
@@ -129,4 +129,11 @@ public class Flight {
                 this.flightModel = flightModel;
         }
 
+        public int getCost() {
+            return cost;
+        }
+
+        public void setCost(int cost) {
+            this.cost = cost;
+        }
 }
