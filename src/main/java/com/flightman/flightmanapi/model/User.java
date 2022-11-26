@@ -5,45 +5,58 @@ import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "user", schema = "public")
+@ApiModel(description = "Class representing a user in the system")
 public class User {
         
         @Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
         @Column(name = "user_id")
+        @ApiModelProperty(notes = "Unique identifier of the user", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6", required = true)
 	private UUID userId;
 
         @NotNull
 	@Column(name = "first_name")
+        @ApiModelProperty(notes = "User's first name")
         private String firstName;
 
         @NotNull
         @Column(name = "last_name")
+        @ApiModelProperty(notes = "User's last name")
         private String lastName;
 
         @NotNull
         @Column(name = "phone_number")
+        @ApiModelProperty(notes = "User's phone number")
         private String phoneNumber;
 
         @NotNull
         @Column(name = "email", unique = true)
+        @ApiModelProperty(notes = "User's email")
         private String email;
 
         @NotNull
         @Column(name = "passport_number")
+        @ApiModelProperty(notes = "User's passport number")
         private String passportNumber;
 
         @NotNull
         @Column(name = "address")
+        @ApiModelProperty(notes = "User's address")
         private String address;
         
         // @NotNull
         @Column(name = "diet_id")
+        @ApiModelProperty(notes = "What is the associated diet identifier for this user")
         private Integer diet;
 
         @NotNull
         @Column(name = "rewards_miles")
+        @ApiModelProperty(notes = "How many reward points/miles does this user have")
         private int rewardsMiles;
 
         public User(){};

@@ -29,7 +29,7 @@ import org.springframework.util.Base64Utils;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = BookingController.class)
 @ActiveProfiles
-public class BookingControllerTest {
+public class BookingControllerTest_Unit {
         @Autowired
         private MockMvc mockMvc;
 
@@ -72,7 +72,7 @@ public class BookingControllerTest {
                 String tomorrowDateString = f.format(tomorrowDate);
                 tomorrowDate = formatter.parse(tomorrowDateString);
 
-                when(bookingService.book(validUser, validFlight, null, tomorrowDateString, true))
+                when(bookingService.book(validUser, validFlight, null, tomorrowDateString, true, false))
                                 .thenReturn(booking);
                 when(bookingService.validateUser(validUser)).thenReturn(true);
                 when(bookingService.validateFlight(validFlight)).thenReturn(true);

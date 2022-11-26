@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,26 +20,30 @@ import org.springframework.web.bind.annotation.RestController;
 import com.flightman.flightmanapi.model.Booking;
 import com.flightman.flightmanapi.services.BookingService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/api")
 @RestController
+@Api(description = "Set of endpoints for Creating, Finding, and Deleting Bookings.")
 public class BookingController {
         @Autowired
         private BookingService bookingService;
 
-        /*
-         * Method to retrieve bookings present in the database for a userId.
-         * If userId is not supplied, all bookings are returned.
-         */
-        @ApiOperation(value = "Get Bookings", notes = "Takes in the user ID and returns bookings (if any)")
-        @ApiResponses({ @ApiResponse(code = 200, message = "Booking is successfully returned. If there are no bookings, an empty list is returned."),
-                        @ApiResponse(code = 500, message = "There was an unexpected problem while returning bookings") })
-        @GetMapping("/bookings")
-        public ResponseEntity<List<Booking>> getBookings(@RequestParam(required = false) UUID userId) {
-                try {
+        /* 
+         * Method to retrieve bookings present in the database for a userId. 
+         * If userId is not supplied, all bookings are returned. 
+        */
+    @ApiOperation(value = "Get All Bookings for a given user ID", notes = "Returns all the bookings for a user")
+    @ApiResponses({ @ApiResponse(code = 200, message = "Booking details are successfully retrieved"),
+                    @ApiResponse(code = 400, message = "No bookings where found for this user"),
+                    @ApiResponse(code = 500, message = "There was an unexpected problem during booking detail retrieval") })
+	@GetMapping("/bookings")
+	public ResponseEntity<List<Booking>> getBookings(@RequestParam(required = false) UUID userId) {
+		try {
                         List<Booking> bookingsList = new ArrayList<Booking>();
                         bookingsList = bookingService.get(userId);
                         return new ResponseEntity<>(bookingsList, HttpStatus.OK);
@@ -48,7 +53,6 @@ public class BookingController {
                         return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
                 }
         }
-
         /*
          * Method that creates a new record in the Booking table by associating the
          * supplied userId and flightId.
@@ -59,7 +63,7 @@ public class BookingController {
                         @ApiResponse(code = 500, message = "There was an unexpected problem while creating bookings") })
         @PostMapping("/bookings")
         public ResponseEntity<?> createBooking(String userId, String flightId,
-                        @RequestParam(required = false) String seatNumber, String date) {
+                        @RequestParam(required = false) String seatNumber, String date, Boolean useRewardPoints) {
                 Date d;
                 if (!this.bookingService.validateUser(userId)) {
                         return new ResponseEntity<>("Invalid User ID", HttpStatus.BAD_REQUEST);
@@ -78,7 +82,7 @@ public class BookingController {
                         return new ResponseEntity<>("Invalid Date", HttpStatus.BAD_REQUEST);
                 }
                 try {
-                        Booking booking = this.bookingService.book(userId, flightId, seatNumber, date, true);
+                        Booking booking = this.bookingService.book(userId, flightId, seatNumber, date, true, useRewardPoints);
                         if (booking != null) {
                                 return new ResponseEntity<>(booking, HttpStatus.CREATED);
                         }
@@ -139,4 +143,20 @@ public class BookingController {
                                         HttpStatus.INTERNAL_SERVER_ERROR);
                 }
         }
+
+    @ApiOperation(value = "Delete a booking", notes = "Delete a booking for a user")
+    @ApiResponses({ @ApiResponse(code = 200, message = "Booking was successfully deleted"),
+                    @ApiResponse(code = 400, message = "Incorrect or invalid data"),
+                    @ApiResponse(code = 500, message = "There was an unexpected problem during booking deletion") })
+    @DeleteMapping("/bookings")
+    public ResponseEntity<Boolean> deleteBooking(String bookingId, String userId) {
+        try {
+                        Boolean ret = this.bookingService.deleteBooking(bookingId, userId);
+                        return new ResponseEntity<>(ret, HttpStatus.OK);
+        } catch (Exception e) {
+                        e.printStackTrace(new java.io.PrintStream(System.out));
+                        System.out.println(e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

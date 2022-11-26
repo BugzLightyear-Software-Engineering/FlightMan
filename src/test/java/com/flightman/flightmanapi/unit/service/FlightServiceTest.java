@@ -47,7 +47,7 @@ public class FlightServiceTest {
     private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
     private Time departure_time = new Time(100);
     private Time arrival_time = new Time(500);
-    private Flight flight = new Flight(source, dest, model, departure_time, arrival_time, null);
+    private Flight flight = new Flight(source, dest, model, departure_time, arrival_time, null, 100);
 
     private FlightModel new_model = new FlightModel("MNameNew", "123aNew", 120, 20, 6);
     private Time new_departure_time = new Time(200);
