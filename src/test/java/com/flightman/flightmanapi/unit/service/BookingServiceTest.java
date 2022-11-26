@@ -92,7 +92,7 @@ public class BookingServiceTest {
                 when(flightRepository.findByFlightId(any())).thenReturn(flight);
                 when(userRepository.findByUserId(any())).thenReturn(user);
                 when(bookingRepository.save(any())).thenReturn(booking);
-                Booking expected = bookingService.book(validUser, validFlight, null, tomorrowDateString, true);
+                Booking expected = bookingService.book(validUser, validFlight, null, tomorrowDateString);
                 assertNotNull(expected);
         }
 

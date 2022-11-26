@@ -53,7 +53,7 @@ public class Flight {
         private Time delayTime;
 
         public Flight() {
-        };
+        }
 
         public Flight(Airport sourceAirport, Airport destAirport, FlightModel flightModel, Time departureTime,
                         Time estArrivalTime, Time delayTime) {

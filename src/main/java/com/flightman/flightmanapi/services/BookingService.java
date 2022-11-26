@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,11 +38,13 @@ public class BookingService {
         @Autowired
         private LuggageRepository luggageRepository;
 
+        private static final Logger logger = LogManager.getLogger(BookingService.class);
+
         /*
          * Method that returns a list of all bookings in the database.
          */
         public List<Booking> get(UUID userId) {
-                List<Booking> bookingsList = new ArrayList<Booking>();
+                List<Booking> bookingsList = new ArrayList<>();
                 if (userId == null) {
                         this.bookingRepository.findAll().forEach(bookingsList::add);
                 } else {
@@ -55,10 +59,7 @@ public class BookingService {
          */
         public Boolean validateUser(String userId) {
                 User u = this.userRepository.findByUserId(UUID.fromString(userId));
-                if (u != null) {
-                        return true;
-                }
-                return false;
+                return u != null;
         }
 
         /*
@@ -66,10 +67,7 @@ public class BookingService {
          */
         public Boolean validateFlight(String flightId) {
                 Flight f = this.flightRepository.findByFlightId(UUID.fromString(flightId));
-                if (f != null) {
-                        return true;
-                }
-                return false;
+                return f != null;
         }
 
         /*
@@ -124,9 +122,9 @@ public class BookingService {
                                 "29F", "30A", "30B", "30C", "30D", "30E", "30F", "31A", "31B", "31C", "31D", "31E",
                                 "31F", "32A", "32B", "32C", "32D", "32E", "32F", "33A", "33B", "33C", "33D", "33E",
                                 "33F", "34A", "34B", "34C", "34D", "34E", "34F" };
-                List<Booking> bookingsList = new ArrayList<Booking>();
+                List<Booking> bookingsList;
                 bookingsList = this.bookingRepository.findByFlightAndFlightDate(f, d);
-                List<String> takenSeats = new ArrayList<String>();
+                List<String> takenSeats = new ArrayList<>();
                 for (Booking booking : bookingsList) {
                         takenSeats.add(0, booking.getSeatNumber());
                 }
@@ -147,14 +145,12 @@ public class BookingService {
                 String date = b.getFlightDate().toString().substring(0, 10);
                 String time = b.getFlight().getDepartureTime().toString();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-                Date flight_date_time = sdf.parse(date + " " + time);
-                String cur_date = LocalDate.now().toString();
-                String cur_time = LocalTime.now().toString();
-                Date cur_date_time = sdf.parse(cur_date + " " + cur_time);
+                Date flightDateTime = sdf.parse(date + " " + time);
+                String curDate = LocalDate.now().toString();
+                String curTime = LocalTime.now().toString();
+                Date curDateTime = sdf.parse(curDate + " " + curTime);
 
-                float diff = (cur_date_time.getTime() - flight_date_time.getTime())
-                                / (float) (1000 * 60 * 60);
-                return diff;
+                return (curDateTime.getTime() - flightDateTime.getTime()) / (float) (1000 * 60 * 60);
         }
 
         /*
@@ -162,17 +158,14 @@ public class BookingService {
          */
         public Boolean getLuggageCheckInStatus(String bookingId) {
                 Booking b = this.bookingRepository.findByBookingId(UUID.fromString(bookingId));
-                if (b.getLuggage() != null) {
-                        return true;
-                }
-                return false;
+                return b.getLuggage() != null;
         }
 
         /*
          * Method that creates a record in the booking table of the database
          * after processing changes on the flight table.
          */
-        public Booking book(String userId, String flightId, String seatNumber, String date, Boolean paymentStatus) {
+        public Booking book(String userId, String flightId, String seatNumber, String date) {
                 try {
                         Date d = new SimpleDateFormat("MM-dd-yyyy").parse(date);
                         User u = this.userRepository.findByUserId(UUID.fromString(userId));
@@ -180,10 +173,10 @@ public class BookingService {
                         Integer totalSeatCount = f.getNumSeats();
                         Integer bookedSeatCount = this.bookingRepository.findByFlightAndFlightDate(f, d).size();
                         Integer availableSeats = totalSeatCount - bookedSeatCount;
-                        if (seatNumber == null || seatNumber == "") {
+                        if (seatNumber == null || seatNumber.equals("")) {
                                 seatNumber = this.generateSeatNumber(f, d);
                         }
-                        if (availableSeats > 0 && seatNumber != "") {
+                        if (availableSeats > 0 && !seatNumber.equals("")) {
                                 Booking booking;
                                 booking = new Booking(u, f, seatNumber, d, true);
                                 booking = this.bookingRepository.save(booking);
@@ -191,8 +184,9 @@ public class BookingService {
                         }
                         return null;
                 } catch (Exception e) {
-                        System.err.println("Error while booking!");
-                        e.printStackTrace(new java.io.PrintStream(System.err));
+                        logger.error("Error while booking!");
+                        logger.error(e.getStackTrace());
+                        logger.error(e);
                         return null;
                 }
         }
@@ -201,7 +195,7 @@ public class BookingService {
                 try {
                         // TODO: Check if id exists
                         Booking b = this.bookingRepository.findByBookingId(bookingId);
-                        if (b.getUserCheckIn()) {
+                        if (Boolean.TRUE.equals(b.getUserCheckIn())) {
                                 return "User is checked in already!";
                         } else {
                                 if (getTimeToFlightDeparture(b) < 2) {
@@ -214,8 +208,8 @@ public class BookingService {
 
                         }
                 } catch (Exception e) {
-                        System.err.println("Error while checking in!");
-                        e.printStackTrace(new java.io.PrintStream(System.err));
+                        logger.error(e.getStackTrace());
+                        logger.error(e);
                         return "Error occurred";
                 }
         }
@@ -226,12 +220,11 @@ public class BookingService {
                         Luggage luggage = new Luggage(count, totalWeight);
                         this.luggageRepository.save(luggage);
                         b.setLuggage(luggage);
-                        if (this.bookingRepository.save(b) != null) {
-                                return true;
-                        }
+                        this.bookingRepository.save(b);
+                        return true;
                 } catch (Exception e) {
-                        System.err.println("Error while checking in!");
-                        e.printStackTrace(new java.io.PrintStream(System.err));
+                        logger.error(e.getStackTrace());
+                        logger.error(e);
                 }
                 return false;
         }
