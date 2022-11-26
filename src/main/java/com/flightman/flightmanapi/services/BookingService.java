@@ -1,5 +1,6 @@
 package com.flightman.flightmanapi.services;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,10 +14,12 @@ import org.springframework.stereotype.Service;
 
 import com.flightman.flightmanapi.model.Booking;
 import com.flightman.flightmanapi.model.Flight;
+import com.flightman.flightmanapi.model.Luggage;
 import com.flightman.flightmanapi.model.User;
 import com.flightman.flightmanapi.repositories.BookingRepository;
 import com.flightman.flightmanapi.repositories.UserRepository;
 import com.flightman.flightmanapi.repositories.FlightRepository;
+import com.flightman.flightmanapi.repositories.LuggageRepository;
 
 @Service
 public class BookingService {
@@ -29,6 +32,9 @@ public class BookingService {
 
         @Autowired
         private UserRepository userRepository;
+
+        @Autowired
+        private LuggageRepository luggageRepository;
 
         /*
          * Method that returns a list of all bookings in the database.
@@ -44,6 +50,9 @@ public class BookingService {
                 return bookingsList;
         }
 
+        /*
+         * Method that validates if user exists
+         */
         public Boolean validateUser(String userId) {
                 User u = this.userRepository.findByUserId(UUID.fromString(userId));
                 if (u != null) {
@@ -52,6 +61,9 @@ public class BookingService {
                 return false;
         }
 
+        /*
+         * Method that validates if flight exists
+         */
         public Boolean validateFlight(String flightId) {
                 Flight f = this.flightRepository.findByFlightId(UUID.fromString(flightId));
                 if (f != null) {
@@ -60,6 +72,40 @@ public class BookingService {
                 return false;
         }
 
+        /*
+         * Method that validates if booking exists
+         */
+        public Boolean validateBooking(String bookingId) {
+                try {
+                        Booking b = this.bookingRepository.findByBookingId(UUID.fromString(bookingId));
+                        if (b != null) {
+                                return true;
+                        }
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+                return false;
+        }
+
+        /*
+         * Method that validates if check in is allowed based on time to flight
+         * departure
+         */
+        public Boolean validateCheckInTime(String bookingId) {
+                try {
+                        Booking b = this.bookingRepository.findByBookingId(UUID.fromString(bookingId));
+                        if (getTimeToFlightDeparture(b) >= -2) {
+                                return true;
+                        }
+                } catch (ParseException e) {
+                        e.printStackTrace();
+                }
+                return false;
+        }
+
+        /*
+         * Method that returns an available seat on a flight on a specific day.
+         */
         public String generateSeatNumber(Flight f, Date d) {
                 String[] possibleSeatList = new String[] { "1A", "1B", "1C", "1D", "1E", "1F", "2A", "2B", "2C", "2D",
                                 "2E", "2F", "3A", "3B", "3C", "3D", "3E", "3F", "4A", "4B", "4C", "4D", "4E", "4F",
@@ -94,6 +140,35 @@ public class BookingService {
         }
 
         /*
+         * Method that returns the number of hours for flight departure
+         * from current time.
+         */
+        public float getTimeToFlightDeparture(Booking b) throws ParseException {
+                String date = b.getFlightDate().toString().substring(0, 10);
+                String time = b.getFlight().getDepartureTime().toString();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                Date flight_date_time = sdf.parse(date + " " + time);
+                String cur_date = LocalDate.now().toString();
+                String cur_time = LocalTime.now().toString();
+                Date cur_date_time = sdf.parse(cur_date + " " + cur_time);
+
+                float diff = (cur_date_time.getTime() - flight_date_time.getTime())
+                                / (float) (1000 * 60 * 60);
+                return diff;
+        }
+
+        /*
+         * Method that returns true if luggage has been checked in already.
+         */
+        public Boolean getLuggageCheckInStatus(String bookingId) {
+                Booking b = this.bookingRepository.findByBookingId(UUID.fromString(bookingId));
+                if (b.getLuggage() != null) {
+                        return true;
+                }
+                return false;
+        }
+
+        /*
          * Method that creates a record in the booking table of the database
          * after processing changes on the flight table.
          */
@@ -122,25 +197,14 @@ public class BookingService {
                 }
         }
 
-        public String update(UUID bookingId) {
+        public String checkInUser(UUID bookingId) {
                 try {
                         // TODO: Check if id exists
                         Booking b = this.bookingRepository.findByBookingId(bookingId);
                         if (b.getUserCheckIn()) {
                                 return "User is checked in already!";
                         } else {
-                                String date = b.getFlightDate().toString().substring(0, 10);
-                                String time = b.getFlight().getDepartureTime().toString();
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-                                Date flight_date_time = sdf.parse(date + " " + time);
-
-                                String cur_date = LocalDate.now().toString();
-                                String cur_time = LocalTime.now().toString();
-                                Date cur_date_time = sdf.parse(cur_date + " " + cur_time);
-
-                                float diff = (cur_date_time.getTime() - flight_date_time.getTime())
-                                                / (float) (1000 * 60 * 60);
-                                if (diff < 2) {
+                                if (getTimeToFlightDeparture(b) < 2) {
                                         b.setUserCheckIn(true);
                                         this.bookingRepository.save(b);
                                         return "Successfully checked in";
@@ -154,5 +218,21 @@ public class BookingService {
                         e.printStackTrace(new java.io.PrintStream(System.err));
                         return "Error occurred";
                 }
+        }
+
+        public Boolean checkInLuggage(String bookingId, Integer count, float totalWeight) {
+                try {
+                        Booking b = this.bookingRepository.findByBookingId(UUID.fromString(bookingId));
+                        Luggage luggage = new Luggage(count, totalWeight);
+                        this.luggageRepository.save(luggage);
+                        b.setLuggage(luggage);
+                        if (this.bookingRepository.save(b) != null) {
+                                return true;
+                        }
+                } catch (Exception e) {
+                        System.err.println("Error while checking in!");
+                        e.printStackTrace(new java.io.PrintStream(System.err));
+                }
+                return false;
         }
 }
