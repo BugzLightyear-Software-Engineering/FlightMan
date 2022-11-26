@@ -1,4 +1,5 @@
-package com.flightman.flightmanapi.unit.controller;
+package com.flightman.flightmanapi.integration.controller;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,37 +27,42 @@ import org.springframework.util.Base64Utils;
 @WebMvcTest(controllers = FlightModelController.class)
 @ActiveProfiles
 public class FlightModelControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    
-    @MockBean
-    private FlightModelService flightModelService;
+        @Autowired
+        private MockMvc mockMvc;
 
-    private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
+        @MockBean
+        private FlightModelService flightModelService;
 
-    private String user = "abhilash";
-    private String password = "securedpasswordofsrishti";
+        private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
 
-    @Test
-    public void getModels() throws Exception {
-        List<FlightModel> created = new ArrayList<FlightModel>();
-        created.add(model);
-        given(flightModelService.getAllFlightModels()).willReturn(created);
-        mockMvc.perform(
-                        get("/api/models")
-                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
-                        .accept(MediaType.ALL)).andExpect(status().isOk());
-    }
+        private String user = "abhilash";
+        private String password = "securedpasswordofsrishti";
+
+        @Test
+        public void getModels() throws Exception {
+                List<FlightModel> created = new ArrayList<FlightModel>();
+                created.add(model);
+                given(flightModelService.getAllFlightModels()).willReturn(created);
+                mockMvc.perform(
+                                get("/api/models")
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk());
+        }
 
 }
 
-    // @Test
-    // public void createModels() throws Exception {
-    //     given(flightModelService.save(model)).willReturn(model);
-    //     mockMvc.perform(
-    //                     post("/api/model")
-    //                     .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
-    //                     .content("flightManufacturerName, String flightModelNumber, Integer seatCapacity, Integer seatRowCount, Integer seatColCount")
-    //                     .accept(MediaType.ALL)).andExpect(status().isOk());
-    // }
-    
+// @Test
+// public void createModels() throws Exception {
+// given(flightModelService.save(model)).willReturn(model);
+// mockMvc.perform(
+// post("/api/model")
+// .header(HttpHeaders.AUTHORIZATION, "Basic " +
+// Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+// .content("flightManufacturerName, String flightModelNumber, Integer
+// seatCapacity, Integer seatRowCount, Integer seatColCount")
+// .accept(MediaType.ALL)).andExpect(status().isOk());
+// }

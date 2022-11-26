@@ -1,4 +1,5 @@
-package com.flightman.flightmanapi.unit.controller;
+package com.flightman.flightmanapi.integration.controller;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,35 +28,43 @@ import org.springframework.util.Base64Utils;
 @WebMvcTest(controllers = UserController.class)
 @ActiveProfiles
 public class UserControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    
-    @MockBean
-    private UserService userService;
+        @Autowired
+        private MockMvc mockMvc;
 
-    User user = new User("FN", "LN", "1", "EM", "PN", "AD", 1, 0);
-    
-    private String auth_user = "abhilash";
-    private String password = "securedpasswordofsrishti";
+        @MockBean
+        private UserService userService;
 
-    @Test
-    public void getUser() throws Exception {
-        List<User> created = new ArrayList<User>();
-        created.add(user);
-        given(userService.getAllUsers()).willReturn(created);
-        mockMvc.perform(
-                        get("/api/users")
-                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.auth_user + ":" + this.password).getBytes()))
-                        .accept(MediaType.ALL)).andExpect(status().isOk());
-    }
+        User user = new User("FN", "LN", "1", "EM", "PN", "AD", 1, 0);
 
-    @Test
-    public void getUserByEmail() throws Exception {
-        given(userService.getUserByEmail(user.getEmail())).willReturn(user);
-        mockMvc.perform(
-                        get("/api/user/email/{email}", user.getEmail())
-                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.auth_user + ":" + this.password).getBytes()))
-                        .accept(MediaType.ALL)).andExpect(status().isOk());
-    }
+        private String auth_user = "abhilash";
+        private String password = "securedpasswordofsrishti";
+
+        @Test
+        public void getUser() throws Exception {
+                List<User> created = new ArrayList<User>();
+                created.add(user);
+                given(userService.getAllUsers()).willReturn(created);
+                mockMvc.perform(
+                                get("/api/users")
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.auth_user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk());
+        }
+
+        @Test
+        public void getUserByEmail() throws Exception {
+                given(userService.getUserByEmail(user.getEmail())).willReturn(user);
+                mockMvc.perform(
+                                get("/api/user/email/{email}", user.getEmail())
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.auth_user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk());
+        }
 
 }
