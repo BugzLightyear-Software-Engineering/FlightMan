@@ -6,7 +6,6 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import java.sql.Time;
-import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,7 +31,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/api")
 @RestController
-@Api(description = "Set of endpoints for Creating, Finding, and Deleting Flights.")
+@Api("Set of endpoints for Creating, Finding, and Deleting Flights.")
 public class FlightController {
     
     @Autowired
@@ -48,8 +47,7 @@ public class FlightController {
         @ApiParam(name = "Destination Abbreviation", value = "Abbreviation of the Destination Airport") @RequestParam(required = false) String destAbv){
 
         try {
-            List<Flight> flightList = new ArrayList<Flight>();
-            flightList = flightService.getFlights(sourceAbv, destAbv);
+            List<Flight> flightList = flightService.getFlights(sourceAbv, destAbv);
             if(!flightList.isEmpty())
                 return new ResponseEntity<>(flightList, HttpStatus.OK);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -58,7 +56,7 @@ public class FlightController {
         catch (Exception e) {
             e.printStackTrace(new java.io.PrintStream(System.err));
             System.err.println(e);
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -75,7 +73,7 @@ public class FlightController {
             } catch (Exception e) {
                     e.printStackTrace(new java.io.PrintStream(System.err));
                     System.err.println(e);
-                    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
     }
 
@@ -92,7 +90,7 @@ public class FlightController {
             } catch (Exception e) {
                     e.printStackTrace(new java.io.PrintStream(System.err));
                     System.err.println(e);
-                    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                    return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
             }
     }
 
@@ -109,7 +107,7 @@ public class FlightController {
         } catch (Exception e) {
                 e.printStackTrace(new java.io.PrintStream(System.err));
                 System.err.println(e);
-                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

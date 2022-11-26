@@ -99,22 +99,6 @@
                                 <groupId>org.apache.maven.plugins</groupId>
                                 <artifactId>maven-checkstyle-plugin</artifactId>
                                 <version>3.0.0</version>
-                                <!-- <executions>
-                                        <execution>
-                                                <?m2e execute onConfiguration,onIncremental?>
-                                                <id>validate</id>
-                                                <phase>validate</phase>
-                                                <configuration>
-                                                        <encoding>UTF-8</encoding>
-                                                        <consoleOutput>true</consoleOutput>
-                                                        <failsOnError>false</failsOnError>
-                                                        <linkXRef>false</linkXRef>
-                                                </configuration>
-                                                <goals>
-                                                        <goal>check</goal>
-                                                </goals>
-                                        </execution>
-                                </executions> -->
                         </plugin>
                         <plugin>
                         <groupId>org.jacoco</groupId>
@@ -142,9 +126,4 @@
                         </plugin>
 		</plugins>
 	</build>
-        <!-- <reporting>
-                <plugins>
-                        
-                </plugins>
-        </reporting> -->
 </project>

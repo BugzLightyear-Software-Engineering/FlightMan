@@ -1,17 +1,14 @@
 package com.flightman.flightmanapi.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +25,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/api")
 @RestController
-@Api(description = "Set of endpoints for Creating, Finding, and Deleting Flight Models.")
+@Api("Set of endpoints for Creating, Finding, and Deleting Flight Models.")
 public class FlightModelController {
     
     @Autowired
@@ -46,8 +43,7 @@ public class FlightModelController {
     public ResponseEntity<List<FlightModel>> getFlightModels(){
 
         try {
-            List<FlightModel> flightModelList = new ArrayList<FlightModel>();
-            flightModelList = flightModelService.getAllFlightModels();
+            List<FlightModel> flightModelList = flightModelService.getAllFlightModels();
             if(!flightModelList.isEmpty())
                 return new ResponseEntity<>(flightModelList, HttpStatus.OK);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -56,7 +52,7 @@ public class FlightModelController {
         catch (Exception e) {
             e.printStackTrace(new java.io.PrintStream(System.err));
             System.err.println(e);
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -72,13 +68,13 @@ public class FlightModelController {
     public ResponseEntity<?> createFlightModel(@RequestBody FlightModel flightModel)   
     {  
         if(flightModel.getSeatCapacity() < 0){
-                return new ResponseEntity<String>("The seat capacity cannot be negative", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("The seat capacity cannot be negative", HttpStatus.BAD_REQUEST);
         }
         if(flightModel.getSeatRowCount() < 0){
-                return new ResponseEntity<String>("The seat row count cannot be negative", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("The seat row count cannot be negative", HttpStatus.BAD_REQUEST);
         }
         if(flightModel.getSeatColCount() < 0){
-                return new ResponseEntity<String>("The seat col count cannot be negative", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("The seat col count cannot be negative", HttpStatus.BAD_REQUEST);
         }
         try {
                 FlightModel flightModelcreated = flightModelService.save(flightModel);
@@ -87,7 +83,7 @@ public class FlightModelController {
         } catch (Exception e) {
                 e.printStackTrace(new java.io.PrintStream(System.err));
                 System.err.println(e);
-                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -108,7 +104,7 @@ public class FlightModelController {
             } catch (Exception e) {
                     e.printStackTrace(new java.io.PrintStream(System.err));
                     System.err.println(e);
-                    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                    return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
             }
     }
 }
