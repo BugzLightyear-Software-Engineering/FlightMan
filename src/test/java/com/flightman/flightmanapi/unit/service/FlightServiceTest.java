@@ -1,6 +1,7 @@
 package com.flightman.flightmanapi.unit.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.sql.Time;
@@ -15,12 +16,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.flightman.flightmanapi.model.Airport;
 import com.flightman.flightmanapi.model.Flight;
 import com.flightman.flightmanapi.model.FlightModel;
+import com.flightman.flightmanapi.repositories.BookingRepository;
+import com.flightman.flightmanapi.repositories.FlightModelRepository;
 import com.flightman.flightmanapi.repositories.FlightRepository;
 import com.flightman.flightmanapi.services.FlightService;
 
@@ -29,7 +33,13 @@ import com.flightman.flightmanapi.services.FlightService;
 @ContextConfiguration(classes = {FlightService.class, FlightRepository.class})
 public class FlightServiceTest {
     @MockBean
+    private BookingRepository bookingRepository;
+
+    @MockBean
     private FlightRepository flightRepository;
+
+    @MockBean
+    private FlightModelRepository flightModelRepository;
 
     @Autowired
     @InjectMocks
@@ -70,7 +80,8 @@ public class FlightServiceTest {
 
     @Test
     public void whenGivenId_shouldDeleteFlight_ifFound(){
-        when(flightRepository.findByFlightId(flight.getFlightId())).thenReturn(flight);
+        when(bookingRepository.deleteByFlight(flight)).thenReturn((long) 0);
+        when(flightRepository.deleteByFlightId(flight.getFlightId())).thenReturn(1);
         flightService.deleteFlightById(flight.getFlightId());
         verify(flightRepository).deleteByFlightId(flight.getFlightId());
     }
