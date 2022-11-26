@@ -18,4 +18,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
         List<Booking> findByFlightAndFlightDate(Flight f, Date d);
         Booking findByBookingId(UUID id);
 
+        Long deleteByFlight(Flight flight);
+
 }
