@@ -1,12 +1,12 @@
 package com.flightman.flightmanapi.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,38 +46,103 @@ public class BookingController {
 		try {
                         List<Booking> bookingsList = new ArrayList<Booking>();
                         bookingsList = bookingService.get(userId);
-                        if(!bookingsList.isEmpty())
-                                return new ResponseEntity<>(bookingsList, HttpStatus.OK);
-                        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} catch (Exception e) {
-                        e.printStackTrace(new java.io.PrintStream(System.err));
-                        System.err.println(e);
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-    /* 
-     * Method that creates a new record in the Booking table by associating the supplied userId and flightId. 
-     * If failure occurs during booking, returns HTTP NO_CONTENT 
-    */
-    @ApiOperation(value = "Create a new booking", notes = "Create a new booking for a user")
-    @ApiResponses({ @ApiResponse(code = 200, message = "Booking was successfully created"),
-                    @ApiResponse(code = 400, message = "Incorrect or invalid data"),
-                    @ApiResponse(code = 500, message = "There was an unexpected problem during booking creation") })
-    @PostMapping("/bookings")
-	public ResponseEntity<Booking> createBooking(String userId, String flightId, @RequestParam(required = false) String seatNumber, @DateTimeFormat(pattern = "MM-dd-yyyy") Date date, Boolean useRewardPoints) {
-		try {
-                        Booking booking = this.bookingService.book(userId, flightId, seatNumber, date, true, useRewardPoints);
-                        if (booking != null){
-                                return new ResponseEntity<>(booking, HttpStatus.OK);
+                        return new ResponseEntity<>(bookingsList, HttpStatus.OK);
+                } catch (Exception e) {
+                        e.printStackTrace(new java.io.PrintStream(System.out));
+                        System.out.println(e);
+                        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+        }
+        /*
+         * Method that creates a new record in the Booking table by associating the
+         * supplied userId and flightId.
+         * If failure occurs during booking, returns HTTP NO_CONTENT
+         */
+        @ApiOperation(value = "Create Bookings", notes = "Takes in the user ID, flight ID, seat number, and the date of the flight. It books the flight if seats are available and returns the booking details.")
+        @ApiResponses({ @ApiResponse(code = 201, message = "The created booking is successfully returned. If there are no bookings, an empty list is returned."),
+                        @ApiResponse(code = 500, message = "There was an unexpected problem while creating bookings") })
+        @PostMapping("/bookings")
+        public ResponseEntity<?> createBooking(String userId, String flightId,
+                        @RequestParam(required = false) String seatNumber, String date, Boolean useRewardPoints) {
+                Date d;
+                if (!this.bookingService.validateUser(userId)) {
+                        return new ResponseEntity<>("Invalid User ID", HttpStatus.BAD_REQUEST);
+                }
+                if (!this.bookingService.validateFlight(flightId)) {
+                        return new ResponseEntity<>("Invalid Flight ID", HttpStatus.BAD_REQUEST);
+                }
+                try {
+                        SimpleDateFormat DateFor = new SimpleDateFormat("MM-dd-yyyy");
+                        d = DateFor.parse(date);
+                        date = DateFor.format(d);
+                        if (d.before(new Date())) {
+                                return new ResponseEntity<>("Invalid Date", HttpStatus.BAD_REQUEST);
                         }
-                        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} catch (Exception e) {
+                } catch (Exception e) {
+                        return new ResponseEntity<>("Invalid Date", HttpStatus.BAD_REQUEST);
+                }
+                try {
+                        Booking booking = this.bookingService.book(userId, flightId, seatNumber, date, true, useRewardPoints);
+                        if (booking != null) {
+                                return new ResponseEntity<>(booking, HttpStatus.CREATED);
+                        }
+                        return new ResponseEntity<>("Could not create booking(s)", HttpStatus.INTERNAL_SERVER_ERROR);
+                } catch (Exception e) {
+                        e.printStackTrace(new java.io.PrintStream(System.out));
+                        System.out.println(e);
+                        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+        }
+
+        @PostMapping("/bookings/id/{id}/usercheckin")
+        public ResponseEntity<String> userCheckIn(@PathVariable("id") UUID bookingId) {
+                try {
+                        String checkedIn = this.bookingService.checkInUser(bookingId);
+                        return new ResponseEntity<>(checkedIn, HttpStatus.OK);
+
+                } catch (Exception e) {
                         e.printStackTrace(new java.io.PrintStream(System.err));
                         System.err.println(e);
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+                        return new ResponseEntity<>("There was a error with the checkin process!",
+                                        HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+        }
+
+        @PostMapping("/bookings/id/{id}/luggagecheckin")
+        public ResponseEntity<?> luggageCheckIn(@PathVariable("id") String bookingId,
+                        @RequestParam(required = true) Integer count,
+                        @RequestParam(required = true) float totalWeight) {
+                if (bookingId == null || bookingId == "" || !this.bookingService.validateBooking(bookingId)) {
+                        return new ResponseEntity<>("Invalid Booking ID", HttpStatus.BAD_REQUEST);
+                }
+                if (!this.bookingService.validateCheckInTime(bookingId)) {
+                        return new ResponseEntity<>("Check in is only allowed two hours before flight departure",
+                                        HttpStatus.BAD_REQUEST);
+                }
+                if (this.bookingService.getLuggageCheckInStatus(bookingId)) {
+                        return new ResponseEntity<>("Luggage has been already checked in!",
+                                        HttpStatus.BAD_REQUEST);
+                }
+                if (count < 0 || count > 2) {
+                        return new ResponseEntity<>("Only 0 to 2 luggages are allowed",
+                                        HttpStatus.BAD_REQUEST);
+                }
+                if (totalWeight < 0 || totalWeight > 46) {
+                        return new ResponseEntity<>("Both luggages can weigh only upto 46 kgs",
+                                        HttpStatus.BAD_REQUEST);
+                }
+                try {
+                        if (this.bookingService.checkInLuggage(bookingId, count, totalWeight)) {
+                                return new ResponseEntity<>("Luggage checked In Successfully!", HttpStatus.OK);
+                        }
+                        return new ResponseEntity<>("Unable to check in luggage!", HttpStatus.OK);
+                } catch (Exception e) {
+                        e.printStackTrace(new java.io.PrintStream(System.err));
+                        System.err.println(e);
+                        return new ResponseEntity<>("There was a error with the luggage checkin process!",
+                                        HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+        }
 
     @ApiOperation(value = "Delete a booking", notes = "Delete a booking for a user")
     @ApiResponses({ @ApiResponse(code = 200, message = "Booking was successfully deleted"),
@@ -94,21 +159,4 @@ public class BookingController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @ApiOperation(value = "Check in a user for their booking", notes = "Check a user in")
-    @ApiResponses({ @ApiResponse(code = 200, message = "User was successfully checked in"),
-                    @ApiResponse(code = 400, message = "Incorrect or invalid data"),
-                    @ApiResponse(code = 500, message = "There was an unexpected problem during check in") })
-    @PostMapping("/bookings/id/{id}/usercheckin")
-	public ResponseEntity<String> userCheckIn(@PathVariable("id") UUID bookingId) {
-		try {
-                        String checkedIn = this.bookingService.update(bookingId);
-                        return new ResponseEntity<>(checkedIn, HttpStatus.OK);
-                        
-		} catch (Exception e) {
-                        e.printStackTrace(new java.io.PrintStream(System.err));
-                        System.err.println(e);
-			return new ResponseEntity<>("There was a error with the checkin process!", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
 }
