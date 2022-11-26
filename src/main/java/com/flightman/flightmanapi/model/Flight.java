@@ -56,7 +56,7 @@ public class Flight {
         private int cost;
 
         public Flight() {
-        };
+        }
 
         public Flight(Airport sourceAirport, Airport destAirport, FlightModel flightModel, Time departureTime,
                         Time estArrivalTime, Time delayTime, int cost) {

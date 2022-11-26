@@ -72,7 +72,7 @@ public class BookingControllerTest_Unit {
                 String tomorrowDateString = f.format(tomorrowDate);
                 tomorrowDate = formatter.parse(tomorrowDateString);
 
-                when(bookingService.book(validUser, validFlight, null, tomorrowDateString, true, false))
+                when(bookingService.book(validUser, validFlight, null, tomorrowDateString, false))
                                 .thenReturn(booking);
                 when(bookingService.validateUser(validUser)).thenReturn(true);
                 when(bookingService.validateFlight(validFlight)).thenReturn(true);
