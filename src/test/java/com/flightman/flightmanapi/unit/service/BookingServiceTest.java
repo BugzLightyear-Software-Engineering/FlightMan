@@ -65,7 +65,7 @@ public class BookingServiceTest {
         private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
         private Time departure_time = new Time(100);
         private Time arrival_time = new Time(500);
-        private Flight flight = new Flight(source, dest, model, departure_time, arrival_time, 120, null);
+        private Flight flight = new Flight(source, dest, model, departure_time, arrival_time, null);
 
         User user = new User("FN", "LN", "123456789", "r@domain.com",
                         "passportNumber", "Address", 1, 0);

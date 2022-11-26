@@ -15,124 +15,118 @@ import javax.persistence.*;
 @ApiModel(description = "Class representing a flight in the system")
 public class Flight {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @ApiModelProperty(notes = "Unique identifier of the flight", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6", required = true)
-    private UUID flightId;
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        @ApiModelProperty(notes = "Unique identifier of the flight", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6", required = true)
+        private UUID flightId;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "sourceAirportId")
-    @ApiModelProperty(notes = "Source Airport Object")
-    private Airport sourceAirport;
+        @NotNull
+        @ManyToOne
+        @JoinColumn(name = "sourceAirportId")
+        @ApiModelProperty(notes = "Source Airport Object")
+        private Airport sourceAirport;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "destAirportId")
-    @ApiModelProperty(notes = "Destination Airport Object")
-    private Airport destAirport;
+        @NotNull
+        @ManyToOne
+        @JoinColumn(name = "destAirportId")
+        @ApiModelProperty(notes = "Destination Airport Object")
+        private Airport destAirport;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "flightModelId")
-    @ApiModelProperty(notes = "Flight Model Object")
-    private FlightModel flightModel;
+        @NotNull
+        @ManyToOne
+        @JoinColumn(name = "flightModelId")
+        @ApiModelProperty(notes = "Flight Model Object")
+        private FlightModel flightModel;
 
-    @NotNull
-    @Column(name = "departureTime")
-    @ApiModelProperty(notes = "The time the flight departs")
-    private Time departureTime;
+        @NotNull
+        @Column(name = "departureTime")
+        @ApiModelProperty(notes = "The time the flight departs")
+        private Time departureTime;
 
-    @ApiModelProperty(notes = "The time the flight is estimated to arrive by")
-    @NotNull
-    @Column(name = "estArrivalTime")
-    private Time estArrivalTime;
+        @ApiModelProperty(notes = "The time the flight is estimated to arrive by")
+        @NotNull
+        @Column(name = "estArrivalTime")
+        private Time estArrivalTime;
 
-    @NotNull
-    @Column(name = "numSeats")
-    @ApiModelProperty(notes = "The number of seats in the flight")
-    private Integer numSeats;
+        @Column(name = "delayTime")
+        @ApiModelProperty(notes = "The time the flight might be delayed by")
+        private Time delayTime;
 
-    @Column(name = "delayTime")
-    @ApiModelProperty(notes = "The time the flight might be delayed by")
-    private Time delayTime;
+        public Flight() {
+        };
 
-    public Flight(){};
+        public Flight(Airport sourceAirport, Airport destAirport, FlightModel flightModel, Time departureTime,
+                        Time estArrivalTime, Time delayTime) {
+                this.sourceAirport = sourceAirport;
+                this.destAirport = destAirport;
+                this.flightModel = flightModel;
+                this.departureTime = departureTime;
+                this.estArrivalTime = estArrivalTime;
+                this.delayTime = delayTime;
+        }
 
-    public Flight(Airport sourceAirport, Airport destAirport, FlightModel flightModel, Time departureTime, Time estArrivalTime,
-                        Integer numSeats, Time delayTime) {
-		this.sourceAirport = sourceAirport;
-        this.destAirport = destAirport;
-        this.flightModel = flightModel;
-        this.departureTime = departureTime;
-        this.estArrivalTime = estArrivalTime;
-        this.numSeats = numSeats;
-        this.delayTime = delayTime;
-	}
+        public UUID getFlightId() {
+                return flightId;
+        }
 
-    public UUID getFlightId() {
-        return flightId;
-    }
+        public void setFlightId(UUID flightId) {
+                this.flightId = flightId;
+        }
 
-    public void setFlightId(UUID flightId) {
-        this.flightId = flightId;
-    }
+        public Time getDepartureTime() {
+                return departureTime;
+        }
 
-    public Time getDepartureTime() {
-        return departureTime;
-    }
+        public void setDepartureTime(Time departureTime) {
+                this.departureTime = departureTime;
+        }
 
-    public void setDepartureTime(Time departureTime) {
-        this.departureTime = departureTime;
-    }
+        public Time getEstArrivalTime() {
+                return estArrivalTime;
+        }
 
-    public Time getEstArrivalTime() {
-        return estArrivalTime;
-    }
+        public void setEstArrivalTime(Time estArrivalTime) {
+                this.estArrivalTime = estArrivalTime;
+        }
 
-    public void setEstArrivalTime(Time estArrivalTime) {
-        this.estArrivalTime = estArrivalTime;
-    }
+        public Integer getNumSeats() {
+                return this.flightModel.getSeatCapacity();
+        }
 
-    public Integer getNumSeats() {
-        return numSeats;
-    }
+        public void setNumSeats(Integer numSeats) {
+                this.flightModel.setSeatCapacity(numSeats);
+        }
 
-    public void setNumSeats(Integer numSeats) {
-        this.numSeats = numSeats;
-    }
+        public Time getDelayTime() {
+                return delayTime;
+        }
 
-    public Time getDelayTime() {
-        return delayTime;
-    }
+        public void setDelayTime(Time delayTime) {
+                this.delayTime = delayTime;
+        }
 
-    public void setDelayTime(Time delayTime) {
-        this.delayTime = delayTime;
-    }
+        public Airport getSourceAirport() {
+                return sourceAirport;
+        }
 
-    public Airport getSourceAirport() {
-        return sourceAirport;
-    }
+        public void setSourceAirport(Airport sourceAirport) {
+                this.sourceAirport = sourceAirport;
+        }
 
-    public void setSourceAirport(Airport sourceAirport) {
-        this.sourceAirport = sourceAirport;
-    }
+        public Airport getDestAirport() {
+                return destAirport;
+        }
 
-    public Airport getDestAirport() {
-        return destAirport;
-    }
+        public void setDestAirport(Airport destAirport) {
+                this.destAirport = destAirport;
+        }
 
-    public void setDestAirport(Airport destAirport) {
-        this.destAirport = destAirport;
-    }
+        public FlightModel getFlightModel() {
+                return flightModel;
+        }
 
-    public FlightModel getFlightModel() {
-        return flightModel;
-    }
-
-    public void setFlightModel(FlightModel flightModel) {
-        this.flightModel = flightModel;
-    }
+        public void setFlightModel(FlightModel flightModel) {
+                this.flightModel = flightModel;
+        }
 
 }
-
