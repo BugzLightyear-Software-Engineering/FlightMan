@@ -28,6 +28,7 @@ import com.flightman.flightmanapi.model.FlightModel;
 import com.flightman.flightmanapi.model.User;
 import com.flightman.flightmanapi.repositories.BookingRepository;
 import com.flightman.flightmanapi.repositories.FlightRepository;
+import com.flightman.flightmanapi.repositories.LuggageRepository;
 import com.flightman.flightmanapi.repositories.UserRepository;
 import com.flightman.flightmanapi.services.BookingService;
 import com.flightman.flightmanapi.services.FlightService;
@@ -44,6 +45,9 @@ public class BookingServiceTest {
 
         @MockBean
         private UserRepository userRepository;
+
+        @MockBean
+        private LuggageRepository luggageRepository;
 
         @Autowired
         @InjectMocks

@@ -93,13 +93,49 @@ public class BookingController {
         @PostMapping("/bookings/id/{id}/usercheckin")
         public ResponseEntity<String> userCheckIn(@PathVariable("id") UUID bookingId) {
                 try {
-                        String checkedIn = this.bookingService.update(bookingId);
+                        String checkedIn = this.bookingService.checkInUser(bookingId);
                         return new ResponseEntity<>(checkedIn, HttpStatus.OK);
 
                 } catch (Exception e) {
                         e.printStackTrace(new java.io.PrintStream(System.err));
                         System.err.println(e);
                         return new ResponseEntity<>("There was a error with the checkin process!",
+                                        HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+        }
+
+        @PostMapping("/bookings/id/{id}/luggagecheckin")
+        public ResponseEntity<?> luggageCheckIn(@PathVariable("id") String bookingId,
+                        @RequestParam(required = true) Integer count,
+                        @RequestParam(required = true) float totalWeight) {
+                if (bookingId == null || bookingId == "" || !this.bookingService.validateBooking(bookingId)) {
+                        return new ResponseEntity<>("Invalid Booking ID", HttpStatus.BAD_REQUEST);
+                }
+                if (!this.bookingService.validateCheckInTime(bookingId)) {
+                        return new ResponseEntity<>("Check in is only allowed two hours before flight departure",
+                                        HttpStatus.BAD_REQUEST);
+                }
+                if (this.bookingService.getLuggageCheckInStatus(bookingId)) {
+                        return new ResponseEntity<>("Luggage has been already checked in!",
+                                        HttpStatus.BAD_REQUEST);
+                }
+                if (count < 0 || count > 2) {
+                        return new ResponseEntity<>("Only 0 to 2 luggages are allowed",
+                                        HttpStatus.BAD_REQUEST);
+                }
+                if (totalWeight < 0 || totalWeight > 46) {
+                        return new ResponseEntity<>("Both luggages can weigh only upto 46 kgs",
+                                        HttpStatus.BAD_REQUEST);
+                }
+                try {
+                        if (this.bookingService.checkInLuggage(bookingId, count, totalWeight)) {
+                                return new ResponseEntity<>("Luggage checked In Successfully!", HttpStatus.OK);
+                        }
+                        return new ResponseEntity<>("Unable to check in luggage!", HttpStatus.OK);
+                } catch (Exception e) {
+                        e.printStackTrace(new java.io.PrintStream(System.err));
+                        System.err.println(e);
+                        return new ResponseEntity<>("There was a error with the luggage checkin process!",
                                         HttpStatus.INTERNAL_SERVER_ERROR);
                 }
         }
