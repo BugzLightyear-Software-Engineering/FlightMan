@@ -1,7 +1,6 @@
 package com.flightman.flightmanapi.services;
 
 import java.sql.Time;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,14 +25,14 @@ public class FlightService {
     private BookingRepository bookingRepository;
     
     public List<Flight> getAllFlights() {
-        return (List<Flight>) flightRepository.findAll();
+        return flightRepository.findAll();
     }
 
     public List<Flight> getFlights(String sourceAbv, String destAbv){
-        List<Flight> flightList = new ArrayList<Flight>();
-
-        if(sourceAbv == null && destAbv == null)
-            flightList = getAllFlights();
+        List<Flight> flightList;
+        if(sourceAbv == null && destAbv == null){
+            flightList = flightRepository.findAll();
+        } 
     
         else if ( destAbv == null){
             flightList = flightRepository.findBySourceAirportAirportAbvName(sourceAbv);

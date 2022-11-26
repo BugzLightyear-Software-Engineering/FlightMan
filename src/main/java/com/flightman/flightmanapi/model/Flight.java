@@ -69,10 +69,6 @@ public class Flight {
                 return flightId;
         }
 
-        public void setFlightId(UUID flightId) {
-                this.flightId = flightId;
-        }
-
         public Time getDepartureTime() {
                 return departureTime;
         }

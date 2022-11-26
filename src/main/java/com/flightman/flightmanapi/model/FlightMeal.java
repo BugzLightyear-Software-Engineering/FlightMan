@@ -23,8 +23,6 @@ public class FlightMeal  implements Serializable{
     @ApiModelProperty(notes = "Meal object")
     private Meal meal;
 
-    public FlightMeal(){};
-
     public FlightMeal(Flight flight, Meal meal){
         this.flight = flight;
         this.meal = meal;

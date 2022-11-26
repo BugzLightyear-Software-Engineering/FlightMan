@@ -12,11 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -71,7 +69,7 @@ public class FlightServiceTest {
 
     @Test
     public void whenUpdateFlight_shouldReturnFlight() {
-
+            new_model.setFlightModelId(10);
             Mockito.when(flightRepository.findByFlightId(flight.getFlightId())).thenReturn(flight);
             Mockito.when(flightRepository.save(any())).thenReturn(flight);
 
@@ -94,6 +92,31 @@ public class FlightServiceTest {
             List<Flight> expected = flightService.getAllFlights();
             assertEquals(expected, flights);
             verify(flightRepository).findAll();
+
+    }
+
+    @Test
+    public void shouldReturnFlightBySourceDestination() {
+            List<Flight> flights = new ArrayList<Flight>();
+            flights.add(flight);
+            when(flightRepository.findBySourceAirportAirportAbvName("SN")).thenReturn(flights);
+            when(flightRepository.findByDestAirportAirportAbvName("DN")).thenReturn(flights);
+            when(flightRepository.findAll()).thenReturn(flights);
+            when(flightRepository.findBySourceAirportAirportAbvNameAndDestAirportAirportAbvName("SN", "DN")).thenReturn(flights);
+
+            List<Flight> expected1 = flightService.getFlights(null, null);
+            List<Flight> expected2 = flightService.getFlights("SN", null);
+            List<Flight> expected3 = flightService.getFlights(null, "DN");
+            List<Flight> expected4 = flightService.getFlights("SN", "DN");
+            assertEquals(expected1, flights);
+            assertEquals(expected2, flights);
+            assertEquals(expected3, flights);
+            assertEquals(expected4, flights);
+            
+            verify(flightRepository).findBySourceAirportAirportAbvName("SN");
+            verify(flightRepository).findByDestAirportAirportAbvName("DN");
+            verify(flightRepository).findAll();
+            verify(flightRepository).findBySourceAirportAirportAbvNameAndDestAirportAirportAbvName("SN", "DN");
 
     }
 
