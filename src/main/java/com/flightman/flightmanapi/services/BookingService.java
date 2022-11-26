@@ -106,8 +106,10 @@ public class BookingService {
 
     public String update(UUID bookingId) {
         try {   
-                // TODO: Check if id exists
                 Booking b = this.bookingRepository.findByBookingId(bookingId);
+                if(b ==  null){
+                        return "Invalid input";
+                }
                 if(b.getUserCheckIn()){
                         return "User is checked in already!";
                 }

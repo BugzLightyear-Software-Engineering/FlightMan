@@ -6,12 +6,10 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -97,18 +95,19 @@ public class FlightModelController {
     */
     @ApiOperation(value = "Delete flight model", notes = "Deletes a flight model by the given Flight Model Id")
     @ApiResponses({@ApiResponse(code = 200, message = "Flight Model is successfully deleted"),
+                   @ApiResponse(code = 400, message = "Flight Model doesnt exist"),
                    @ApiResponse(code = 500, message = "If any other error occurs")})
     @Transactional
     @DeleteMapping("/model/id/{id}")
-    public ResponseEntity<Boolean> deleteModelById(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> deleteModelById(@PathVariable("id") Integer id) {
             try {
                     if(this.flightModelService.deleteModelById(id)==1)
-                            return new ResponseEntity<>(true, HttpStatus.OK);
-                    return new ResponseEntity<>(false, HttpStatus.OK);
+                            return new ResponseEntity<>("Flight deleted", HttpStatus.OK);
+                    return new ResponseEntity<>("Flight Id doesnt exist", HttpStatus.BAD_REQUEST);
             } catch (Exception e) {
                     e.printStackTrace(new java.io.PrintStream(System.err));
                     System.err.println(e);
-                    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                    return new ResponseEntity<>("Error occured", HttpStatus.INTERNAL_SERVER_ERROR);
             }
     }
 }
