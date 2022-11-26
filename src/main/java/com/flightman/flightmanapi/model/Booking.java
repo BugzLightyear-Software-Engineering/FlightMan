@@ -20,6 +20,10 @@ public class Booking {
         @JoinColumn(name = "flight_id")
         private Flight flight;
 
+        @OneToOne
+        @JoinColumn(name = "luggage_id")
+        private Luggage luggage;
+
         @Column(name = "seatNumber")
         private String seatNumber;
 
@@ -78,6 +82,14 @@ public class Booking {
 
         public void setFlight(Flight flight) {
                 this.flight = flight;
+        }
+
+        public Luggage getLuggage() {
+                return this.luggage;
+        }
+
+        public void setLuggage(Luggage luggage) {
+                this.luggage = luggage;
         }
 
         public String getSeatNumber() {

@@ -1,21 +1,43 @@
-// package com.flightman.flightmanapi.model;
+package com.flightman.flightmanapi.model;
 
-// import java.sql.Time;
-// import java.util.UUID;
+import java.util.UUID;
 
-// import javax.persistence.*;
+import javax.persistence.*;
 
-// @Entity
-// @Table(name = "booking")
-// public class Luggage {
-//         @Id
-// 	@GeneratedValue(strategy = GenerationType.AUTO)
-// 	private UUID luggageId;
+@Entity
+@Table(name = "luggage")
+public class Luggage {
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private UUID luggageId;
 
-//         @OneToMany
-// 	@Column(name = "booking_id")
-//         private String bookingId;
-        
-//         @Column(name = "luggage_status")
-//         private String luggageStatus;
-// }
+        @Column(name = "count")
+        private Integer count;
+
+        @Column(name = "total_weight")
+        private float weight;
+
+        public Integer getCount() {
+                return this.count;
+        }
+
+        public void setCount(Integer count) {
+                this.count = count;
+        }
+
+        public float getWeight() {
+                return this.weight;
+        }
+
+        public void setWeight(float weight) {
+                this.weight = weight;
+        }
+
+        public Luggage() {
+        }
+
+        public Luggage(Integer count, float weight) {
+                this.count = count;
+                this.weight = weight;
+        }
+}
