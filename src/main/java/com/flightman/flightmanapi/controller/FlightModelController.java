@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,8 @@ public class FlightModelController {
     @Autowired
     private FlightModelService flightModelService;
 
+    private static final Logger logger = LogManager.getLogger(FlightModelController.class);
+
     /*
      * Method to get all the flight Models in the database if there are any
      * If no data, then we return NO_CONTENT
@@ -50,9 +54,9 @@ public class FlightModelController {
 
         } 
         catch (Exception e) {
-            e.printStackTrace(new java.io.PrintStream(System.err));
-            System.err.println(e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                logger.error(e.getStackTrace());
+                logger.error(e);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -81,8 +85,8 @@ public class FlightModelController {
                 Integer flightModelId = flightModelcreated.getFlightModelId();
                 return new ResponseEntity<>(flightModelId, HttpStatus.OK);
         } catch (Exception e) {
-                e.printStackTrace(new java.io.PrintStream(System.err));
-                System.err.println(e);
+                logger.error(e.getStackTrace());
+                logger.error(e);
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -98,13 +102,13 @@ public class FlightModelController {
     @DeleteMapping("/model/id/{id}")
     public ResponseEntity<Boolean> deleteModelById(@PathVariable("id") Integer id) {
             try {
-                    if(this.flightModelService.deleteModelById(id)==1)
-                            return new ResponseEntity<>(true, HttpStatus.OK);
-                    return new ResponseEntity<>(false, HttpStatus.OK);
+                if(this.flightModelService.deleteModelById(id)==1)
+                        return new ResponseEntity<>(true, HttpStatus.OK);
+                return new ResponseEntity<>(false, HttpStatus.OK);
             } catch (Exception e) {
-                    e.printStackTrace(new java.io.PrintStream(System.err));
-                    System.err.println(e);
-                    return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+                logger.error(e.getStackTrace());
+                logger.error(e);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
     }
 }

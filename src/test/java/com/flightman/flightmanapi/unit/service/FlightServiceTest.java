@@ -104,7 +104,7 @@ public class FlightServiceTest {
     @Test
     public void shouldReturnAllFlights() {
             List<Flight> flights = new ArrayList<Flight>();
-            flights.add(new Flight());
+            flights.add(flight);
             when(flightRepository.findAll()).thenReturn(flights);
             List<Flight> expected = flightService.getAllFlights();
             assertEquals(expected, flights);
