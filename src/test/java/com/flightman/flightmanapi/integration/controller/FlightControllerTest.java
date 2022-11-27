@@ -3,6 +3,7 @@ package com.flightman.flightmanapi.unit.controller;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,11 +41,16 @@ public class FlightControllerTest {
         private String password = "securedpasswordofsrishti";
 
         private Airport source = new Airport("SourceName", "SN", "Lat", "Long");
+        private Airport source2 = new Airport("SourceName2", "SN2", "Lat", "Long");
         private Airport dest = new Airport("DestName", "DN", "Lat", "Long");
+        private Airport dest2 = new Airport("DestName2", "DN2", "Lat", "Long");
         private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
         private Time departure_time = new Time(100);
         private Time arrival_time = new Time(500);
         private Flight flight = new Flight(source, dest, model, departure_time, arrival_time, null, 100);
+        private Flight flight_SN2_DN = new Flight(source2, dest, model, departure_time, arrival_time, null, 100);
+        private Flight flight_SN_DN2 = new Flight(source, dest2, model, departure_time, arrival_time, null, 100);
+        private Flight flight_SN2_DN2 = new Flight(source2, dest2, model, departure_time, arrival_time, null, 100);
 
         @Test
         public void getFlights() throws Exception {
@@ -75,12 +81,85 @@ public class FlightControllerTest {
                                                                                                 .getBytes()))
                                                 .accept(MediaType.ALL))
                                 .andExpect(status().isOk());
+                
+                List<Flight> created_empty = new ArrayList<Flight>();
+                when(flightService.getFlights(source2.getAirportAbvName(),null)).thenReturn(created_empty);
+                mockMvc.perform(
+                                get("/api/flights?sourceAbv=SN")
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isNoContent());
         }
+
+        @Test
+        public void deleteFlightById() throws Exception{
+                flight.setFlightId(UUID.randomUUID());
+                when(flightService.deleteFlightById(flight.getFlightId())).thenReturn(1);
+                mockMvc.perform(
+                                delete("/api/flight/id/{id}", flight.getFlightId())
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$").value(true));
+                
+                UUID notInDB = UUID.randomUUID();
+                when(flightService.deleteFlightById(notInDB)).thenReturn(0);
+                mockMvc.perform(
+                                delete("/api/flight/id/{id}", notInDB)
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$").value(false));
+
+        }
+        @Test
+        public void updateFlightById() throws Exception{
+                flight.setFlightId(UUID.randomUUID());
+                when(flightService.update(flight.getFlightId(), null, null, null)).thenReturn(flight);
+                mockMvc.perform(
+                                put("/api/flight/id/{id}", flight.getFlightId())
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk());
+        }
+        // @Test
+        // public void createFlight() throws Exception{
+        //         when(flightService.save(any())).thenReturn(flight);
+        //         mockMvc.perform(
+        //                 post("/api/flight")
+        //                                 .header(HttpHeaders.AUTHORIZATION,
+        //                                                 "Basic " + Base64Utils.encodeToString(
+        //                                                                 (this.user + ":" + this.password)
+        //                                                                                 .getBytes()))
+        //                                 .content("{\"flightId\": \"14b6e6b7-6e77-416e-bbee-b24513b519b7\", \"sourceAirport\": {\"airportId\": \"7199de04-60d7-45c4-9d01-d0a1ea807f73\",\"airportName\": \"Murtala Mohammed International Airport\",\"airportAbvName\": \"MM2\",\"latitude\": null,\"longitude\": null},\"destAirport\": {\"airportId\": \"d4005cf1-7842-44a7-9c34-77314d432e64\",\"airportName\": \"Hyderabad International Airport\",\"airportAbvName\": \"GMR\",\"latitude\": null,\"longitude\": null},\"flightModel\": {\"flightModelId\": 2,\"flightManufacturerName\": \"aml\",\"flightModelNumber\": \"723e\",\"seatCapacity\": 600,\"seatRowCount\": 60,\"seatColCount\": 10},\"departureTime\": \"09:00:00\",\"estArrivalTime\": \"10:00:00\",\"delayTime\": null,\"numSeats\": 600,\"cost\":\" 100\" }")
+        //                                 .contentType(MediaType.APPLICATION_JSON)
+        //                                 .accept(MediaType.ALL))
+        //                 .andExpect(status().isOk());
+                
+        //         mockMvc.perform(
+        //                 post("/api/flight")
+        //                                 .header(HttpHeaders.AUTHORIZATION,
+        //                                                 "Basic " + Base64Utils.encodeToString(
+        //                                                                 (this.user + ":" + this.password)
+        //                                                                                 .getBytes()))
+        //                                 .content("{\"flightId\": \"14b6e6b7-6e77-416e-bbee-b24513b519b7\", \"sourceAirport\": {\"airportId\": \"7199de04-60d7-45c4-9d01-d0a1ea807f73\",\"airportName\": \"Murtala Mohammed International Airport\",\"airportAbvName\": \"MM2\",\"latitude\": null,\"longitude\": null},\"destAirport\": {\"airportId\": \"d4005cf1-7842-44a7-9c34-77314d432e64\",\"airportName\": \"Hyderabad International Airport\",\"airportAbvName\": \"GMR\",\"latitude\": null,\"longitude\": null},\"flightModel\": {\"flightModelId\": 2,\"flightManufacturerName\": \"aml\",\"flightModelNumber\": \"723e\",\"seatCapacity\": 600,\"seatRowCount\": 60,\"seatColCount\": 10},\"departureTime\": \"09:00:00\",\"estArrivalTime\": \"10:00:00\",\"delayTime\": null,\"numSeats\": 600,\"cost\":\" -100\" }")
+        //                                 .contentType(MediaType.APPLICATION_JSON)
+        //                                 .accept(MediaType.ALL))
+        //                 .andExpect(status().isOk());
+        // }
 
 }
 
-// @Test
-// public void createFlight() throws Exception {
-// when(flightService.save(any())).thenReturn(flight);
-// mockMvc.perform(post("/api/flight").contentType(MediaType.APPLICATION_JSON).content(flight.toString())).andExpect(status().isOk());
-// }
+

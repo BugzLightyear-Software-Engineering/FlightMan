@@ -71,6 +71,7 @@ public class FlightModelController {
     @PostMapping("/model")
     public ResponseEntity<?> createFlightModel(@RequestBody FlightModel flightModel)   
     {  
+        System.out.println("IN MODEL");
         if(flightModel.getSeatCapacity() < 0){
                 return new ResponseEntity<>("The seat capacity cannot be negative", HttpStatus.BAD_REQUEST);
         }

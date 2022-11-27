@@ -133,4 +133,8 @@ public class Flight {
         public void setCost(int cost) {
             this.cost = cost;
         }
+
+        public void setFlightId(UUID flightId) {
+                this.flightId = flightId;
+        }
 }

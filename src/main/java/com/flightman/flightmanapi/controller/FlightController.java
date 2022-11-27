@@ -68,9 +68,13 @@ public class FlightController {
     @ApiResponses({@ApiResponse(code = 200, message = "Flight is successfully created"),
                    @ApiResponse(code = 500, message = "If any other error occurs")})
     @PostMapping("/flight")
-    public ResponseEntity<UUID> createFlight(@RequestBody Flight flight)   
+    public ResponseEntity<?> createFlight(@RequestBody Flight flight)   
     {  
             try {
+                if(flight.getCost() < 0){
+                        System.out.println("COST");
+                        return new ResponseEntity<>("Cost cannot be negative",HttpStatus.BAD_REQUEST);
+                }
                 Flight createdFlight = flightService.save(flight);
                 UUID flightId = createdFlight.getFlightId();
                 return new ResponseEntity<>(flightId, HttpStatus.OK);
@@ -81,8 +85,8 @@ public class FlightController {
         }
     }
 
-    @ApiOperation(value = "Create flight", notes = "Takes in the details of the flights and creates a new flight in the database")
-    @ApiResponses({@ApiResponse(code = 200, message = "Flight is successfully created"),
+    @ApiOperation(value = "Update flight", notes = "Can update the departure or arrival time and the flight model")
+    @ApiResponses({@ApiResponse(code = 200, message = "Flight is successfully udpateed"),
                    @ApiResponse(code = 500, message = "If any other error occurs")})
     @PutMapping("/flight/id/{flightID}")
     public ResponseEntity<UUID> updateFlight(@PathVariable UUID flightID, @RequestParam(required = false) Time departureTime, @RequestParam(required = false) Time estArrivalTime, @RequestParam(required = false) Integer flightModelID )   

@@ -48,15 +48,61 @@ public class FlightModelControllerTest {
                         .accept(MediaType.ALL)).andExpect(status().isOk());
     }
 
-}
+    @Test
+        public void deleteFlightModelById() throws Exception{
+                model.setFlightModelId(1);
+                when(flightModelService.deleteModelById(model.getFlightModelId())).thenReturn(1);
+                mockMvc.perform(
+                                delete("/api/model/id/{id}", model.getFlightModelId())
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$").value(true));
+                
 
+                when(flightModelService.deleteModelById(2)).thenReturn(0);
+                mockMvc.perform(
+                                delete("/api/model/id/{id}", 2)
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$").value(false));
+
+        }
+    
     // @Test
     // public void createModels() throws Exception {
     //     given(flightModelService.save(model)).willReturn(model);
     //     mockMvc.perform(
     //                     post("/api/model")
     //                     .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
-    //                     .content("flightManufacturerName, String flightModelNumber, Integer seatCapacity, Integer seatRowCount, Integer seatColCount")
-    //                     .accept(MediaType.ALL)).andExpect(status().isOk());
+    //                     .contentType(MediaType.APPLICATION_JSON)
+    //                     .content("{\"flightModelId\": \"1\",\"flightManufacturerName\": \"boeing\",\"flightModelNumber\": \"737e\",\"seatCapacity\": \"300\",\"seatRowCount\": \"60\",\"seatColCount\": \"5\"}"))
+    //                     .andExpect(status().isOk());
+        
+    //     mockMvc.perform(
+    //                     post("/api/model")
+    //                     .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+    //                     .contentType(MediaType.APPLICATION_JSON)
+    //                     .content("{\"flightModelId\": \"1\",\"flightManufacturerName\": \"boeing\",\"flightModelNumber\": \"737e\",\"seatCapacity\": \"300\",\"seatRowCount\": \"-60\",\"seatColCount\": \"5\"}"))
+    //                     .andExpect(status().isBadRequest());
+    //     mockMvc.perform(
+    //                         post("/api/model")
+    //                         .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+    //                         .contentType(MediaType.APPLICATION_JSON)
+    //                         .content("{\"flightModelId\": \"1\",\"flightManufacturerName\": \"boeing\",\"flightModelNumber\": \"737e\",\"seatCapacity\": \"300\",\"seatRowCount\": \"60\",\"seatColCount\": \"-5\"}"))
+    //                         .andExpect(status().isBadRequest());
     // }
+
+    
+
+}
+
+
     
