@@ -13,15 +13,21 @@ import com.flightman.flightmanapi.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-        User findByUserId(UUID userId);
+	User findByUserId(UUID userId);
 
-        User findByEmail(String email);
+	User findByEmail(String email);
 
-        @Modifying
-        @Query(value = "DELETE FROM User WHERE user_id = :id")
-        Integer deleteById(@Param("id") UUID id);
+	// findAll
 
-        @Modifying
-        @Query(value = "DELETE FROM User WHERE email = :email")
-        Integer deleteByEmail(@Param("email") String email);
+	@Modifying
+	@Query(value = "DELETE FROM User WHERE user_id = :id")
+	Integer deleteById(@Param("id") UUID id);
+
+	@Modifying
+	@Query(value = "DELETE FROM User WHERE email = :email")
+	Integer deleteByEmail(@Param("email") String email);
+
+	// deleteAll
+
+	// Create and Update: userRepository.save(user);
 }

@@ -1,4 +1,4 @@
-package com.flightman.flightmanapi.integration.controller;
+package com.flightman.flightmanapi.unit.controller;
 
 import java.sql.Time;
 import java.util.ArrayList;

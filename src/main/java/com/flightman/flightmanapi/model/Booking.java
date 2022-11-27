@@ -58,6 +58,8 @@ public class Booking {
         @ApiModelProperty(notes = "Has the user checked in")
         private Boolean userCheckIn;
 
+        // TODO : Use libs to generate get/set at runtime - LOMBOK
+
         public Booking() {
         }
 
