@@ -114,8 +114,7 @@ public class FlightControllerTest {
                                                                                 (this.user + ":" + this.password)
                                                                                                 .getBytes()))
                                                 .accept(MediaType.ALL))
-                                .andExpect(status().isOk())
-                                .andExpect(jsonPath("$").value(false));
+                                .andExpect(status().isBadRequest());
 
         }
         @Test

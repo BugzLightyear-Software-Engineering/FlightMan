@@ -54,19 +54,23 @@ public class FlightService {
 
     public Flight update(UUID flightId, Time departureTime, Time estArrivalTime, Integer flightModelId) {
         Flight f = flightRepository.findByFlightId(flightId);
-        if(departureTime != null){
-            f.setDepartureTime(departureTime);
-        }
-        if(estArrivalTime != null){
-            f.setEstArrivalTime(estArrivalTime);
-        }
-        if(flightModelId != null){
-            FlightModel m = flightModelRepository.findByFlightModelId(flightModelId);
-            if(m != null){
-                f.setFlightModel(m);
+        if(f != null){
+            if(departureTime != null){
+                f.setDepartureTime(departureTime);
             }
+            if(estArrivalTime != null){
+                f.setEstArrivalTime(estArrivalTime);
+            }
+            if(flightModelId != null){
+                FlightModel m = flightModelRepository.findByFlightModelId(flightModelId);
+                if(m != null){
+                    f.setFlightModel(m);
+                }
+            }
+            return flightRepository.save(f);
         }
-        return flightRepository.save(f);
+        return null;
+            
     }
 
     public Integer deleteFlightById(UUID id) {

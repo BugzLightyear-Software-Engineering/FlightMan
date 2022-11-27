@@ -75,8 +75,12 @@ public class FlightController {
                         return new ResponseEntity<>("Cost cannot be negative",HttpStatus.BAD_REQUEST);
                 }
                 Flight createdFlight = flightService.save(flight);
-                UUID flightId = createdFlight.getFlightId();
-                return new ResponseEntity<>(flightId, HttpStatus.OK);
+                if(createdFlight != null){
+                    UUID flightId = createdFlight.getFlightId();
+                    return new ResponseEntity<>(flightId, HttpStatus.OK);
+                }
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                
             } catch (Exception e) {
                 logger.error(e.getStackTrace());
                 logger.error(e);
@@ -93,8 +97,12 @@ public class FlightController {
             try {
                 
                 Flight updatedFlight = flightService.update(flightID, departureTime, estArrivalTime, flightModelID);
-                UUID flightId = updatedFlight.getFlightId();
-                return new ResponseEntity<>(flightId, HttpStatus.OK);
+                if(updatedFlight != null){
+                    UUID flightId = updatedFlight.getFlightId();
+                    return new ResponseEntity<>(flightId, HttpStatus.OK);
+                }
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                
             } catch (Exception e) {
                 logger.error(e.getStackTrace());
                 logger.error(e);
@@ -111,7 +119,7 @@ public class FlightController {
         try {
                 if(this.flightService.deleteFlightById(id)==1)
                     return new ResponseEntity<>(true, HttpStatus.OK);
-                return new ResponseEntity<>(false, HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
                 logger.error(e.getStackTrace());
                 logger.error(e);
