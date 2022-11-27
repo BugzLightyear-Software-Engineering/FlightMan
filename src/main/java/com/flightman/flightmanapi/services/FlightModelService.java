@@ -15,7 +15,7 @@ public class FlightModelService {
     private FlightModelRepository flightModelRepository;
     
     public List<FlightModel> getAllFlightModels() {
-        return (List<FlightModel>) flightModelRepository.findAll();
+        return flightModelRepository.findAll();
     }
 
     public FlightModel save(FlightModel flightModel) {

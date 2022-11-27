@@ -70,6 +70,8 @@ public class FlightServiceTest {
     @Test
     public void whenUpdateFlight_shouldReturnFlight() {
             new_model.setFlightModelId(10);
+
+
             Mockito.when(flightRepository.findByFlightId(flight.getFlightId())).thenReturn(flight);
             Mockito.when(flightRepository.save(any())).thenReturn(flight);
 
@@ -82,12 +84,27 @@ public class FlightServiceTest {
             assert (flight.getDepartureTime() == updated.getDepartureTime());
             assert (flight.getEstArrivalTime() == updated.getEstArrivalTime());
             verify(flightRepository).save(updated);
+
+            
+    }
+
+    @Test
+    public void whenNoUpdateFlight_shouldReturnFlight(){
+        Mockito.when(flightRepository.findByFlightId(flight.getFlightId())).thenReturn(flight);
+        Mockito.when(flightRepository.save(any())).thenReturn(flight);
+
+        Flight updated1 = flightService.update(flight.getFlightId(), null, null, null);
+        
+        assert (flight.getFlightModel().getFlightModelId()) == (updated1.getFlightModel().getFlightModelId());
+        assert (flight.getDepartureTime() == updated1.getDepartureTime());
+        assert (flight.getEstArrivalTime() == updated1.getEstArrivalTime());
+        verify(flightRepository).save(updated1);
     }
 
     @Test
     public void shouldReturnAllFlights() {
             List<Flight> flights = new ArrayList<Flight>();
-            flights.add(new Flight());
+            flights.add(flight);
             when(flightRepository.findAll()).thenReturn(flights);
             List<Flight> expected = flightService.getAllFlights();
             assertEquals(expected, flights);
@@ -126,6 +143,15 @@ public class FlightServiceTest {
         when(flightRepository.deleteByFlightId(flight.getFlightId())).thenReturn(1);
         flightService.deleteFlightById(flight.getFlightId());
         verify(flightRepository).deleteByFlightId(flight.getFlightId());
+    }
+
+    @Test
+    public void createFlight(){
+        when(flightRepository.save(flight)).thenReturn(flight);
+        Flight saved = flightService.save(flight);
+        assert(saved != null);
+        verify(flightRepository).save(flight);
+
     }
 
 }

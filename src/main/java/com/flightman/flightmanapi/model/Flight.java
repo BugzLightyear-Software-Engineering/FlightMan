@@ -55,8 +55,7 @@ public class Flight {
         @Column(name = "cost")
         private int cost;
 
-        public Flight() {
-        }
+        public Flight(){}
 
         public Flight(Airport sourceAirport, Airport destAirport, FlightModel flightModel, Time departureTime,
                         Time estArrivalTime, Time delayTime, int cost) {
@@ -135,5 +134,9 @@ public class Flight {
 
         public void setCost(int cost) {
             this.cost = cost;
+        }
+
+        public void setFlightId(UUID flightId) {
+                this.flightId = flightId;
         }
 }

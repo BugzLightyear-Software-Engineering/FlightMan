@@ -7,6 +7,8 @@ import javax.transaction.Transactional;
 
 import java.sql.Time;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +39,8 @@ public class FlightController {
     @Autowired
     private FlightService flightService;
 
+    private static final Logger logger = LogManager.getLogger(FlightController.class);
+
     @ApiOperation(value = "Get flight by Source or/and Destination", notes = "Finds the flights connecting a source and destination airport")
     @ApiResponses({@ApiResponse(code = 200, message = "Successfully found the flights"), 
                    @ApiResponse(code = 204, message = "If source or destination airport is not in database"), 
@@ -54,9 +58,9 @@ public class FlightController {
 
         } 
         catch (Exception e) {
-            e.printStackTrace(new java.io.PrintStream(System.err));
-            System.err.println(e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                logger.error(e.getStackTrace());
+                logger.error(e);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -64,33 +68,37 @@ public class FlightController {
     @ApiResponses({@ApiResponse(code = 200, message = "Flight is successfully created"),
                    @ApiResponse(code = 500, message = "If any other error occurs")})
     @PostMapping("/flight")
-    public ResponseEntity<UUID> createFlight(@RequestBody Flight flight)   
+    public ResponseEntity<?> createFlight(@RequestBody Flight flight)   
     {  
             try {
-                    Flight createdFlight = flightService.save(flight);
-                    UUID flightId = createdFlight.getFlightId();
-                    return new ResponseEntity<>(flightId, HttpStatus.OK);
+                if(flight.getCost() < 0){
+                        return new ResponseEntity<>("Cost cannot be negative",HttpStatus.BAD_REQUEST);
+                }
+                Flight createdFlight = flightService.save(flight);
+                UUID flightId = createdFlight.getFlightId();
+                return new ResponseEntity<>(flightId, HttpStatus.OK);
             } catch (Exception e) {
-                    e.printStackTrace(new java.io.PrintStream(System.err));
-                    System.err.println(e);
-                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+                logger.error(e.getStackTrace());
+                logger.error(e);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @ApiOperation(value = "Create flight", notes = "Takes in the details of the flights and creates a new flight in the database")
-    @ApiResponses({@ApiResponse(code = 200, message = "Flight is successfully created"),
+    @ApiOperation(value = "Update flight", notes = "Can update the departure or arrival time and the flight model")
+    @ApiResponses({@ApiResponse(code = 200, message = "Flight is successfully udpateed"),
                    @ApiResponse(code = 500, message = "If any other error occurs")})
     @PutMapping("/flight/id/{flightID}")
     public ResponseEntity<UUID> updateFlight(@PathVariable UUID flightID, @RequestParam(required = false) Time departureTime, @RequestParam(required = false) Time estArrivalTime, @RequestParam(required = false) Integer flightModelID )   
     {  
             try {
-                    Flight updatedFlight = flightService.update(flightID, departureTime, estArrivalTime, flightModelID);
-                    UUID flightId = updatedFlight.getFlightId();
-                    return new ResponseEntity<>(flightId, HttpStatus.OK);
+                
+                Flight updatedFlight = flightService.update(flightID, departureTime, estArrivalTime, flightModelID);
+                UUID flightId = updatedFlight.getFlightId();
+                return new ResponseEntity<>(flightId, HttpStatus.OK);
             } catch (Exception e) {
-                    e.printStackTrace(new java.io.PrintStream(System.err));
-                    System.err.println(e);
-                    return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
+                logger.error(e.getStackTrace());
+                logger.error(e);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
     }
 
@@ -105,8 +113,8 @@ public class FlightController {
                     return new ResponseEntity<>(true, HttpStatus.OK);
                 return new ResponseEntity<>(false, HttpStatus.OK);
         } catch (Exception e) {
-                e.printStackTrace(new java.io.PrintStream(System.err));
-                System.err.println(e);
+                logger.error(e.getStackTrace());
+                logger.error(e);
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

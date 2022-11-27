@@ -1,5 +1,4 @@
-package com.flightman.flightmanapi.integration.controller;
-
+package com.flightman.flightmanapi.unit.controller;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,42 +26,83 @@ import org.springframework.util.Base64Utils;
 @WebMvcTest(controllers = FlightModelController.class)
 @ActiveProfiles
 public class FlightModelControllerTest {
-        @Autowired
-        private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
+    
+    @MockBean
+    private FlightModelService flightModelService;
 
-        @MockBean
-        private FlightModelService flightModelService;
+    private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
 
-        private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
+    private String user = "abhilash";
+    private String password = "securedpasswordofsrishti";
 
-        private String user = "abhilash";
-        private String password = "securedpasswordofsrishti";
+    @Test
+    public void getModels() throws Exception {
+        List<FlightModel> created = new ArrayList<FlightModel>();
+        created.add(model);
+        given(flightModelService.getAllFlightModels()).willReturn(created);
+        mockMvc.perform(
+                        get("/api/models")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                        .accept(MediaType.ALL)).andExpect(status().isOk());
+    }
 
-        @Test
-        public void getModels() throws Exception {
-                List<FlightModel> created = new ArrayList<FlightModel>();
-                created.add(model);
-                given(flightModelService.getAllFlightModels()).willReturn(created);
+    @Test
+        public void deleteFlightModelById() throws Exception{
+                model.setFlightModelId(1);
+                when(flightModelService.deleteModelById(model.getFlightModelId())).thenReturn(1);
                 mockMvc.perform(
-                                get("/api/models")
+                                delete("/api/model/id/{id}", model.getFlightModelId())
                                                 .header(HttpHeaders.AUTHORIZATION,
                                                                 "Basic " + Base64Utils.encodeToString(
                                                                                 (this.user + ":" + this.password)
                                                                                                 .getBytes()))
                                                 .accept(MediaType.ALL))
-                                .andExpect(status().isOk());
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$").value(true));
+                
+
+                when(flightModelService.deleteModelById(2)).thenReturn(0);
+                mockMvc.perform(
+                                delete("/api/model/id/{id}", 2)
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$").value(false));
+
         }
+    
+    @Test
+    public void createModels() throws Exception {
+        given(flightModelService.save(any())).willReturn(model);
+        mockMvc.perform(
+                        post("/api/model")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"flightManufacturerName\": \"boeing\",\"flightModelNumber\": \"737e\",\"seatCapacity\": \"300\",\"seatRowCount\": \"60\",\"seatColCount\": \"5\"}"))
+                        .andExpect(status().isOk());
+        
+        mockMvc.perform(
+                        post("/api/model")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"flightManufacturerName\": \"boeing\",\"flightModelNumber\": \"737e\",\"seatCapacity\": \"300\",\"seatRowCount\": \"-60\",\"seatColCount\": \"5\"}"))
+                        .andExpect(status().isBadRequest());
+        mockMvc.perform(
+                            post("/api/model")
+                            .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"flightManufacturerName\": \"boeing\",\"flightModelNumber\": \"737e\",\"seatCapacity\": \"300\",\"seatRowCount\": \"60\",\"seatColCount\": \"-5\"}"))
+                            .andExpect(status().isBadRequest());
+    }
+
+    
 
 }
 
-// @Test
-// public void createModels() throws Exception {
-// given(flightModelService.save(model)).willReturn(model);
-// mockMvc.perform(
-// post("/api/model")
-// .header(HttpHeaders.AUTHORIZATION, "Basic " +
-// Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
-// .content("flightManufacturerName, String flightModelNumber, Integer
-// seatCapacity, Integer seatRowCount, Integer seatColCount")
-// .accept(MediaType.ALL)).andExpect(status().isOk());
-// }
+
+    

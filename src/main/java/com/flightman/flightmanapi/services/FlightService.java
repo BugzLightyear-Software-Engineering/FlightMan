@@ -60,10 +60,8 @@ public class FlightService {
         if(estArrivalTime != null){
             f.setEstArrivalTime(estArrivalTime);
         }
-        System.out.println(flightModelId);
         if(flightModelId != null){
             FlightModel m = flightModelRepository.findByFlightModelId(flightModelId);
-            System.out.println(m);
             if(m != null){
                 f.setFlightModel(m);
             }
