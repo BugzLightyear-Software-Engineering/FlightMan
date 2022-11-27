@@ -36,6 +36,6 @@ public class UserService {
     }
 
     public Boolean saveUser(User user) {
-        return this.userRepository.save(user) != null ? true : false;
+        return this.userRepository.save(user) != null;
     }
 }
