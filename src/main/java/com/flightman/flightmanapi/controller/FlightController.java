@@ -72,7 +72,6 @@ public class FlightController {
     {  
             try {
                 if(flight.getCost() < 0){
-                        System.out.println("COST");
                         return new ResponseEntity<>("Cost cannot be negative",HttpStatus.BAD_REQUEST);
                 }
                 Flight createdFlight = flightService.save(flight);
@@ -92,6 +91,7 @@ public class FlightController {
     public ResponseEntity<UUID> updateFlight(@PathVariable UUID flightID, @RequestParam(required = false) Time departureTime, @RequestParam(required = false) Time estArrivalTime, @RequestParam(required = false) Integer flightModelID )   
     {  
             try {
+                
                 Flight updatedFlight = flightService.update(flightID, departureTime, estArrivalTime, flightModelID);
                 UUID flightId = updatedFlight.getFlightId();
                 return new ResponseEntity<>(flightId, HttpStatus.OK);
