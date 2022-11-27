@@ -1,4 +1,4 @@
-package com.flightman.flightmanapi.unit.controller;
+package com.flightman.flightmanapi.integration.controller;
 
 import java.util.ArrayList;
 import java.util.List;

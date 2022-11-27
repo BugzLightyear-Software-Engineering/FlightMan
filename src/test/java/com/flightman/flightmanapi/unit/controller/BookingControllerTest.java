@@ -29,7 +29,7 @@ import org.springframework.util.Base64Utils;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = BookingController.class)
 @ActiveProfiles
-public class BookingControllerTest_Unit {
+public class BookingControllerTest {
         @Autowired
         private MockMvc mockMvc;
 
