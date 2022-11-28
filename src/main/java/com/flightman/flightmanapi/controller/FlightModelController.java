@@ -71,7 +71,6 @@ public class FlightModelController {
     @PostMapping("/model")
     public ResponseEntity<?> createFlightModel(@RequestBody FlightModel flightModel)   
     {  
-        System.out.println("IN MODEL");
         if(flightModel.getSeatCapacity() < 0){
                 return new ResponseEntity<>("The seat capacity cannot be negative", HttpStatus.BAD_REQUEST);
         }
@@ -98,10 +97,11 @@ public class FlightModelController {
     */
     @ApiOperation(value = "Delete flight model", notes = "Deletes a flight model by the given Flight Model Id")
     @ApiResponses({@ApiResponse(code = 200, message = "Flight Model is successfully deleted"),
+                   @ApiResponse(code = 400, message = "Flight Model doesnt exist"),
                    @ApiResponse(code = 500, message = "If any other error occurs")})
     @Transactional
     @DeleteMapping("/model/id/{id}")
-    public ResponseEntity<Boolean> deleteModelById(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> deleteModelById(@PathVariable("id") Integer id) {
             try {
                 if(this.flightModelService.deleteModelById(id)==1)
                         return new ResponseEntity<>(true, HttpStatus.OK);

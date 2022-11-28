@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 
 import java.util.concurrent.TimeUnit;
 
@@ -152,14 +149,12 @@ public class BookingService {
             String date = b.getFlightDate().toString().substring(0, 10);
             String time = b.getFlight().getDepartureTime().toString();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-            Date flight_date_time = sdf.parse(date + " " + time);
-            String cur_date = LocalDate.now().toString();
-            String cur_time = LocalTime.now().toString();
-            Date cur_date_time = sdf.parse(cur_date + " " + cur_time);
+            Date flightDateTime = sdf.parse(date + " " + time);
+            String curDate = LocalDate.now().toString();
+            String curTime = LocalTime.now().toString();
+            Date curDateTime = sdf.parse(curDate + " " + curTime);
 
-            float diff = (cur_date_time.getTime() - flight_date_time.getTime())
-                            / (float) (1000 * 60 * 60);
-            return diff;
+            return (curDateTime.getTime() - flightDateTime.getTime())/ (float) (1000 * 60 * 60);
     }
 
     /*
