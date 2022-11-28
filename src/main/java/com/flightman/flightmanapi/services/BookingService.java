@@ -216,9 +216,11 @@ public class BookingService {
 
     public String checkInUser(UUID bookingId) {
             try {
-                    // TODO: Check if id exists
                     Booking b = this.bookingRepository.findByBookingId(bookingId);
-                    if (b.getUserCheckIn()) {
+                    if(b == null){
+                        return "No bookingID";
+                    }
+                    if (Boolean.TRUE.equals(b.getUserCheckIn())) {
                             return "User is checked in already!";
                     } else {
                             if (getTimeToFlightDeparture(b) < 2) {
