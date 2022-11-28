@@ -18,6 +18,7 @@
                 <sonar.organization>bugzlightyear-software-engineering</sonar.organization>
                 <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
+        
 	<dependencies>
                 <dependency>
                         <groupId>org.springframework.boot</groupId>
@@ -77,7 +78,7 @@
                         <version>3.0.0</version>
                 </dependency>
 	</dependencies>
-
+        
 	<build>
 		<plugins>
                         <plugin>
@@ -98,28 +99,31 @@
                                 <groupId>org.apache.maven.plugins</groupId>
                                 <artifactId>maven-checkstyle-plugin</artifactId>
                                 <version>3.0.0</version>
-                                <!-- <executions>
-                                        <execution>
-                                                <?m2e execute onConfiguration,onIncremental?>
-                                                <id>validate</id>
-                                                <phase>validate</phase>
-                                                <configuration>
-                                                        <encoding>UTF-8</encoding>
-                                                        <consoleOutput>true</consoleOutput>
-                                                        <failsOnError>false</failsOnError>
-                                                        <linkXRef>false</linkXRef>
-                                                </configuration>
-                                                <goals>
-                                                        <goal>check</goal>
-                                                </goals>
-                                        </execution>
-                                </executions> -->
+                        </plugin>
+                        <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.8.7</version>
+                        <executions>
+                                <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                <goal>prepare-agent</goal>
+                                </goals>
+                                </execution>
+                                <execution>
+                                <id>report</id>
+                                <goals>
+                                <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                <formats>
+                                <format>XML</format>
+                                </formats>
+                                </configuration>
+                                </execution>
+                        </executions>
                         </plugin>
 		</plugins>
 	</build>
-        <!-- <reporting>
-                <plugins>
-                        
-                </plugins>
-        </reporting> -->
 </project>
