@@ -59,10 +59,14 @@ public class User {
         @ApiModelProperty(notes = "How many reward points/miles does this user have")
         private int rewardsMiles;
 
+        @NotNull
+        @Column(name = "authorization_level")
+        private int authorizationLevel;
+
         public User(){};
 
         public User(String firstName, String lastName, String phoneNumber, String email,
-                String passportNumber, String address, Integer diet, int rewardsMiles) {
+                String passportNumber, String address, Integer diet, int rewardsMiles, int authorizationLevel) {
                 this.firstName = firstName;
                 this.lastName = lastName;
                 this.phoneNumber = phoneNumber;
@@ -71,6 +75,7 @@ public class User {
                 this.address = address;
                 this.diet = diet;
                 this.rewardsMiles = rewardsMiles;
+                this.authorizationLevel = authorizationLevel;
         }
 
         public UUID getID() {
@@ -147,5 +152,13 @@ public class User {
 
         public void setAddress(String address) {
                 this.address = address;
+        }
+        
+        public int getAuthorizationLevel() {
+                return this.authorizationLevel;
+        }
+
+        public void setAuthorizationLevel(int authorizationLevel) {
+                this.authorizationLevel = authorizationLevel;
         }
 }
