@@ -176,7 +176,7 @@ public class BookingServiceTest {
                 Date later = cal.getTime();
 
                 Boolean expected = bookingService.updateRewardPointsForBookingDeletion(
-                                user.getID(),
+                                user.getUserId(),
                                 100,
                                 later);
 
@@ -214,7 +214,7 @@ public class BookingServiceTest {
                 Date later = cal.getTime();
 
                 Boolean expected = bookingService.updateRewardPointsForBookingDeletion(
-                                user.getID(),
+                                user.getUserId(),
                                 100,
                                 later);
 

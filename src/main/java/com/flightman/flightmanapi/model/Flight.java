@@ -7,12 +7,18 @@ import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "flights")
 @ApiModel(description = "Class representing a flight in the system")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Flight {
 
         @Id
@@ -55,8 +61,6 @@ public class Flight {
         @Column(name = "cost")
         private int cost;
 
-        public Flight(){}
-
         public Flight(Airport sourceAirport, Airport destAirport, FlightModel flightModel, Time departureTime,
                         Time estArrivalTime, Time delayTime, int cost) {
                 this.sourceAirport = sourceAirport;
@@ -68,75 +72,7 @@ public class Flight {
                 this.cost = cost;
         }
 
-        public UUID getFlightId() {
-                return flightId;
-        }
-
-        public Time getDepartureTime() {
-                return departureTime;
-        }
-
-        public void setDepartureTime(Time departureTime) {
-                this.departureTime = departureTime;
-        }
-
-        public Time getEstArrivalTime() {
-                return estArrivalTime;
-        }
-
-        public void setEstArrivalTime(Time estArrivalTime) {
-                this.estArrivalTime = estArrivalTime;
-        }
-
         public Integer getNumSeats() {
                 return this.flightModel.getSeatCapacity();
-        }
-
-        public void setNumSeats(Integer numSeats) {
-                this.flightModel.setSeatCapacity(numSeats);
-        }
-
-        public Time getDelayTime() {
-                return delayTime;
-        }
-
-        public void setDelayTime(Time delayTime) {
-                this.delayTime = delayTime;
-        }
-
-        public Airport getSourceAirport() {
-                return sourceAirport;
-        }
-
-        public void setSourceAirport(Airport sourceAirport) {
-                this.sourceAirport = sourceAirport;
-        }
-
-        public Airport getDestAirport() {
-                return destAirport;
-        }
-
-        public void setDestAirport(Airport destAirport) {
-                this.destAirport = destAirport;
-        }
-
-        public FlightModel getFlightModel() {
-                return flightModel;
-        }
-
-        public void setFlightModel(FlightModel flightModel) {
-                this.flightModel = flightModel;
-        }
-
-        public int getCost() {
-            return cost;
-        }
-
-        public void setCost(int cost) {
-            this.cost = cost;
-        }
-
-        public void setFlightId(UUID flightId) {
-                this.flightId = flightId;
         }
 }

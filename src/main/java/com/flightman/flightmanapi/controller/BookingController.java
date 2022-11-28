@@ -8,7 +8,9 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.flightman.flightmanapi.model.Booking;
 import com.flightman.flightmanapi.services.BookingService;
+import com.flightman.flightmanapi.utils.ClassToJsonString;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,7 +68,7 @@ public class BookingController {
         @ApiResponses({ @ApiResponse(code = 201, message = "The created booking is successfully returned. If there are no bookings, an empty list is returned."),
                         @ApiResponse(code = 500, message = "There was an unexpected problem while creating bookings") })
         @PostMapping("/bookings")
-        public ResponseEntity<?> createBooking(String userId, String flightId,
+        public ResponseEntity<String> createBooking(String userId, String flightId,
                         @RequestParam(required = false) String seatNumber, String date, Boolean useRewardPoints) {
                 Date d;
                 if (Boolean.FALSE.equals(this.bookingService.validateUser(userId))) {
@@ -73,7 +77,6 @@ public class BookingController {
                 if (Boolean.FALSE.equals(this.bookingService.validateFlight(flightId))) {
                         return new ResponseEntity<>("Invalid Flight ID", HttpStatus.BAD_REQUEST);
                 }
-                System.out.println("rewp" + useRewardPoints);
                 if (useRewardPoints == null) {
                         return new ResponseEntity<>("Invalid Reward Point Flag", HttpStatus.BAD_REQUEST);
                 }
@@ -87,17 +90,22 @@ public class BookingController {
                 } catch (Exception e) {
                         return new ResponseEntity<>("Invalid Date", HttpStatus.BAD_REQUEST);
                 }
-                try {
-                        Booking booking = this.bookingService.book(userId, flightId, seatNumber, date, useRewardPoints);
-                        if (booking != null) {
-                                return new ResponseEntity<>(booking, HttpStatus.CREATED);
+                Booking booking = this.bookingService.book(userId, flightId, seatNumber, date, useRewardPoints);
+                if (booking != null) {
+                        final HttpHeaders httpHeaders = new HttpHeaders();
+                        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+                        ClassToJsonString cls = new ClassToJsonString(booking);
+                        try {
+                                return new ResponseEntity<>(cls.getJsonString(), httpHeaders,
+                                                HttpStatus.CREATED);
+                        } catch (JsonProcessingException e) {
+                                e.printStackTrace();
+                                return new ResponseEntity<>(booking.toString(), httpHeaders,
+                                                HttpStatus.CREATED);
                         }
-                        return new ResponseEntity<>("Could not create booking(s)", HttpStatus.INTERNAL_SERVER_ERROR);
-                } catch (Exception e) {
-                        logger.error(e.getStackTrace());
-                        logger.error(e);
-                        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
+                return new ResponseEntity<>("Could not create booking",
+                                HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         @PostMapping("/bookings/id/{id}/usercheckin")
@@ -115,10 +123,10 @@ public class BookingController {
         }
 
         @PostMapping("/bookings/id/{id}/luggagecheckin")
-        public ResponseEntity<?> luggageCheckIn(@PathVariable("id") String bookingId,
+        public ResponseEntity<String> luggageCheckIn(@PathVariable("id") String bookingId,
                         @RequestParam(required = true) Integer count,
                         @RequestParam(required = true) float totalWeight) {
-                if (bookingId == null || bookingId == ""
+                if (bookingId == null || bookingId.equals("")
                                 || Boolean.TRUE.equals(!this.bookingService.validateBooking(bookingId))) {
                         return new ResponseEntity<>("Invalid Booking ID", HttpStatus.BAD_REQUEST);
                 }

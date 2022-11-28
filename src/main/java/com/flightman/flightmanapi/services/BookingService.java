@@ -11,6 +11,8 @@ import java.util.UUID;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,8 @@ public class BookingService {
 
         @Autowired
         private LuggageRepository luggageRepository;
+
+        private static final Logger logger = LogManager.getLogger(BookingService.class);
 
         /*
          * Method that returns a list of all bookings in the database.
@@ -182,10 +186,10 @@ public class BookingService {
                         Integer availableSeats = totalSeatCount - bookedSeatCount;
                         int pointsToReturn = f.getCost();
 
-                        if (seatNumber == null || seatNumber == "") {
+                        if (seatNumber == null || seatNumber.equals("")) {
                                 seatNumber = this.generateSeatNumber(f, d);
                         }
-                        if (availableSeats > 0 && seatNumber != "") {
+                        if (availableSeats > 0 && !seatNumber.equals("")) {
                                 if (useRewardPoints) {
                                         if (u.getRewardsMiles() < pointsToReturn) {
                                                 return null;
@@ -202,8 +206,9 @@ public class BookingService {
                         }
                         return null;
                 } catch (Exception e) {
-                        System.err.println("Error while booking!");
-                        e.printStackTrace(new java.io.PrintStream(System.err));
+                        logger.error("Error while booking!");
+                        logger.error(e.getStackTrace());
+                        logger.error(e);
                         return null;
                 }
         }
@@ -227,8 +232,9 @@ public class BookingService {
 
                         }
                 } catch (Exception e) {
-                        System.err.println("Error while checking in!");
-                        e.printStackTrace(new java.io.PrintStream(System.err));
+                        logger.error("Error while checking in user!");
+                        logger.error(e.getStackTrace());
+                        logger.error(e);
                         return "Error occurred";
                 }
         }
@@ -239,11 +245,12 @@ public class BookingService {
                         Luggage luggage = new Luggage(count, totalWeight);
                         this.luggageRepository.save(luggage);
                         b.setLuggage(luggage);
-                        if (this.bookingRepository.save(b) != null) {
-                                return true;
-                        }
+                        this.bookingRepository.save(b);
+                        return true;
                 } catch (Exception e) {
-                        System.err.println("Error while checking in!");
+                        logger.error("Error while checking in luggage!");
+                        logger.error(e.getStackTrace());
+                        logger.error(e);
                         e.printStackTrace(new java.io.PrintStream(System.err));
                 }
                 return false;
@@ -252,12 +259,12 @@ public class BookingService {
         public Boolean deleteBooking(String bookingID, String userID) {
                 Booking booking = this.bookingRepository.findByBookingId(UUID.fromString(bookingID));
 
-                if (UUID.fromString(userID) != booking.getUser().getID()) {
+                if (UUID.fromString(userID) != booking.getUser().getUserId()) {
                         return false;
                 }
 
                 this.bookingRepository.deleteById(UUID.fromString(bookingID));
-                updateRewardPointsForBookingDeletion(booking.getUser().getID(), booking.getFlight().getCost(),
+                updateRewardPointsForBookingDeletion(booking.getUser().getUserId(), booking.getFlight().getCost(),
                                 booking.getFlightDate());
 
                 return true;

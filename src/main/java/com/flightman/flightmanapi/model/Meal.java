@@ -4,51 +4,34 @@ import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "meals")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Meal {
-    @Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID mealId;
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        @ApiModelProperty(notes = "Unique identifier of the meal")
+        private UUID mealId;
 
-    @NotNull
-    @Column(name = "mealName")
-    private String mealName;
+        @NotNull
+        @Column(name = "mealName")
+        @ApiModelProperty(notes = "Name of the meal")
+        private String mealName;
 
-    @NotNull
-    @Column(name = "mealDesc")
-    private String mealDesc;
+        @NotNull
+        @Column(name = "mealDesc")
+        @ApiModelProperty(notes = "Description of the meal")
+        private String mealDesc;
 
-    public Meal(){}
-
-    public Meal(String mealName, String mealDesc){
-        this.mealName = mealName;
-        this.mealDesc = mealDesc;
-    }
-
-    public UUID getMealId() {
-        return mealId;
-    }
-
-    public void setMealId(UUID mealId) {
-        this.mealId = mealId;
-    }
-
-    public String getMealName() {
-        return mealName;
-    }
-
-    public void setMealName(String mealName) {
-        this.mealName = mealName;
-    }
-
-    public String getMealDesc() {
-        return mealDesc;
-    }
-
-    public void setMealDesc(String mealDesc) {
-        this.mealDesc = mealDesc;
-    }
-
-    
+        public Meal(String mealName, String mealDesc) {
+                this.mealName = mealName;
+                this.mealDesc = mealDesc;
+        }
 }
