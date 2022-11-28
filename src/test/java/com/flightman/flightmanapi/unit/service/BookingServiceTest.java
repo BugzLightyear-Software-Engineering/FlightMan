@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.util.List;
+import java.util.UUID;
 import java.sql.Time;
 import java.text.Format;
 import java.text.ParseException;
@@ -13,9 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +28,6 @@ import com.flightman.flightmanapi.model.Airport;
 import com.flightman.flightmanapi.model.Booking;
 import com.flightman.flightmanapi.model.Flight;
 import com.flightman.flightmanapi.model.FlightModel;
-import com.flightman.flightmanapi.model.User;
 import com.flightman.flightmanapi.repositories.BookingRepository;
 
 import com.flightman.flightmanapi.repositories.FlightModelRepository;
@@ -39,15 +36,7 @@ import com.flightman.flightmanapi.repositories.LuggageRepository;
 
 import com.flightman.flightmanapi.repositories.UserRepository;
 import com.flightman.flightmanapi.services.BookingService;
-import com.flightman.flightmanapi.model.Airport;
-import com.flightman.flightmanapi.model.Flight;
-import com.flightman.flightmanapi.model.FlightModel;
-import com.flightman.flightmanapi.repositories.FlightRepository;
 import com.flightman.flightmanapi.services.FlightService;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { BookingService.class, BookingRepository.class, FlightRepository.class,
@@ -89,6 +78,8 @@ public class BookingServiceTest {
     private Time departure_time = new Time(100);
     private Time arrival_time = new Time(500);
     private Flight flight = new Flight(source, dest, model, departure_time,arrival_time, null, 100);
+    private String seatnumber = "1A";
+    private Boolean paymentStatus = true;
 
     @Test
     public void shouldReturnAllBookings(){
@@ -232,5 +223,30 @@ public class BookingServiceTest {
 
         assert expected == true;
         assert user.getRewardsMiles() == initial;
+    }
+
+    @Test
+    public void testUserCheckIn() throws ParseException{
+
+        Date d = new SimpleDateFormat("MM-dd-yyyy").parse("01-01-2022");
+        departure_time = new Time(1 * 60 * 60 * 1000);
+        flight = new Flight(source, dest, model, departure_time,arrival_time, null, 100);
+        Booking expected = new Booking(user, flight, "1A", true, false, d);
+        expected.setBookingId(UUID.randomUUID());
+        when(bookingRepository.findByBookingId(expected.getBookingId())).thenReturn(expected);
+        String s = bookingService.checkInUser(expected.getBookingId());
+        assert(s=="Error occurred");
+
+        UUID notInDB = UUID.randomUUID();
+        when(bookingRepository.findByBookingId(notInDB)).thenReturn(null);
+        s = bookingService.checkInUser(notInDB);
+        assert(s=="No bookingID");
+
+        expected.setUserCheckIn(true);
+        s = bookingService.checkInUser(expected.getBookingId());
+        assert(s=="User is checked in already!");
+
+        //TODO: check difference in time
+
     }
 }
