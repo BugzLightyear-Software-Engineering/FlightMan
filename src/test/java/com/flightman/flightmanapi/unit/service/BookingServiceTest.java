@@ -76,7 +76,7 @@ public class BookingServiceTest {
     private String validFlight = "4a01bbd4-9d7c-4380-a266-b42ee4c27162";
 
     User user = new User("FN", "LN", "123456789", "r@domain.com",
-                    "passportNumber", "Address", 1, 0);
+                    "passportNumber", "Address", 1, 0, 0);
 
     private Format f = new SimpleDateFormat("MM-dd-yyyy");
     private SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
@@ -103,7 +103,7 @@ public class BookingServiceTest {
     @Test
     public void testUserRewardPointChangesForCreation() throws Exception {
         int initial = 100;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial, 0);
 
         when(userRepository.findByUserId(any())).thenReturn(user);
         when(flightRepository.findByFlightId(any())).thenReturn(flight);
@@ -127,7 +127,7 @@ public class BookingServiceTest {
     @Test
     public void testUserRewardPointChangesForCreationUsingPoints_1() throws Exception {
         int initial = 100;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial, 0);
 
         when(userRepository.findByUserId(any())).thenReturn(user);
         when(flightRepository.findByFlightId(any())).thenReturn(flight);
@@ -151,7 +151,7 @@ public class BookingServiceTest {
     @Test
     public void testUserRewardPointChangesForCreationUsingPoints_2() throws Exception {
         int initial = 50;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial, 0);
 
         when(userRepository.findByUserId(any())).thenReturn(user);
         when(flightRepository.findByFlightId(any())).thenReturn(flight);
@@ -176,7 +176,7 @@ public class BookingServiceTest {
     @Test
     public void testUserRewardPointChangesForDeletion_1() {
         int initial = 100;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial, 0);
 
         when(userRepository.findByUserId(any())).thenReturn(user);
         when(userRepository.save(any())).thenReturn(user);
@@ -214,7 +214,7 @@ public class BookingServiceTest {
     @Test
     public void testUserRewardPointChangesForDeletion_2() {
         int initial = 100;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial, 0);
 
         when(userRepository.findByUserId(any())).thenReturn(user);
         when(userRepository.save(any())).thenReturn(user);

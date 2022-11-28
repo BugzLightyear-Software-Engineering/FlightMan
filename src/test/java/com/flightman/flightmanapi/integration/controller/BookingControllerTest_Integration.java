@@ -101,7 +101,7 @@ public class BookingControllerTest_Integration {
     @Test
     public void createBooking_2() throws Exception {
         int initial = 100;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial, 0);
 
         when(userRepository.findByUserId(any())).thenReturn(user);
         when(flightRepository.findByFlightId(any())).thenReturn(flight);
@@ -120,7 +120,7 @@ public class BookingControllerTest_Integration {
     @Test
     public void createBooking_3() throws Exception {
         int initial = 50;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial, 0);
 
         when(userRepository.findByUserId(any())).thenReturn(user);
         when(flightRepository.findByFlightId(any())).thenReturn(flight);
