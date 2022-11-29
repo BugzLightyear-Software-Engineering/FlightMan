@@ -5,11 +5,16 @@ import java.util.UUID;
 import javax.persistence.*;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "airport")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Airport {
-
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         @ApiModelProperty(notes = "Unique identifier of the airport", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6", required = true)
@@ -31,49 +36,10 @@ public class Airport {
         @ApiModelProperty(notes = "Longitude of the airport", example = "2.2221")
         private String longitude;
 
-        public Airport() {
-        };
-
         public Airport(String airportName, String airportAbvName, String latitude, String longitude) {
                 this.airportName = airportName;
                 this.airportAbvName = airportAbvName;
                 this.latitude = latitude;
                 this.longitude = longitude;
-        }
-
-        public String getAirportName() {
-                return this.airportName;
-        }
-
-        public void setAirportName(String airportName) {
-                this.airportName = airportName;
-        }
-
-        public String getAirportAbvName() {
-                return this.airportAbvName;
-        }
-
-        public void setAirportAbvName(String airportAbvName) {
-                this.airportAbvName = airportAbvName;
-        }
-
-        public String getLatitude() {
-                return this.latitude;
-        }
-
-        public void setLatitude(String latitude) {
-                this.latitude = latitude;
-        }
-
-        public String getLongitude() {
-                return this.longitude;
-        }
-
-        public void setLongitude(String longitude) {
-                this.longitude = longitude;
-        }
-
-        public UUID getAirportId() {
-                return airportId;
         }
 }

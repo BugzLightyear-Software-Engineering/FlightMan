@@ -23,7 +23,6 @@ import com.flightman.flightmanapi.services.UserService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -39,19 +38,19 @@ public class UserController {
         @ApiResponses({ @ApiResponse(code = 200, message = "User details are successfully retrieved"),
                         @ApiResponse(code = 400, message = "No users were found oon the server"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during user detail retrieval") })
-	@GetMapping("/users")
-	public ResponseEntity<List<User>> getUsers() {
-		try {
+        @GetMapping("/users")
+        public ResponseEntity<List<User>> getUsers() {
+                try {
                         List<User> usersList = userService.getAllUsers();
-                        if(usersList.size() > 0)
+                        if (usersList.size() > 0)
                                 return new ResponseEntity<>(usersList, HttpStatus.OK);
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} catch (Exception e) {
+                } catch (Exception e) {
                         e.printStackTrace(new java.io.PrintStream(System.err));
                         System.err.println(e);
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+                        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+        }
 
         @ApiOperation(value = "Get User By ID", notes = "Returns the details of the supplied user based on their ID (if it exists)")
         @ApiResponses({ @ApiResponse(code = 200, message = "User details are successfully retrieved"),
@@ -62,7 +61,7 @@ public class UserController {
                 try {
                         User user = this.userService.getUserById(id);
 
-                        if(user != null)
+                        if (user != null)
                                 return new ResponseEntity<>(user, HttpStatus.OK);
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 } catch (Exception e) {
@@ -81,7 +80,7 @@ public class UserController {
                 try {
                         User user = this.userService.getUserByEmail(email);
 
-                        if(user != null)
+                        if (user != null)
                                 return new ResponseEntity<>(user, HttpStatus.OK);
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 } catch (Exception e) {
@@ -96,11 +95,10 @@ public class UserController {
                         @ApiResponse(code = 400, message = "The user already exists"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during user creation") })
         @PostMapping("/user")
-        public ResponseEntity<UUID> createUser(@RequestBody User user)   
-        {  
+        public ResponseEntity<UUID> createUser(@RequestBody User user) {
                 try {
-                        if(this.userService.saveUser(user))
-                                return new ResponseEntity<>(user.getID(), HttpStatus.OK);
+                        if (this.userService.saveUser(user))
+                                return new ResponseEntity<>(user.getUserId(), HttpStatus.OK);
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 } catch (Exception e) {
                         e.printStackTrace(new java.io.PrintStream(System.err));
@@ -114,10 +112,9 @@ public class UserController {
                         @ApiResponse(code = 400, message = "The supplied user was not found on the server"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during user updation") })
         @PutMapping("/user")
-        public ResponseEntity<Boolean> updateUser(@RequestBody User user)   
-        {  
+        public ResponseEntity<Boolean> updateUser(@RequestBody User user) {
                 try {
-                        if(this.userService.saveUser(user))
+                        if (this.userService.saveUser(user))
                                 return new ResponseEntity<>(true, HttpStatus.OK);
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 } catch (Exception e) {
@@ -135,7 +132,7 @@ public class UserController {
         @DeleteMapping("/user/id/{id}")
         public ResponseEntity<Boolean> deleteUserById(@PathVariable("id") UUID id) {
                 try {
-                        if(this.userService.deleteUserById(id))
+                        if (this.userService.deleteUserById(id))
                                 return new ResponseEntity<>(true, HttpStatus.OK);
                         return new ResponseEntity<>(false, HttpStatus.OK);
                 } catch (Exception e) {
@@ -153,7 +150,7 @@ public class UserController {
         @DeleteMapping("/user/email/{email}")
         public ResponseEntity<Boolean> deleteUserByEmail(@PathVariable("email") String email) {
                 try {
-                        if(this.userService.deleteUserByEmail(email))
+                        if (this.userService.deleteUserByEmail(email))
                                 return new ResponseEntity<>(true, HttpStatus.OK);
                         return new ResponseEntity<>(false, HttpStatus.OK);
                 } catch (Exception e) {

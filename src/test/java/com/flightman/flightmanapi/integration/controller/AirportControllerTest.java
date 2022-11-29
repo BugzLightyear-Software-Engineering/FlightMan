@@ -47,7 +47,7 @@ public class AirportControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"}"))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         /* Test sad path, incorrect latitude */
         when(airportService.saveAirport(any())).thenReturn(true);
@@ -70,9 +70,22 @@ public class AirportControllerTest {
 
         @Test
         public void getAirport() throws Exception {
+                /* Test happy path */
                 List<Airport> temp = new ArrayList<Airport>();
                 temp.add(source);
                 given(airportService.find(null)).willReturn(temp);
+                mockMvc.perform(
+                                get("/api/airports")
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk());
+
+                /* Test happy path but no airports in DB */
+                List<Airport> empty = new ArrayList<Airport>();
+                given(airportService.find(null)).willReturn(empty);
                 mockMvc.perform(
                                 get("/api/airports")
                                                 .header(HttpHeaders.AUTHORIZATION,

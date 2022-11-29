@@ -47,6 +47,8 @@ public class BookingControllerUnitTest {
         private Format f = new SimpleDateFormat("MM-dd-yyyy");
         private SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
 
+        Boolean useRewardPoints = false;
+
         Booking booking = new Booking();
 
         @Test
@@ -64,28 +66,27 @@ public class BookingControllerUnitTest {
                                 .andExpect(status().isOk());
         }
 
-        // @Test
-        // public void createBookingSuccess() throws Exception {
-        //         /* Test happy path */
+        @Test
+        public void createBookingSuccess() throws Exception {
+                /* Test happy path */
 
-        //         Date tomorrowDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
-        //         String tomorrowDateString = f.format(tomorrowDate);
-        //         tomorrowDate = formatter.parse(tomorrowDateString);
+                Date tomorrowDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
+                String tomorrowDateString = f.format(tomorrowDate);
+                tomorrowDate = formatter.parse(tomorrowDateString);
+                when(bookingService.book(validUser, validFlight, null, tomorrowDateString, false))
+                                .thenReturn(booking);
+                when(bookingService.validateUser(validUser)).thenReturn(true);
+                when(bookingService.validateFlight(validFlight)).thenReturn(true);
+                mockMvc.perform(
+                                post("/api/bookings?userId=" + validUser + "&flightId=" + validFlight + "&date="
+                                                + tomorrowDateString + "&useRewardPoints=" + useRewardPoints)
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes())))
+                                .andExpect(status().isCreated());
 
-        //         when(bookingService.book(validUser, validFlight, null, tomorrowDateString, true, false))
-        //                         .thenReturn(booking);
-        //         when(bookingService.validateUser(validUser)).thenReturn(true);
-        //         when(bookingService.validateFlight(validFlight)).thenReturn(true);
-        //         mockMvc.perform(
-        //                         post("/api/bookings?userId=" + validUser + "&flightId=" + validFlight + "&date="
-        //                                         + tomorrowDateString)
-        //                                         .header(HttpHeaders.AUTHORIZATION,
-        //                                                         "Basic " + Base64Utils.encodeToString(
-        //                                                                         (this.user + ":" + this.password)
-        //                                                                                         .getBytes())))
-        //                         .andExpect(status().isCreated());
-
-        // }
+        }
 
         @Test
         public void createBookingBadDate() throws Exception {

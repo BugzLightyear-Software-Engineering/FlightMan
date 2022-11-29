@@ -43,20 +43,20 @@ import com.flightman.flightmanapi.services.FlightService;
 @ContextConfiguration(classes = { BookingService.class, BookingRepository.class, FlightRepository.class,
                 FlightService.class })
 public class BookingServiceTest {
-    @MockBean
-    private BookingRepository bookingRepository;
+        @MockBean
+        private BookingRepository bookingRepository;
 
-    @MockBean
-    private FlightRepository flightRepository;
+        @MockBean
+        private FlightRepository flightRepository;
 
-    @MockBean
-    private UserRepository userRepository;
+        @MockBean
+        private UserRepository userRepository;
 
-    @MockBean
-    private LuggageRepository luggageRepository;
+        @MockBean
+        private LuggageRepository luggageRepository;
 
-    @MockBean
-    private FlightModelRepository flightModelRepository;
+        @MockBean
+        private FlightModelRepository flightModelRepository;
 
     @MockBean
     private AirportRepository airportRepository;
@@ -65,192 +65,189 @@ public class BookingServiceTest {
     @InjectMocks
     private BookingService bookingService;
 
-    private String validUser = "6ec95abc-2d4d-46ec-9174-bd595d380ed8";
-    private String validFlight = "4a01bbd4-9d7c-4380-a266-b42ee4c27162";
+        private String validUser = "6ec95abc-2d4d-46ec-9174-bd595d380ed8";
+        private String validFlight = "4a01bbd4-9d7c-4380-a266-b42ee4c27162";
 
-    User user = new User("FN", "LN", "123456789", "r@domain.com",
-                    "passportNumber", "Address", 1, 0);
+        User user = new User("FN", "LN", "123456789", "r@domain.com",
+                        "passportNumber", "Address", 1, 0);
 
-    private Format f = new SimpleDateFormat("MM-dd-yyyy");
-    private SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+        private Format f = new SimpleDateFormat("MM-dd-yyyy");
+        private SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
 
-    Booking booking = new Booking();
+        Booking booking = new Booking();
 
-    private Airport source = new Airport("SourceName", "SN", "Lat", "Long");
-    private Airport dest = new Airport("DestName", "DN", "Lat", "Long");
-    private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
-    private Time departure_time = new Time(100);
-    private Time arrival_time = new Time(500);
-    private Flight flight = new Flight(source, dest, model, departure_time,arrival_time, null, 100);
-    private String seatnumber = "1A";
-    private Boolean paymentStatus = true;
+        private Airport source = new Airport("SourceName", "SN", "Lat", "Long");
+        private Airport dest = new Airport("DestName", "DN", "Lat", "Long");
+        private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
+        private Time departure_time = new Time(100);
+        private Time arrival_time = new Time(500);
+        private Flight flight = new Flight(source, dest, model, departure_time, arrival_time, null, 100);
+        private String seatnumber = "1A";
+        private Boolean paymentStatus = true;
 
-    @Test
-    public void shouldReturnAllBookings(){
-        List<Booking> bookings = new ArrayList<Booking>();
-        bookings.add(new Booking());
-        when(bookingRepository.findAll()).thenReturn(bookings);
-        List<Booking> expected = bookingService.get(null);
-        assertEquals(expected, bookings);
-        verify(bookingRepository).findAll();
-    }
+        @Test
+        public void shouldReturnAllBookings() {
+                List<Booking> bookings = new ArrayList<Booking>();
+                bookings.add(new Booking());
+                when(bookingRepository.findAll()).thenReturn(bookings);
+                List<Booking> expected = bookingService.get(null);
+                assertEquals(expected, bookings);
+                verify(bookingRepository).findAll();
+        }
 
-    @Test
-    public void testUserRewardPointChangesForCreation() throws Exception {
-        int initial = 100;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+        @Test
+        public void testUserRewardPointChangesForCreation() throws Exception {
+                int initial = 100;
+                User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0,
+                                initial);
 
-        when(userRepository.findByUserId(any())).thenReturn(user);
-        when(flightRepository.findByFlightId(any())).thenReturn(flight);
+                when(userRepository.findByUserId(any())).thenReturn(user);
+                when(flightRepository.findByFlightId(any())).thenReturn(flight);
 
-        when(userRepository.save(any())).thenReturn(true);
-        when(bookingRepository.save(any())).thenReturn(new Booking());
-        when(flightRepository.save(any())).thenReturn(true);
+                when(userRepository.save(any())).thenReturn(true);
+                when(bookingRepository.save(any())).thenReturn(new Booking());
+                when(flightRepository.save(any())).thenReturn(true);
 
-        Booking expected = bookingService.book(
-            "7a9223a4-820e-42d8-922b-162cea9e5f6e",
-            "7a9223a4-820e-42d8-922b-162cea9e5f6e",
-            "1A",
-            "01-01-2022",
-            true,
-            false
-        );
+                Booking expected = bookingService.book(
+                                "7a9223a4-820e-42d8-922b-162cea9e5f6e",
+                                "7a9223a4-820e-42d8-922b-162cea9e5f6e",
+                                "1A",
+                                "01-01-2022",
+                                false);
 
-        assert user.getRewardsMiles() > initial;
-    }
+                assert user.getRewardsMiles() > initial;
+        }
 
-    @Test
-    public void testUserRewardPointChangesForCreationUsingPoints_1() throws Exception {
-        int initial = 100;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+        @Test
+        public void testUserRewardPointChangesForCreationUsingPoints_1() throws Exception {
+                int initial = 100;
+                User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0,
+                                initial);
 
-        when(userRepository.findByUserId(any())).thenReturn(user);
-        when(flightRepository.findByFlightId(any())).thenReturn(flight);
+                when(userRepository.findByUserId(any())).thenReturn(user);
+                when(flightRepository.findByFlightId(any())).thenReturn(flight);
 
-        when(userRepository.save(any())).thenReturn(true);
-        when(bookingRepository.save(any())).thenReturn(true);
-        when(flightRepository.save(any())).thenReturn(true);
+                when(userRepository.save(any())).thenReturn(true);
+                when(bookingRepository.save(any())).thenReturn(true);
+                when(flightRepository.save(any())).thenReturn(true);
 
-        Booking expected = bookingService.book(
-            "7a9223a4-820e-42d8-922b-162cea9e5f6e",
-            "7a9223a4-820e-42d8-922b-162cea9e5f6e",
-            "1A",
-            "01-01-2022",
-            true,
-            true
-        );
+                Booking expected = bookingService.book(
+                                "7a9223a4-820e-42d8-922b-162cea9e5f6e",
+                                "7a9223a4-820e-42d8-922b-162cea9e5f6e",
+                                "1A",
+                                "01-01-2022",
+                                true);
 
-        assert user.getRewardsMiles() == 0;
-    }
+                assert user.getRewardsMiles() == 0;
+        }
 
-    @Test
-    public void testUserRewardPointChangesForCreationUsingPoints_2() throws Exception {
-        int initial = 50;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+        @Test
+        public void testUserRewardPointChangesForCreationUsingPoints_2() throws Exception {
+                int initial = 50;
+                User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0,
+                                initial);
 
-        when(userRepository.findByUserId(any())).thenReturn(user);
-        when(flightRepository.findByFlightId(any())).thenReturn(flight);
+                when(userRepository.findByUserId(any())).thenReturn(user);
+                when(flightRepository.findByFlightId(any())).thenReturn(flight);
 
-        when(userRepository.save(any())).thenReturn(true);
-        when(bookingRepository.save(any())).thenReturn(new Booking());
-        when(flightRepository.save(any())).thenReturn(true);
+                when(userRepository.save(any())).thenReturn(true);
+                when(bookingRepository.save(any())).thenReturn(new Booking());
+                when(flightRepository.save(any())).thenReturn(true);
 
-        Booking expected = bookingService.book(
-            "7a9223a4-820e-42d8-922b-162cea9e5f6e",
-            "7a9223a4-820e-42d8-922b-162cea9e5f6e",
-            "1A",
-            "01-01-2022",
-            true,
-            true
-        );
+                Booking expected = bookingService.book(
+                                "7a9223a4-820e-42d8-922b-162cea9e5f6e",
+                                "7a9223a4-820e-42d8-922b-162cea9e5f6e",
+                                "1A",
+                                "01-01-2022",
+                                true);
 
-        assert user.getRewardsMiles() == 50;
-        assert expected == null;
-    }
+                assert user.getRewardsMiles() == 50;
+                assert expected == null;
+        }
 
-    @Test
-    public void testUserRewardPointChangesForDeletion_1() {
-        int initial = 100;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+        @Test
+        public void testUserRewardPointChangesForDeletion_1() {
+                int initial = 100;
+                User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0,
+                                initial);
 
-        when(userRepository.findByUserId(any())).thenReturn(user);
-        when(userRepository.save(any())).thenReturn(user);
+                when(userRepository.findByUserId(any())).thenReturn(user);
+                when(userRepository.save(any())).thenReturn(user);
 
-        Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
-        cal.add(Calendar.YEAR, 10);
-        Date later = cal.getTime();
+                Calendar cal = Calendar.getInstance();
+                Date today = cal.getTime();
+                cal.add(Calendar.YEAR, 10);
+                Date later = cal.getTime();
 
-        Boolean expected = bookingService.updateRewardPointsForBookingDeletion(
-            user.getID(),
-            100,
-            later
-        );
+                Boolean expected = bookingService.updateRewardPointsForBookingDeletion(
+                                user.getUserId(),
+                                100,
+                                later);
 
-        assert expected == true;
-        assert user.getRewardsMiles() > initial;
-    }
+                assert expected == true;
+                assert user.getRewardsMiles() > initial;
+        }
 
-    @Test
-    public void shouldBook() throws ParseException {
-            Date tomorrowDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
-            String tomorrowDateString = f.format(tomorrowDate);
-            tomorrowDate = formatter.parse(tomorrowDateString);
+        @Test
+        public void shouldBook() throws ParseException {
+                Date tomorrowDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
+                String tomorrowDateString = f.format(tomorrowDate);
+                tomorrowDate = formatter.parse(tomorrowDateString);
 
-            List<Booking> bookings = new ArrayList<Booking>();
-            when(bookingRepository.findByFlightAndFlightDate(any(), any())).thenReturn(bookings);
-            when(flightRepository.findByFlightId(any())).thenReturn(flight);
-            when(userRepository.findByUserId(any())).thenReturn(user);
-            when(bookingRepository.save(any())).thenReturn(booking);
-            Booking expected = bookingService.book(validUser, validFlight, null, tomorrowDateString, true, false);
-            assertNotNull(expected);
-    }
+                List<Booking> bookings = new ArrayList<Booking>();
+                when(bookingRepository.findByFlightAndFlightDate(any(), any())).thenReturn(bookings);
+                when(flightRepository.findByFlightId(any())).thenReturn(flight);
+                when(userRepository.findByUserId(any())).thenReturn(user);
+                when(bookingRepository.save(any())).thenReturn(booking);
+                Booking expected = bookingService.book(validUser, validFlight, null, tomorrowDateString, false);
+                assertNotNull(expected);
+        }
 
-    @Test
-    public void testUserRewardPointChangesForDeletion_2() {
-        int initial = 100;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+        @Test
+        public void testUserRewardPointChangesForDeletion_2() {
+                int initial = 100;
+                User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0,
+                                initial);
 
-        when(userRepository.findByUserId(any())).thenReturn(user);
-        when(userRepository.save(any())).thenReturn(user);
+                when(userRepository.findByUserId(any())).thenReturn(user);
+                when(userRepository.save(any())).thenReturn(user);
 
-        Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
-        cal.add(Calendar.YEAR, -10);
-        Date later = cal.getTime();
+                Calendar cal = Calendar.getInstance();
+                Date today = cal.getTime();
+                cal.add(Calendar.YEAR, -10);
+                Date later = cal.getTime();
 
-        Boolean expected = bookingService.updateRewardPointsForBookingDeletion(
-            user.getID(),
-            100,
-            later
-        );
+                Boolean expected = bookingService.updateRewardPointsForBookingDeletion(
+                                user.getUserId(),
+                                100,
+                                later);
 
-        assert expected == true;
-        assert user.getRewardsMiles() == initial;
-    }
+                assert expected == true;
+                assert user.getRewardsMiles() == initial;
+        }
 
-    @Test
-    public void testUserCheckIn() throws ParseException{
+        @Test
+        public void testUserCheckIn() throws ParseException {
 
-        Date d = new SimpleDateFormat("MM-dd-yyyy").parse("01-01-2022");
-        departure_time = new Time(1 * 60 * 60 * 1000);
-        flight = new Flight(source, dest, model, departure_time,arrival_time, null, 100);
-        Booking expected = new Booking(user, flight, "1A", true, false, d);
-        expected.setBookingId(UUID.randomUUID());
-        when(bookingRepository.findByBookingId(expected.getBookingId())).thenReturn(expected);
-        String s = bookingService.checkInUser(expected.getBookingId());
-        assert(s=="Error occurred");
+                Date d = new SimpleDateFormat("MM-dd-yyyy").parse("01-01-2022");
+                departure_time = new Time(1 * 60 * 60 * 1000);
+                flight = new Flight(source, dest, model, departure_time, arrival_time, null, 100);
+                Booking expected = new Booking(user, flight, "1A", true, false, d);
+                expected.setBookingId(UUID.randomUUID());
+                when(bookingRepository.findByBookingId(expected.getBookingId())).thenReturn(expected);
+                String s = bookingService.checkInUser(expected.getBookingId());
+                assert (s == "Error occurred");
 
-        UUID notInDB = UUID.randomUUID();
-        when(bookingRepository.findByBookingId(notInDB)).thenReturn(null);
-        s = bookingService.checkInUser(notInDB);
-        assert(s=="No bookingID");
+                UUID notInDB = UUID.randomUUID();
+                when(bookingRepository.findByBookingId(notInDB)).thenReturn(null);
+                s = bookingService.checkInUser(notInDB);
+                assert (s == "No bookingID");
 
-        expected.setUserCheckIn(true);
-        s = bookingService.checkInUser(expected.getBookingId());
-        assert(s=="User is checked in already!");
+                expected.setUserCheckIn(true);
+                s = bookingService.checkInUser(expected.getBookingId());
+                assert (s == "User is checked in already!");
 
-        //TODO: check difference in time
+                // TODO: check difference in time
 
-    }
+        }
 }
