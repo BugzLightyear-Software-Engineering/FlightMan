@@ -54,6 +54,11 @@ level of security.
 5. Once your authorization is successful, you will see the page "Hello Authorized
 User!" on your screen.
 
+## API Documentation
+Please refer to the following link to read our (Swagger) API documentation.
+
+https://bugzlightyear-flightman.herokuapp.com/swagger-ui/index.html
+
 --------------------------------------------------------------------------------
 
 ## Operational entry points to our server:
