@@ -46,6 +46,13 @@ public class FlightModelControllerTest {
                         get("/api/models")
                         .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
                         .accept(MediaType.ALL)).andExpect(status().isOk());
+        
+        List<FlightModel> empty = new ArrayList<FlightModel>();
+        given(flightModelService.getAllFlightModels()).willReturn(empty);
+        mockMvc.perform(
+                        get("/api/models")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                        .accept(MediaType.ALL)).andExpect(status().isNoContent());
     }
 
     @Test
@@ -91,6 +98,12 @@ public class FlightModelControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"flightManufacturerName\": \"boeing\",\"flightModelNumber\": \"737e\",\"seatCapacity\": \"300\",\"seatRowCount\": \"-60\",\"seatColCount\": \"5\"}"))
+                        .andExpect(status().isBadRequest());
+        mockMvc.perform(
+                        post("/api/model")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"flightManufacturerName\": \"boeing\",\"flightModelNumber\": \"737e\",\"seatCapacity\": \"-300\",\"seatRowCount\": \"60\",\"seatColCount\": \"5\"}"))
                         .andExpect(status().isBadRequest());
         mockMvc.perform(
                             post("/api/model")
