@@ -81,6 +81,17 @@ public class AirportControllerTest {
                                                                                                 .getBytes()))
                                                 .accept(MediaType.ALL))
                                 .andExpect(status().isOk());
+
+                List<Airport> empty = new ArrayList<Airport>();
+                given(airportService.find(null)).willReturn(empty);
+                mockMvc.perform(
+                                get("/api/airports")
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk());
         }
 }
 

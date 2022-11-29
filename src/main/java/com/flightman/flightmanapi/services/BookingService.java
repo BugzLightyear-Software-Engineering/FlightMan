@@ -46,7 +46,7 @@ public class BookingService {
          * Method that returns a list of all bookings in the database.
          */
         public List<Booking> get(UUID userId) {
-                List<Booking> bookingsList = new ArrayList<Booking>();
+                List<Booking> bookingsList = new ArrayList<>();
                 if (userId == null) {
                         this.bookingRepository.findAll().forEach(bookingsList::add);
                 } else {
@@ -61,10 +61,7 @@ public class BookingService {
          */
         public Boolean validateUser(String userId) {
                 User u = this.userRepository.findByUserId(UUID.fromString(userId));
-                if (u != null) {
-                        return true;
-                }
-                return false;
+                return u != null;
         }
 
         /*
@@ -72,10 +69,7 @@ public class BookingService {
          */
         public Boolean validateFlight(String flightId) {
                 Flight f = this.flightRepository.findByFlightId(UUID.fromString(flightId));
-                if (f != null) {
-                        return true;
-                }
-                return false;
+                return f != null;
         }
 
         /*
@@ -130,9 +124,9 @@ public class BookingService {
                                 "29F", "30A", "30B", "30C", "30D", "30E", "30F", "31A", "31B", "31C", "31D", "31E",
                                 "31F", "32A", "32B", "32C", "32D", "32E", "32F", "33A", "33B", "33C", "33D", "33E",
                                 "33F", "34A", "34B", "34C", "34D", "34E", "34F" };
-                List<Booking> bookingsList = new ArrayList<Booking>();
+                List<Booking> bookingsList;
                 bookingsList = this.bookingRepository.findByFlightAndFlightDate(f, d);
-                List<String> takenSeats = new ArrayList<String>();
+                List<String> takenSeats = new ArrayList<>();
                 for (Booking booking : bookingsList) {
                         takenSeats.add(0, booking.getSeatNumber());
                 }
@@ -166,10 +160,7 @@ public class BookingService {
          */
         public Boolean getLuggageCheckInStatus(String bookingId) {
                 Booking b = this.bookingRepository.findByBookingId(UUID.fromString(bookingId));
-                if (b.getLuggage() != null) {
-                        return true;
-                }
-                return false;
+                return b.getLuggage() != null;
         }
 
         /*
@@ -190,7 +181,7 @@ public class BookingService {
                                 seatNumber = this.generateSeatNumber(f, d);
                         }
                         if (availableSeats > 0 && !seatNumber.equals("")) {
-                                if (useRewardPoints) {
+                                if (Boolean.TRUE.equals(useRewardPoints)) {
                                         if (u.getRewardsMiles() < pointsToReturn) {
                                                 return null;
                                         }
@@ -251,7 +242,6 @@ public class BookingService {
                         logger.error("Error while checking in luggage!");
                         logger.error(e.getStackTrace());
                         logger.error(e);
-                        e.printStackTrace(new java.io.PrintStream(System.err));
                 }
                 return false;
         }

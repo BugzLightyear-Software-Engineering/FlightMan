@@ -1,10 +1,13 @@
 package com.flightman.flightmanapi.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.flightman.flightmanapi.model.Airport;
 import com.flightman.flightmanapi.services.AirportService;
+import com.flightman.flightmanapi.utils.ClassToJsonString;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -27,6 +32,8 @@ public class AirportController {
         @Autowired
         private AirportService airportService;
 
+        private static final Logger logger = LogManager.getLogger(AirportController.class);
+
         /*
          * Method that returns a list of all airports in the database if any are
          * available, else returns HTTP NO_CONTENT
@@ -36,17 +43,23 @@ public class AirportController {
                         @ApiResponse(code = 400, message = "The supplied airport name was not found on the server"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during airport detail retrieval") })
         @GetMapping("/airports")
-        public ResponseEntity<?> getAirports(@RequestParam(required = false) String airportName) {
-                try {
-                        List<Airport> airportsList = new ArrayList<Airport>();
-                        airportsList = airportService.find(airportName);
-                        if (!airportsList.isEmpty())
-                                return new ResponseEntity<>(airportsList, HttpStatus.OK);
-                        return new ResponseEntity<>("Airport does not exist.", HttpStatus.BAD_REQUEST);
-                } catch (Exception e) {
-                        System.err.println(e);
-                        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        public ResponseEntity<String> getAirports(@RequestParam(required = false) String airportName) {
+                List<Airport> airportsList;
+                airportsList = airportService.find(airportName);
+                if (!airportsList.isEmpty()) {
+                        final HttpHeaders httpHeaders = new HttpHeaders();
+                        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+                        ClassToJsonString cls = new ClassToJsonString(airportsList);
+                        try {
+                                return new ResponseEntity<>(cls.getJsonString(), httpHeaders,
+                                                HttpStatus.CREATED);
+                        } catch (JsonProcessingException e) {
+                                e.printStackTrace();
+                                return new ResponseEntity<>(airportsList.toString(), httpHeaders,
+                                                HttpStatus.CREATED);
+                        }
                 }
+                return new ResponseEntity<>("Airport does not exist.", HttpStatus.OK);
         }
 
         /*
@@ -59,31 +72,24 @@ public class AirportController {
                         @ApiResponse(code = 400, message = "The supplied parameters are invalid and the airport cannot be created"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during the creation of airport") })
         @PostMapping("/airports")
-        public ResponseEntity<?> createAirport(@RequestBody Airport airport) {
-                System.out.println("HOHOHO");
-                // System.out.println(airportName);
-                // System.out.println(Float.valueOf(latitude));
+        public ResponseEntity<String> createAirport(@RequestBody Airport airport) {
                 if (Float.valueOf(airport.getLatitude()) < -90 || Float.valueOf(airport.getLongitude()) > 90
                                 || Float.valueOf(airport.getLongitude()) < -180
                                 || Float.valueOf(airport.getLongitude()) > 180) {
-                        System.out.println("LATLONG");
                         return new ResponseEntity<>("Invalid latitude/longitude", HttpStatus.BAD_REQUEST);
                 }
                 if (airport.getAirportAbvName().length() != 3) {
-                        System.out.println("ABVNAME");
                         return new ResponseEntity<>("Airport ABV Name must be exactly 3 characters",
                                         HttpStatus.BAD_REQUEST);
                 }
-                System.out.println("ELO");
                 try {
-                        if (this.airportService.saveAirport(airport)) {
-                                return new ResponseEntity<>("Airport successfully created", HttpStatus.OK);
-                        }
-                        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                        this.airportService.saveAirport(airport);
+                        return new ResponseEntity<>("Airport successfully created", HttpStatus.OK);
                 } catch (Exception e) {
-                        e.printStackTrace(new java.io.PrintStream(System.err));
-                        System.err.println(e);
-                        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                        logger.error(e.getStackTrace());
+                        logger.error(e);
                 }
+                return new ResponseEntity<>("Could not create airport",
+                                HttpStatus.INTERNAL_SERVER_ERROR);
         }
 }
