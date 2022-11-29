@@ -52,11 +52,11 @@ public class AirportController {
                         ClassToJsonString cls = new ClassToJsonString(airportsList);
                         try {
                                 return new ResponseEntity<>(cls.getJsonString(), httpHeaders,
-                                                HttpStatus.CREATED);
+                                                HttpStatus.OK);
                         } catch (JsonProcessingException e) {
                                 e.printStackTrace();
                                 return new ResponseEntity<>(airportsList.toString(), httpHeaders,
-                                                HttpStatus.CREATED);
+                                                HttpStatus.OK);
                         }
                 }
                 return new ResponseEntity<>("Airport does not exist.", HttpStatus.OK);
@@ -84,7 +84,7 @@ public class AirportController {
                 }
                 try {
                         this.airportService.saveAirport(airport);
-                        return new ResponseEntity<>("Airport successfully created", HttpStatus.OK);
+                        return new ResponseEntity<>("Airport successfully created", HttpStatus.CREATED);
                 } catch (Exception e) {
                         logger.error(e.getStackTrace());
                         logger.error(e);
