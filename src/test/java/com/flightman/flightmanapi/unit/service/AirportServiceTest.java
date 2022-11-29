@@ -1,6 +1,7 @@
 package com.flightman.flightmanapi.unit.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.util.List;
@@ -47,6 +48,11 @@ public class AirportServiceTest {
                 when(airportRepository.findAll()).thenReturn(airports);
                 List<Airport> expected = airportService.find(null);
                 assertEquals(expected, airports);
+                verify(airportRepository).findAll();
+
+                when(airportRepository.findByAirportNameContaining(any())).thenReturn(airports);
+                List<Airport> expectedNew = airportService.find("Test Non-Null Value");
+                assertEquals(expectedNew, airports);
                 verify(airportRepository).findAll();
 
         }

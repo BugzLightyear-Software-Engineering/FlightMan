@@ -32,13 +32,7 @@ public class AirportService {
          * Method that saves an Airport object to the database.
          */
         public Boolean saveAirport(Airport airport) {
-                try {
-                        if (this.airportRepository.save(airport) != null) {
-                                return true;
-                        }
-                } catch (Exception e) {
-                        return false;
-                }
-                return false;
+                this.airportRepository.save(airport);
+                return true;
         }
 }
