@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.sql.Time;
 import java.util.List;
+import java.util.UUID;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
@@ -57,6 +58,28 @@ public class FlightServiceTest {
     private Time new_departure_time = new Time(200);
     private Time new_arrival_time = new Time(600);
 
+    @Test void validateModel(){
+        model.setFlightModelId(1);
+        Mockito.when(flightModelRepository.findByFlightModelId(1)).thenReturn(model);
+        Mockito.when(flightModelRepository.findByFlightModelId(2)).thenReturn(null);
+        Boolean trueB = flightService.validateFlightModel(1);
+        Boolean falseB = flightService.validateFlightModel(2);
+        assert(trueB == true);
+        assert(falseB == false);
+
+    }
+    @Test void validateAirport(){
+        UUID inDb = UUID.randomUUID();
+        UUID notInDb = UUID.randomUUID();
+        source.setAirportId(inDb);
+        Mockito.when(airportRepository.findByAirportId(inDb)).thenReturn(source);
+        Mockito.when(airportRepository.findByAirportId(notInDb)).thenReturn(null);
+        Boolean trueB = flightService.validateAirport(inDb);
+        Boolean falseB = flightService.validateAirport(notInDb);
+        assert(trueB == true);
+        assert(falseB == false);
+
+    }
     @Test
     public void whenSaveFlight_shouldReturnFlight() {
 
@@ -78,17 +101,27 @@ public class FlightServiceTest {
 
             Mockito.when(flightRepository.findByFlightId(flight.getFlightId())).thenReturn(flight);
             Mockito.when(flightRepository.save(any())).thenReturn(flight);
+            Mockito.when(flightModelRepository.findByFlightModelId(10)).thenReturn(new_model);
+            Mockito.when(flightModelRepository.findByFlightModelId(11)).thenReturn(null);
 
             Flight updated = flightService.update(flight.getFlightId(), new_departure_time, new_arrival_time, new_model.getFlightModelId());
             flight.setDepartureTime(new_departure_time);
             flight.setEstArrivalTime(new_arrival_time);
             flight.setFlightModel(new_model);
             
+            
             assert (flight.getFlightModel().getFlightModelId()) == (updated.getFlightModel().getFlightModelId());
             assert (flight.getDepartureTime() == updated.getDepartureTime());
             assert (flight.getEstArrivalTime() == updated.getEstArrivalTime());
             verify(flightRepository).save(updated);
 
+            Flight updated2 = flightService.update(flight.getFlightId(), new_departure_time, new_arrival_time, 11);
+            assert (updated2.getFlightModel().getFlightModelId()) == 10;
+
+            UUID notInDb = UUID.randomUUID();
+            Mockito.when(flightRepository.findByFlightId(notInDb)).thenReturn(null);
+            Flight noFlight = flightService.update(notInDb, new_departure_time, new_arrival_time, new_model.getFlightModelId());
+            assert(noFlight == null);
             
     }
 
