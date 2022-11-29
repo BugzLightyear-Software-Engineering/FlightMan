@@ -69,7 +69,7 @@ public class AirportController {
                         @ApiResponse(code = 500, message = "There was an unexpected problem during the creation of airport") })
         @PostMapping("/airports")
         public ResponseEntity<String> createAirport(@RequestBody Airport airport) {
-                if (Float.valueOf(airport.getLatitude()) < -90 || Float.valueOf(airport.getLongitude()) > 90
+                if (Float.valueOf(airport.getLatitude()) < -90 || Float.valueOf(airport.getLatitude()) > 90
                                 || Float.valueOf(airport.getLongitude()) < -180
                                 || Float.valueOf(airport.getLongitude()) > 180) {
                         return new ResponseEntity<>("Invalid latitude/longitude", HttpStatus.BAD_REQUEST);
