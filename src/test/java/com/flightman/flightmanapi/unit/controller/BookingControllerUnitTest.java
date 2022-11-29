@@ -96,6 +96,10 @@ public class BookingControllerUnitTest {
                 String yesterdayDateString = f.format(yesterdayDate);
                 yesterdayDate = formatter.parse(yesterdayDateString);
 
+                when(bookingService.book(validUser, validFlight, null, yesterdayDateString, false))
+                                .thenReturn(booking);
+                when(bookingService.validateUser(validUser)).thenReturn(true);
+                when(bookingService.validateFlight(validFlight)).thenReturn(true);
                 mockMvc.perform(
                                 post("/api/bookings?userId=" + validUser + "&flightId=" + validFlight + "&date="
                                                 + yesterdayDateString)
@@ -132,11 +136,33 @@ public class BookingControllerUnitTest {
                 Date tomorrowDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
                 String tomorrowDateString = f.format(tomorrowDate);
                 tomorrowDate = formatter.parse(tomorrowDateString);
-
+                System.out.println("HOI");
+                when(bookingService.validateUser(validUser)).thenReturn(true);
                 when(bookingService.validateFlight(invalidFlight)).thenReturn(false);
                 mockMvc.perform(
                                 post("/api/bookings?userId=" + validUser + "&flightId=" + invalidFlight + "&date="
                                                 + tomorrowDateString)
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes())))
+                                .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        public void createBookingBadRewardPoints() throws Exception {
+                /* Test sad path */
+
+                Date tomorrowDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
+                String tomorrowDateString = f.format(tomorrowDate);
+                tomorrowDate = formatter.parse(tomorrowDateString);
+                when(bookingService.validateUser(validUser)).thenReturn(true);
+                when(bookingService.validateFlight(validFlight)).thenReturn(true);
+                when(bookingService.book(validUser, validFlight, null, tomorrowDateString, true))
+                                .thenReturn(booking);
+                mockMvc.perform(
+                                post("/api/bookings?userId=" + validUser + "&flightId=" + validFlight + "&date="
+                                                + tomorrowDateString + "&useRewardPoints=")
                                                 .header(HttpHeaders.AUTHORIZATION,
                                                                 "Basic " + Base64Utils.encodeToString(
                                                                                 (this.user + ":" + this.password)

@@ -49,14 +49,8 @@ public class BookingController {
                         @ApiResponse(code = 500, message = "There was an unexpected problem during booking detail retrieval") })
         @GetMapping("/bookings")
         public ResponseEntity<List<Booking>> getBookings(@RequestParam(required = false) UUID userId) {
-                try {
-                        List<Booking> bookingsList = bookingService.get(userId);
-                        return new ResponseEntity<>(bookingsList, HttpStatus.OK);
-                } catch (Exception e) {
-                        logger.error(e.getStackTrace());
-                        logger.error(e);
-                        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-                }
+                List<Booking> bookingsList = bookingService.get(userId);
+                return new ResponseEntity<>(bookingsList, HttpStatus.OK);
         }
 
         /*
@@ -69,7 +63,8 @@ public class BookingController {
                         @ApiResponse(code = 500, message = "There was an unexpected problem while creating bookings") })
         @PostMapping("/bookings")
         public ResponseEntity<String> createBooking(String userId, String flightId,
-                        @RequestParam(required = false) String seatNumber, String date, Boolean useRewardPoints) {
+                        @RequestParam(required = false) String seatNumber, String date, Boolean useRewardPoints)
+                        throws JsonProcessingException {
                 Date d;
                 if (Boolean.FALSE.equals(this.bookingService.validateUser(userId))) {
                         return new ResponseEntity<>("Invalid User ID", HttpStatus.BAD_REQUEST);
@@ -95,14 +90,8 @@ public class BookingController {
                         final HttpHeaders httpHeaders = new HttpHeaders();
                         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                         ClassToJsonString cls = new ClassToJsonString(booking);
-                        try {
-                                return new ResponseEntity<>(cls.getJsonString(), httpHeaders,
-                                                HttpStatus.CREATED);
-                        } catch (JsonProcessingException e) {
-                                e.printStackTrace();
-                                return new ResponseEntity<>(booking.toString(), httpHeaders,
-                                                HttpStatus.CREATED);
-                        }
+                        return new ResponseEntity<>(cls.getJsonString(), httpHeaders,
+                                        HttpStatus.CREATED);
                 }
                 return new ResponseEntity<>("Could not create booking",
                                 HttpStatus.INTERNAL_SERVER_ERROR);
