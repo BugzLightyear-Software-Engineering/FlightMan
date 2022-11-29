@@ -58,6 +58,15 @@ public class AirportControllerTest {
                 .content("{\"airportName\": \"SourceName\",\"airportAbvName\": \"SN\",\"latitude\": \"-91\",\"longitude\": \"2\"}"))
                 .andExpect(status().isBadRequest());
 
+        /* Test sad path, incorrect longitude */
+        when(airportService.saveAirport(any())).thenReturn(true);
+        mockMvc.perform(
+                post("/api/airports")
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"airportName\": \"SourceName\",\"airportAbvName\": \"SN\",\"latitude\": \"1\",\"longitude\": \"-191\"}"))
+                .andExpect(status().isBadRequest());
+
         /* Test sad path, incorrect airport ABV name */
         when(airportService.saveAirport(any())).thenReturn(true);
         mockMvc.perform(
@@ -66,6 +75,15 @@ public class AirportControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"airportName\": \"SourceName\",\"airportAbvName\": \"AB\",\"latitude\": \"1\",\"longitude\": \"2\"}"))
                 .andExpect(status().isBadRequest());
+
+        /* Test happy path, but internal server error because DB is not saving data */
+        when(airportService.saveAirport(any())).thenReturn(false);
+        mockMvc.perform(
+                post("/api/airports")
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"}"))
+                .andExpect(status().isInternalServerError());
     }
 
         @Test
