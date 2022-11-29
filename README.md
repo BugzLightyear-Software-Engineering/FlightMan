@@ -118,3 +118,20 @@ commit is suitable to deploy.
 
 5. Heroku then pulls the code from our repository, builds it into a
 production-ready version, and deploys it on a public domain.
+
+
+
+--------------------------------------------------------------------------------
+
+## Client Repository:
+https://github.com/BugzLightyear-Software-Engineering/FlightManAirlineClient
+
+--------------------------------------------------------------------------------
+
+1. In order to run the client pull the code run 'npm run start' and access on localhost:8080
+deployment to heroku in progress
+
+2. 3rd parties are able to develop thier clients against our server by registering a user 
+and calling the api with thier credentials
+
+
