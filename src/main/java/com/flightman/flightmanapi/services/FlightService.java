@@ -7,8 +7,10 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.flightman.flightmanapi.model.Airport;
 import com.flightman.flightmanapi.model.Flight;
 import com.flightman.flightmanapi.model.FlightModel;
+import com.flightman.flightmanapi.repositories.AirportRepository;
 import com.flightman.flightmanapi.repositories.BookingRepository;
 import com.flightman.flightmanapi.repositories.FlightModelRepository;
 import com.flightman.flightmanapi.repositories.FlightRepository;
@@ -22,10 +24,29 @@ public class FlightService {
     private FlightModelRepository flightModelRepository;
 
     @Autowired
+    private AirportRepository airportRepository;
+
+    @Autowired
     private BookingRepository bookingRepository;
     
     public List<Flight> getAllFlights() {
         return flightRepository.findAll();
+    }
+
+    public Boolean validateAirport(UUID airportId) {
+        Airport a = airportRepository.findByAirportId(airportId);
+        if (a != null) {
+                return true;
+        }
+        return false;
+    }
+
+    public Boolean validateFlightModel(Integer modelId) {
+        FlightModel m = flightModelRepository.findByFlightModelId(modelId);
+        if (m != null) {
+                return true;
+        }
+        return false;
     }
 
     public List<Flight> getFlights(String sourceAbv, String destAbv){

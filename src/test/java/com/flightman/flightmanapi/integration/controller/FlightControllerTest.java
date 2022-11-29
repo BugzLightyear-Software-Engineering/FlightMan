@@ -132,6 +132,9 @@ public class FlightControllerTest {
         }
         @Test
         public void createFlight() throws Exception{
+                when(flightService.validateAirport(UUID.fromString("7199de04-60d7-45c4-9d01-d0a1ea807f73"))).thenReturn(true);
+                when(flightService.validateAirport(UUID.fromString("d4005cf1-7842-44a7-9c34-77314d432e64"))).thenReturn(true);
+                when(flightService.validateFlightModel(2)).thenReturn(true);
                 when(flightService.save(any())).thenReturn(flight);
                 mockMvc.perform(
                         post("/api/flight")

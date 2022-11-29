@@ -71,8 +71,21 @@ public class FlightController {
     public ResponseEntity<?> createFlight(@RequestBody Flight flight)   
     {  
             try {
-                if(flight.getCost() < 0){
-                        return new ResponseEntity<>("Cost cannot be negative",HttpStatus.BAD_REQUEST);
+                Boolean validCost = (flight.getCost() > 0);
+                if(Boolean.FALSE.equals( validCost)){
+                    return new ResponseEntity<>("Cost cannot be negative",HttpStatus.BAD_REQUEST);
+                }
+                Boolean validSource = flightService.validateAirport(flight.getSourceAirport().getAirportId());
+                if(Boolean.FALSE.equals( validSource)){
+                    return new ResponseEntity<>("Source Airport is invalid",HttpStatus.BAD_REQUEST);
+                }
+                Boolean validDest = flightService.validateAirport(flight.getDestAirport().getAirportId());
+                if(Boolean.FALSE.equals( validDest)){
+                    return new ResponseEntity<>("Destination Airport is invalid",HttpStatus.BAD_REQUEST);
+                }
+                Boolean validModel = flightService.validateFlightModel(flight.getFlightModel().getFlightModelId());
+                if(Boolean.FALSE.equals( validModel)){
+                    return new ResponseEntity<>("Airport model is invalid",HttpStatus.BAD_REQUEST);
                 }
                 Flight createdFlight = flightService.save(flight);
                 if(createdFlight != null){
