@@ -197,7 +197,7 @@ public class BookingControllerUnitTest {
         }
 
         @Test
-        public void deleteBookingBadBooking() throws Exception {
+        public void deleteBookingBadBookingId() throws Exception {
                 when(bookingService.validateBooking(invalidBooking)).thenReturn(false);
                 mockMvc.perform(
                                 delete("/api/bookings?bookingId="+invalidBooking+"&userId="+validUser)
@@ -206,6 +206,14 @@ public class BookingControllerUnitTest {
                                                                                 (this.user + ":" + this.password)
                                                                                                 .getBytes())))
                                 .andExpect(status().isBadRequest());
+
+                mockMvc.perform(
+                        delete("/api/bookings?bookingId="+null+"&userId="+validUser)
+                                        .header(HttpHeaders.AUTHORIZATION,
+                                                        "Basic " + Base64Utils.encodeToString(
+                                                                        (this.user + ":" + this.password)
+                                                                                        .getBytes())))
+                        .andExpect(status().isBadRequest());
         }
 
         @Test
@@ -294,14 +302,14 @@ public class BookingControllerUnitTest {
                                                                                                 .getBytes())))
                                 .andExpect(status().isBadRequest());
 
-                                mockMvc.perform(
-                                        post("/api/bookings/id/null/luggagecheckin?bookingId=" + validBooking
-                                                        + "&count=" + validLuggageCount + "&totalWeight=" + validLuggageWeight)
-                                                        .header(HttpHeaders.AUTHORIZATION,
-                                                                        "Basic " + Base64Utils.encodeToString(
-                                                                                        (this.user + ":" + this.password)
-                                                                                                        .getBytes())))
-                                        .andExpect(status().isBadRequest());
+                mockMvc.perform(
+                        post("/api/bookings/id/"+null+"/luggagecheckin?bookingId=" + validBooking
+                                        + "&count=" + validLuggageCount + "&totalWeight=" + validLuggageWeight)
+                                        .header(HttpHeaders.AUTHORIZATION,
+                                                        "Basic " + Base64Utils.encodeToString(
+                                                                        (this.user + ":" + this.password)
+                                                                                        .getBytes())))
+                        .andExpect(status().isBadRequest());
         }
 
         @Test

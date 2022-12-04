@@ -80,6 +80,8 @@ public class BookingServiceTest {
 
         Booking booking = new Booking();
 
+        Luggage randomLuggage = new Luggage(1, 25);
+
         private Airport source = new Airport("SourceName", "SN", "Lat", "Long");
         private Airport dest = new Airport("DestName", "DN", "Lat", "Long");
         private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
