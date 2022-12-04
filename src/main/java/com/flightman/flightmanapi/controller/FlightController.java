@@ -61,7 +61,7 @@ public class FlightController {
                    @ApiResponse(code = 500, message = "If any other error occurs")})
     @PostMapping("/flight")
     public ResponseEntity<?> createFlight(@RequestBody Flight flight)   
-    {  
+    {   
             try {
                 Boolean validCost = (flight.getCost() > 0);
                 if(Boolean.FALSE.equals( validCost)){
@@ -84,7 +84,7 @@ public class FlightController {
                     UUID flightId = createdFlight.getFlightId();
                     return new ResponseEntity<>(flightId, HttpStatus.OK);
                 }
-                return new ResponseEntity<>("Something", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Could not save", HttpStatus.BAD_REQUEST);
                 
             } catch (Exception e) {
                 logger.error(e.getStackTrace());

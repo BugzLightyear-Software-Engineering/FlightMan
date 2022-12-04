@@ -88,7 +88,7 @@ public class FlightModelControllerTest {
                             post("/api/model")
                             .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"flightManufacturerName\":,\"flightModelNumber\": \"737e\",\"seatCapacity\": \"300\",\"seatRowCount\": \"60\",\"seatColCount\": \"5\"}"))
+                            .content("{\"flightManufacturerName\": null,\"flightModelNumber\": \"737e\",\"seatCapacity\": \"300\",\"seatRowCount\": \"60\",\"seatColCount\": \"5\"}"))
                             .andExpect(status().isBadRequest());
         }
 
