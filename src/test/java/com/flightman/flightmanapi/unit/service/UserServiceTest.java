@@ -54,10 +54,37 @@ public class UserServiceTest {
         }
 
     @Test
-    public void whenGivenId_shouldDeleteUser_ifFound(){
-        when(userRepository.findByUserId(user.getUserId())).thenReturn(user);
+    public void shouldDeleteUser_Id(){
+        when(userRepository.deleteById(user.getUserId())).thenReturn(1);
         userService.deleteUserById(user.getUserId());
         verify(userRepository).deleteById(user.getUserId());
     }
 
+    @Test
+    public void shouldDeleteUser_Email(){
+        when(userRepository.deleteByEmail(user.getEmail())).thenReturn(1);
+        userService.deleteUserByEmail(user.getEmail());
+        verify(userRepository).deleteByEmail(user.getEmail());
+    }
+
+    @Test
+    public void shouldFindUser_Id(){
+        when(userRepository.findByUserId(user.getUserId())).thenReturn(user);
+        userService.getUserById(user.getUserId());
+        verify(userRepository).findByUserId(user.getUserId());
+    }
+
+    @Test
+    public void shouldFindUser_Email(){
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
+        userService.getUserByEmail(user.getEmail());
+        verify(userRepository).findByEmail(user.getEmail());
+    }
+
+    @Test
+    public void shouldSaveUser(){
+        when(userRepository.save(user)).thenReturn(user);
+        userService.saveUser(user);
+        verify(userRepository).save(user);
+    }
 }
