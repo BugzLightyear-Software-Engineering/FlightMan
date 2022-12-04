@@ -88,8 +88,6 @@ public class BookingServiceTest {
         private Time departure_time = new Time(100);
         private Time arrival_time = new Time(500);
         private Flight flight = new Flight(source, dest, model, departure_time, arrival_time, null, 100);
-        private String seatnumber = "1A";
-        private Boolean paymentStatus = true;
 
         @Test
         public void shouldReturnAllBookings() {
@@ -114,14 +112,14 @@ public class BookingServiceTest {
                 when(bookingRepository.save(any())).thenReturn(new Booking());
                 when(flightRepository.save(any())).thenReturn(true);
 
-                Booking expected = bookingService.book(
+                bookingService.book(
                                 "7a9223a4-820e-42d8-922b-162cea9e5f6e",
                                 "7a9223a4-820e-42d8-922b-162cea9e5f6e",
                                 "1A",
                                 "01-01-2022",
                                 false);
 
-                assert user.getRewardsMiles() > initial;
+                assertTrue(user.getRewardsMiles() > initial);
         }
 
         @Test
@@ -137,14 +135,14 @@ public class BookingServiceTest {
                 when(bookingRepository.save(any())).thenReturn(true);
                 when(flightRepository.save(any())).thenReturn(true);
 
-                Booking expected = bookingService.book(
+                bookingService.book(
                                 "7a9223a4-820e-42d8-922b-162cea9e5f6e",
                                 "7a9223a4-820e-42d8-922b-162cea9e5f6e",
                                 "1A",
                                 "01-01-2022",
                                 true);
 
-                assert user.getRewardsMiles() == 0;
+                assertEquals(user.getRewardsMiles(), 0);
         }
 
         @Test
@@ -167,8 +165,8 @@ public class BookingServiceTest {
                                 "01-01-2022",
                                 true);
 
-                assert user.getRewardsMiles() == 50;
-                assert expected == null;
+                assertEquals(user.getRewardsMiles(), 50);
+                assertEquals(null, expected);
         }
 
         @Test
@@ -190,8 +188,8 @@ public class BookingServiceTest {
                                 100,
                                 later);
 
-                assert expected == true;
-                assert user.getRewardsMiles() > initial;
+                assertTrue(expected);
+                assertTrue(user.getRewardsMiles() > initial);
         }
 
         @Test
@@ -276,7 +274,6 @@ public class BookingServiceTest {
                 when(userRepository.save(any())).thenReturn(user);
 
                 Calendar cal = Calendar.getInstance();
-                Date today = cal.getTime();
                 cal.add(Calendar.YEAR, -10);
                 Date later = cal.getTime();
 
@@ -285,8 +282,8 @@ public class BookingServiceTest {
                                 100,
                                 later);
 
-                assert expected == true;
-                assert user.getRewardsMiles() == initial;
+                assertTrue(expected);
+                assertEquals(user.getRewardsMiles(), initial);
         }
 
         @Test
@@ -309,8 +306,5 @@ public class BookingServiceTest {
                 expected.setUserCheckIn(true);
                 s = bookingService.checkInUser(expected.getBookingId());
                 assert (s == "User is checked in already!");
-
-                // TODO: check difference in time
-
         }
 }

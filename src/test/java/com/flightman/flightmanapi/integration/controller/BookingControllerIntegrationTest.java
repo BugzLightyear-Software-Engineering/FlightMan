@@ -3,7 +3,6 @@ package com.flightman.flightmanapi.integration.controller;
 import java.util.List;
 import java.util.UUID;
 import java.util.ArrayList;
-import java.sql.Time;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,14 +15,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.flightman.flightmanapi.controller.BookingController;
-import com.flightman.flightmanapi.model.User;
 import com.flightman.flightmanapi.model.Booking;
 import com.flightman.flightmanapi.repositories.BookingRepository;
 import com.flightman.flightmanapi.repositories.UserRepository;
 import com.flightman.flightmanapi.services.BookingService;
-import com.flightman.flightmanapi.model.Airport;
-import com.flightman.flightmanapi.model.Flight;
-import com.flightman.flightmanapi.model.FlightModel;
 import com.flightman.flightmanapi.repositories.FlightRepository;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -51,13 +46,6 @@ public class BookingControllerIntegrationTest {
         @MockBean
         private BookingService bookingService;
 
-        private Airport source = new Airport("SourceName", "SN", "Lat", "Long");
-        private Airport dest = new Airport("DestName", "DN", "Lat", "Long");
-        private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
-        private Time departure_time = new Time(100);
-        private Time arrival_time = new Time(500);
-        private Flight flight = new Flight(source, dest, model, departure_time, arrival_time, null, 100);
-
         private String user = "abhilash";
         private String password = "securedpasswordofsrishti";
 
@@ -74,67 +62,6 @@ public class BookingControllerIntegrationTest {
                                                                                                 .getBytes()))
                                                 .accept(MediaType.ALL))
                                 .andExpect(status().isOk());
-        }
-
-        // @Test
-        // public void createBooking_1() throws Exception {
-        // given(bookingService.book(any(), any(), any(), any(), any(),
-        // any())).willReturn(new Booking());
-        // mockMvc.perform(
-        // post("/api/bookings")
-        // .header(HttpHeaders.AUTHORIZATION, "Basic " +
-        // Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
-        // .contentType(MediaType.APPLICATION_JSON)
-        // .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\":
-        // \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\":
-        // \"1\",\"useRewardPoints\": \"true\", \"date\": \"01-01-2022\"}"))
-        // .andExpect(status().isOk());
-        // }
-
-        @Test
-        public void createBooking_2() throws Exception {
-                int initial = 100;
-                User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0,
-                                initial);
-
-                when(userRepository.findByUserId(any())).thenReturn(user);
-                when(flightRepository.findByFlightId(any())).thenReturn(flight);
-
-                when(userRepository.save(any())).thenReturn(true);
-                when(bookingRepository.save(any())).thenReturn(true);
-                when(flightRepository.save(any())).thenReturn(true);
-
-                mockMvc.perform(
-                                post("/api/bookings")
-                                                .header(HttpHeaders.AUTHORIZATION,
-                                                                "Basic " + Base64Utils.encodeToString(
-                                                                                (this.user + ":" + this.password)
-                                                                                                .getBytes()))
-                                                .contentType(MediaType.APPLICATION_JSON)
-                                                .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\": \"1\",\"useRewardPoints\": \"true\", \"date\": \"01-01-2022\"}"));
-        }
-
-        @Test
-        public void createBooking_3() throws Exception {
-                int initial = 50;
-                User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0,
-                                initial);
-
-                when(userRepository.findByUserId(any())).thenReturn(user);
-                when(flightRepository.findByFlightId(any())).thenReturn(flight);
-
-                when(userRepository.save(any())).thenReturn(true);
-                when(bookingRepository.save(any())).thenReturn(true);
-                when(flightRepository.save(any())).thenReturn(true);
-
-                mockMvc.perform(
-                                post("/api/bookings")
-                                                .header(HttpHeaders.AUTHORIZATION,
-                                                                "Basic " + Base64Utils.encodeToString(
-                                                                                (this.user + ":" + this.password)
-                                                                                                .getBytes()))
-                                                .contentType(MediaType.APPLICATION_JSON)
-                                                .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\": \"1\",\"useRewardPoints\": \"false\", \"date\": \"01-01-2022\"}"));
         }
 
         @Test

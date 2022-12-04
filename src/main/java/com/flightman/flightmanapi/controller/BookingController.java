@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,8 +34,6 @@ import io.swagger.annotations.ApiResponses;
 public class BookingController {
         @Autowired
         private BookingService bookingService;
-
-        private static final Logger logger = LogManager.getLogger(BookingController.class);
 
         /*
          * Method to retrieve bookings present in the database for a userId.
