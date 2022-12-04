@@ -140,6 +140,28 @@ public class FlightControllerTest {
                                                 .accept(MediaType.ALL))
                                 .andExpect(status().isBadRequest());
         }
+
+        @Test
+        public void createFlightSaveError() throws Exception{
+                when(flightService.validateAirport(UUID.fromString("7199de04-60d7-45c4-9d01-d0a1ea807f73"))).thenReturn(true);
+                when(flightService.validateAirport(UUID.fromString("d4005cf1-7842-44a7-9c34-77314d432e64"))).thenReturn(true);
+                when(flightService.validateAirport(UUID.fromString("7199de04-60d7-45c4-9d01-d0a1ea807f74"))).thenReturn(false);
+                when(flightService.validateAirport(UUID.fromString("d4005cf1-7842-44a7-9c34-77314d432e65"))).thenReturn(false);
+                when(flightService.validateFlightModel(2)).thenReturn(true);
+                when(flightService.validateFlightModel(10)).thenReturn(false);
+                when(flightService.save(null)).thenReturn(null);
+                mockMvc.perform(
+                        post("/api/flight")
+                                        .header(HttpHeaders.AUTHORIZATION,
+                                                        "Basic " + Base64Utils.encodeToString(
+                                                                        (this.user + ":" + this.password)
+                                                                                        .getBytes()))
+                                        .content("{\"sourceAirport\": {\"airportId\": \"7199de04-60d7-45c4-9d01-d0a1ea807f73\",\"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"destAirport\": {\"airportId\": \"d4005cf1-7842-44a7-9c34-77314d432e64\", \"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"flightModel\": {\"flightModelId\": \"2\",\"flightManufacturerName\": \"aml\",\"flightModelNumber\": \"723e\",\"seatCapacity\": \"600\",\"seatRowCount\": \"60\",\"seatColCount\": \"10\"},\"departureTime\": \"09:00:00\",\"estArrivalTime\": \"10:00:00\",\"delayTime\": \"00:00:00\",\"numSeats\": \"600\",\"cost\":\"100\" }")
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .accept(MediaType.ALL))
+                        .andExpect(status().isBadRequest());
+        }
+        
         @Test
         public void createFlight() throws Exception{
                 when(flightService.validateAirport(UUID.fromString("7199de04-60d7-45c4-9d01-d0a1ea807f73"))).thenReturn(true);
@@ -207,13 +229,13 @@ public class FlightControllerTest {
                                                                 "Basic " + Base64Utils.encodeToString(
                                                                                 (this.user + ":" + this.password)
                                                                                                 .getBytes()))
-                                                .content("{\"sourceAirport\": {\"airportId\": \"7199de04-60d7-45c4-9d01-d0a1ea807f73\",\"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"destAirport\": {\"airportId\": \"d4005cf1-7842-44a7-9c34-77314d432e64\", \"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"flightModel\": {\"flightModelId\": \"2\",\"flightManufacturerName\": \"aml\",\"flightModelNumber\": \"723e\",\"seatCapacity\": \"600\",\"seatRowCount\": \"60\",\"seatColCount\": \"10\"},\"departureTime\": ,\"estArrivalTime\": \"10:00:00\",\"delayTime\": \"00:00:00\",\"numSeats\": \"600\",\"cost\":\"100\" }")
+                                                .content("{\"sourceAirport\": {\"airportId\": \"7199de04-60d7-45c4-9d01-d0a1ea807f73\",\"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"destAirport\": {\"airportId\": \"d4005cf1-7842-44a7-9c34-77314d432e64\", \"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"flightModel\": {\"flightModelId\": \"2\",\"flightManufacturerName\": \"aml\",\"flightModelNumber\": \"723e\",\"seatCapacity\": \"600\",\"seatRowCount\": \"60\",\"seatColCount\": \"10\"},\"departureTime\": null,\"estArrivalTime\": \"10:00:00\",\"delayTime\": \"00:00:00\",\"numSeats\": \"600\",\"cost\":\"100\" }")
                                                 .contentType(MediaType.APPLICATION_JSON)
                                                 .accept(MediaType.ALL))
                                 .andExpect(status().isBadRequest());
-
-
-                }
+                        }
+        
+                
 
 }
 

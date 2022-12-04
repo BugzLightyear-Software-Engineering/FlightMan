@@ -99,16 +99,8 @@ public class BookingController {
 
         @PostMapping("/bookings/id/{id}/usercheckin")
         public ResponseEntity<String> userCheckIn(@PathVariable("id") UUID bookingId) {
-                try {
-                        String checkedIn = this.bookingService.checkInUser(bookingId);
-                        return new ResponseEntity<>(checkedIn, HttpStatus.OK);
-
-                } catch (Exception e) {
-                        logger.error(e.getStackTrace());
-                        logger.error(e);
-                        return new ResponseEntity<>("There was a error with the checkin process!",
-                                        HttpStatus.INTERNAL_SERVER_ERROR);
-                }
+                String checkedIn = this.bookingService.checkInUser(bookingId);
+                return new ResponseEntity<>(checkedIn, HttpStatus.OK);
         }
 
         @PostMapping("/bookings/id/{id}/luggagecheckin")
