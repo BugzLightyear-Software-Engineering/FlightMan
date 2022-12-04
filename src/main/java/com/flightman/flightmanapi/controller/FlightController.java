@@ -50,18 +50,10 @@ public class FlightController {
         @ApiParam(name = "Source Abbreviation", value = "Abbreviation of the Source Airport") @RequestParam(required = false) String sourceAbv, 
         @ApiParam(name = "Destination Abbreviation", value = "Abbreviation of the Destination Airport") @RequestParam(required = false) String destAbv){
 
-        try {
-            List<Flight> flightList = flightService.getFlights(sourceAbv, destAbv);
-            if(!flightList.isEmpty())
-                return new ResponseEntity<>(flightList, HttpStatus.OK);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
-        } 
-        catch (Exception e) {
-                logger.error(e.getStackTrace());
-                logger.error(e);
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<Flight> flightList = flightService.getFlights(sourceAbv, destAbv);
+        if(!flightList.isEmpty())
+            return new ResponseEntity<>(flightList, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation(value = "Create flight", notes = "Takes in the details of the flights and creates a new flight in the database")
@@ -92,12 +84,12 @@ public class FlightController {
                     UUID flightId = createdFlight.getFlightId();
                     return new ResponseEntity<>(flightId, HttpStatus.OK);
                 }
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Something", HttpStatus.BAD_REQUEST);
                 
             } catch (Exception e) {
                 logger.error(e.getStackTrace());
                 logger.error(e);
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>("Input invalid", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -107,20 +99,13 @@ public class FlightController {
     @PutMapping("/flight/id/{flightID}")
     public ResponseEntity<UUID> updateFlight(@PathVariable UUID flightID, @RequestParam(required = false) Time departureTime, @RequestParam(required = false) Time estArrivalTime, @RequestParam(required = false) Integer flightModelID )   
     {  
-            try {
-                
-                Flight updatedFlight = flightService.update(flightID, departureTime, estArrivalTime, flightModelID);
-                if(updatedFlight != null){
-                    UUID flightId = updatedFlight.getFlightId();
-                    return new ResponseEntity<>(flightId, HttpStatus.OK);
-                }
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-                
-            } catch (Exception e) {
-                logger.error(e.getStackTrace());
-                logger.error(e);
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            Flight updatedFlight = flightService.update(flightID, departureTime, estArrivalTime, flightModelID);
+            if(updatedFlight != null){
+                UUID flightId = updatedFlight.getFlightId();
+                return new ResponseEntity<>(flightId, HttpStatus.OK);
             }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                
     }
 
     @ApiOperation(value = "Delete flight", notes = "Deletes a flight by the given Flight Id")
@@ -129,14 +114,8 @@ public class FlightController {
     @Transactional
     @DeleteMapping("/flight/id/{id}")
     public ResponseEntity<Boolean> deleteFlightById(@ApiParam(name = "Id", value = "Id of the flight to be deleted") @PathVariable("id") UUID id) {
-        try {
-                if(this.flightService.deleteFlightById(id)==1)
-                    return new ResponseEntity<>(true, HttpStatus.OK);
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-                logger.error(e.getStackTrace());
-                logger.error(e);
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        if(this.flightService.deleteFlightById(id)==1)
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

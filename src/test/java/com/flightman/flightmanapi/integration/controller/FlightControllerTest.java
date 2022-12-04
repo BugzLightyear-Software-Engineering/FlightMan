@@ -129,12 +129,25 @@ public class FlightControllerTest {
                                                                                                 .getBytes()))
                                                 .accept(MediaType.ALL))
                                 .andExpect(status().isOk());
+                UUID noInDB = UUID.randomUUID();
+                when(flightService.update(noInDB, null, null, null)).thenReturn(null);
+                mockMvc.perform(
+                                put("/api/flight/id/{id}",  noInDB)
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isBadRequest());
         }
         @Test
         public void createFlight() throws Exception{
                 when(flightService.validateAirport(UUID.fromString("7199de04-60d7-45c4-9d01-d0a1ea807f73"))).thenReturn(true);
                 when(flightService.validateAirport(UUID.fromString("d4005cf1-7842-44a7-9c34-77314d432e64"))).thenReturn(true);
+                when(flightService.validateAirport(UUID.fromString("7199de04-60d7-45c4-9d01-d0a1ea807f74"))).thenReturn(false);
+                when(flightService.validateAirport(UUID.fromString("d4005cf1-7842-44a7-9c34-77314d432e65"))).thenReturn(false);
                 when(flightService.validateFlightModel(2)).thenReturn(true);
+                when(flightService.validateFlightModel(10)).thenReturn(false);
                 when(flightService.save(any())).thenReturn(flight);
                 mockMvc.perform(
                         post("/api/flight")
@@ -147,6 +160,36 @@ public class FlightControllerTest {
                                         .accept(MediaType.ALL))
                         .andExpect(status().isOk());
                 mockMvc.perform(
+                        post("/api/flight")
+                                        .header(HttpHeaders.AUTHORIZATION,
+                                                        "Basic " + Base64Utils.encodeToString(
+                                                                        (this.user + ":" + this.password)
+                                                                                        .getBytes()))
+                                        .content("{\"sourceAirport\": {\"airportId\": \"7199de04-60d7-45c4-9d01-d0a1ea807f74\",\"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"destAirport\": {\"airportId\": \"d4005cf1-7842-44a7-9c34-77314d432e64\", \"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"flightModel\": {\"flightModelId\": \"2\",\"flightManufacturerName\": \"aml\",\"flightModelNumber\": \"723e\",\"seatCapacity\": \"600\",\"seatRowCount\": \"60\",\"seatColCount\": \"10\"},\"departureTime\": \"09:00:00\",\"estArrivalTime\": \"10:00:00\",\"delayTime\": \"00:00:00\",\"numSeats\": \"600\",\"cost\":\"100\" }")
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .accept(MediaType.ALL))
+                        .andExpect(status().isBadRequest());
+                mockMvc.perform(
+                        post("/api/flight")
+                                        .header(HttpHeaders.AUTHORIZATION,
+                                                        "Basic " + Base64Utils.encodeToString(
+                                                                        (this.user + ":" + this.password)
+                                                                                        .getBytes()))
+                                        .content("{\"sourceAirport\": {\"airportId\": \"7199de04-60d7-45c4-9d01-d0a1ea807f73\",\"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"destAirport\": {\"airportId\": \"d4005cf1-7842-44a7-9c34-77314d432e65\", \"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"flightModel\": {\"flightModelId\": \"2\",\"flightManufacturerName\": \"aml\",\"flightModelNumber\": \"723e\",\"seatCapacity\": \"600\",\"seatRowCount\": \"60\",\"seatColCount\": \"10\"},\"departureTime\": \"09:00:00\",\"estArrivalTime\": \"10:00:00\",\"delayTime\": \"00:00:00\",\"numSeats\": \"600\",\"cost\":\"100\" }")
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .accept(MediaType.ALL))
+                                .andExpect(status().isBadRequest());
+                mockMvc.perform(
+                                post("/api/flight")
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .content("{\"sourceAirport\": {\"airportId\": \"7199de04-60d7-45c4-9d01-d0a1ea807f73\",\"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"destAirport\": {\"airportId\": \"d4005cf1-7842-44a7-9c34-77314d432e64\", \"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"flightModel\": {\"flightModelId\": \"10\",\"flightManufacturerName\": \"aml\",\"flightModelNumber\": \"723e\",\"seatCapacity\": \"600\",\"seatRowCount\": \"60\",\"seatColCount\": \"10\"},\"departureTime\": \"09:00:00\",\"estArrivalTime\": \"10:00:00\",\"delayTime\": \"00:00:00\",\"numSeats\": \"600\",\"cost\":\"100\" }")
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isBadRequest());
+                mockMvc.perform(
                                 post("/api/flight")
                                                 .header(HttpHeaders.AUTHORIZATION,
                                                                 "Basic " + Base64Utils.encodeToString(
@@ -156,7 +199,21 @@ public class FlightControllerTest {
                                                 .contentType(MediaType.APPLICATION_JSON)
                                                 .accept(MediaType.ALL))
                                 .andExpect(status().isBadRequest());
-        }
+                
+                when(flightService.save(any())).thenThrow(new NullPointerException());
+                mockMvc.perform(
+                                post("/api/flight")
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .content("{\"sourceAirport\": {\"airportId\": \"7199de04-60d7-45c4-9d01-d0a1ea807f73\",\"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"destAirport\": {\"airportId\": \"d4005cf1-7842-44a7-9c34-77314d432e64\", \"airportName\": \"SourceName\",\"airportAbvName\": \"JFK\",\"latitude\": \"1\",\"longitude\": \"2\"},\"flightModel\": {\"flightModelId\": \"2\",\"flightManufacturerName\": \"aml\",\"flightModelNumber\": \"723e\",\"seatCapacity\": \"600\",\"seatRowCount\": \"60\",\"seatColCount\": \"10\"},\"departureTime\": ,\"estArrivalTime\": \"10:00:00\",\"delayTime\": \"00:00:00\",\"numSeats\": \"600\",\"cost\":\"100\" }")
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isBadRequest());
+
+
+                }
 
 }
 

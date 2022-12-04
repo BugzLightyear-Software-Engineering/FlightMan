@@ -46,18 +46,10 @@ public class FlightModelController {
     @GetMapping("/models")
     public ResponseEntity<List<FlightModel>> getFlightModels(){
 
-        try {
-            List<FlightModel> flightModelList = flightModelService.getAllFlightModels();
-            if(!flightModelList.isEmpty())
+        List<FlightModel> flightModelList = flightModelService.getAllFlightModels();
+        if(!flightModelList.isEmpty())
                 return new ResponseEntity<>(flightModelList, HttpStatus.OK);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
-        } 
-        catch (Exception e) {
-                logger.error(e.getStackTrace());
-                logger.error(e);
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /* 
@@ -87,7 +79,7 @@ public class FlightModelController {
         } catch (Exception e) {
                 logger.error(e.getStackTrace());
                 logger.error(e);
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>("Input invalid", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -102,14 +94,9 @@ public class FlightModelController {
     @Transactional
     @DeleteMapping("/model/id/{id}")
     public ResponseEntity<?> deleteModelById(@PathVariable("id") Integer id) {
-            try {
-                if(this.flightModelService.deleteModelById(id)==1)
-                        return new ResponseEntity<>(true, HttpStatus.OK);
-                return new ResponseEntity<>(false, HttpStatus.OK);
-            } catch (Exception e) {
-                logger.error(e.getStackTrace());
-                logger.error(e);
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+
+        if(this.flightModelService.deleteModelById(id)==1)
+                return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>("Invalid Id", HttpStatus.BAD_REQUEST);
     }
 }

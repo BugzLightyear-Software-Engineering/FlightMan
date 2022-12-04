@@ -72,15 +72,4 @@ public class Booking {
                 this.userCheckIn = false;
         }
 
-        public Booking(User user, Flight flight, String seatNumber, Boolean paymentStatus, Boolean useRewardPoints,
-                        Date date, Boolean userCheckIn) {
-                this.user = user;
-                this.flight = flight;
-                this.seatNumber = seatNumber;
-                this.paymentStatus = paymentStatus;
-                this.useRewardPoints = useRewardPoints;
-                this.flightDate = date;
-                this.userCheckIn = userCheckIn;
-        }
-
 }
