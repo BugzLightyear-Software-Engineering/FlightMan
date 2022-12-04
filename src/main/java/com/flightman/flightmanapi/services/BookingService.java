@@ -248,13 +248,13 @@ public class BookingService {
 
         public Boolean deleteBooking(String bookingID, String userID) {
                 Booking booking = this.bookingRepository.findByBookingId(UUID.fromString(bookingID));
-
-                if (UUID.fromString(userID) != booking.getUser().getUserId()) {
+                if (!userID.equals(booking.getUser().getUserId().toString())) {
                         return false;
                 }
 
                 this.bookingRepository.deleteById(UUID.fromString(bookingID));
-                updateRewardPointsForBookingDeletion(booking.getUser().getUserId(), booking.getFlight().getCost(),
+                updateRewardPointsForBookingDeletion(booking.getUser().getUserId(),
+                                booking.getFlight().getCost(),
                                 booking.getFlightDate());
 
                 return true;

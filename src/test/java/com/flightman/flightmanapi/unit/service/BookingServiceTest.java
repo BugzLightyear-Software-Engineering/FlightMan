@@ -1,7 +1,9 @@
 package com.flightman.flightmanapi.unit.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,6 +30,7 @@ import com.flightman.flightmanapi.model.Airport;
 import com.flightman.flightmanapi.model.Booking;
 import com.flightman.flightmanapi.model.Flight;
 import com.flightman.flightmanapi.model.FlightModel;
+import com.flightman.flightmanapi.model.Luggage;
 import com.flightman.flightmanapi.repositories.AirportRepository;
 import com.flightman.flightmanapi.repositories.BookingRepository;
 
@@ -58,15 +61,16 @@ public class BookingServiceTest {
         @MockBean
         private FlightModelRepository flightModelRepository;
 
-    @MockBean
-    private AirportRepository airportRepository;
+        @MockBean
+        private AirportRepository airportRepository;
 
-    @Autowired
-    @InjectMocks
-    private BookingService bookingService;
+        @Autowired
+        @InjectMocks
+        private BookingService bookingService;
 
         private String validUser = "6ec95abc-2d4d-46ec-9174-bd595d380ed8";
         private String validFlight = "4a01bbd4-9d7c-4380-a266-b42ee4c27162";
+        private String validBooking = "7a9223a4-820e-42d8-922b-162cea9e5f6e";
 
         User user = new User("FN", "LN", "123456789", "r@domain.com",
                         "passportNumber", "Address", 1, 0);
@@ -189,7 +193,7 @@ public class BookingServiceTest {
         }
 
         @Test
-        public void shouldBook() throws ParseException {
+        public void bookSuccess() throws ParseException {
                 Date tomorrowDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
                 String tomorrowDateString = f.format(tomorrowDate);
                 tomorrowDate = formatter.parse(tomorrowDateString);
@@ -201,6 +205,63 @@ public class BookingServiceTest {
                 when(bookingRepository.save(any())).thenReturn(booking);
                 Booking expected = bookingService.book(validUser, validFlight, null, tomorrowDateString, false);
                 assertNotNull(expected);
+        }
+
+        @Test
+        public void getLuggageCheckInStatusTrue() throws ParseException {
+                Luggage luggage = new Luggage();
+                booking.setLuggage(luggage);
+                when(bookingRepository.findByBookingId(any())).thenReturn(booking);
+                Boolean isLuggageCheckIn = bookingService.getLuggageCheckInStatus(validBooking);
+                assertTrue(isLuggageCheckIn);
+        }
+
+        @Test
+        public void getLuggageCheckInStatusFalse() throws ParseException {
+                booking.setLuggage(null);
+                when(bookingRepository.findByBookingId(any())).thenReturn(booking);
+                Boolean isLuggageCheckIn = bookingService.getLuggageCheckInStatus(validBooking);
+                assertFalse(isLuggageCheckIn);
+        }
+
+        @Test
+        public void deleteBookingSuccess() {
+                Date tomorrowDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
+                UUID bookingId = UUID.fromString("11d5f8dd-7fba-4a10-803d-a440e938bfa5");
+                UUID userId = UUID.fromString("e9e7e949-8580-411a-bea0-55ff00f72457");
+                UUID flightId = UUID.randomUUID();
+                user.setUserId(userId);
+                flight.setFlightId(flightId);
+                booking.setBookingId(bookingId);
+                booking.setUser(user);
+                booking.setFlight(flight);
+                booking.setFlightDate(tomorrowDate);
+                when(bookingRepository.findByBookingId(any())).thenReturn(booking);
+                when(bookingRepository.deleteById(booking.getBookingId())).thenReturn(0);
+                when(userRepository.findByUserId(userId)).thenReturn(user);
+                Boolean isDeleteBookingSuccess = bookingService.deleteBooking(booking.getBookingId().toString(),
+                                userId.toString());
+                assertTrue(isDeleteBookingSuccess);
+        }
+
+        @Test
+        public void deleteBookingFailureInvalidUser() {
+                Date tomorrowDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
+                UUID bookingId = UUID.fromString("11d5f8dd-7fba-4a10-803d-a440e938bfa5");
+                UUID userId = UUID.fromString("e9e7e949-8580-411a-bea0-55ff00f72457");
+                UUID flightId = UUID.randomUUID();
+                user.setUserId(userId);
+                flight.setFlightId(flightId);
+                booking.setBookingId(bookingId);
+                booking.setUser(user);
+                booking.setFlight(flight);
+                booking.setFlightDate(tomorrowDate);
+                when(bookingRepository.findByBookingId(any())).thenReturn(booking);
+                when(bookingRepository.deleteById(booking.getBookingId())).thenReturn(0);
+                when(userRepository.findByUserId(userId)).thenReturn(user);
+                Boolean isDeleteBookingSuccess = bookingService.deleteBooking(booking.getBookingId().toString(),
+                                "123");
+                assertFalse(isDeleteBookingSuccess);
         }
 
         @Test

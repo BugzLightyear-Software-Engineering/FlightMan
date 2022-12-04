@@ -149,7 +149,6 @@ public class BookingControllerUnitTest {
                 Date tomorrowDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
                 String tomorrowDateString = f.format(tomorrowDate);
                 tomorrowDate = formatter.parse(tomorrowDateString);
-                System.out.println("HOI");
                 when(bookingService.validateUser(validUser)).thenReturn(true);
                 when(bookingService.validateFlight(invalidFlight)).thenReturn(false);
                 mockMvc.perform(
