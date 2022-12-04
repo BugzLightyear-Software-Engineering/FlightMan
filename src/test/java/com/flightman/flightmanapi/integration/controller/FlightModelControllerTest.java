@@ -78,11 +78,20 @@ public class FlightModelControllerTest {
                                                                                 (this.user + ":" + this.password)
                                                                                                 .getBytes()))
                                                 .accept(MediaType.ALL))
-                                .andExpect(status().isOk())
-                                .andExpect(jsonPath("$").value(false));
+                                .andExpect(status().isBadRequest());
 
         }
-    
+    @Test
+    public void createModelsException() throws Exception {
+        when(flightModelService.save(any())).thenThrow(new NullPointerException("Error occurred"));
+        mockMvc.perform(
+                            post("/api/model")
+                            .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"flightManufacturerName\":,\"flightModelNumber\": \"737e\",\"seatCapacity\": \"300\",\"seatRowCount\": \"60\",\"seatColCount\": \"5\"}"))
+                            .andExpect(status().isBadRequest());
+        }
+
     @Test
     public void createModels() throws Exception {
         given(flightModelService.save(any())).willReturn(model);
@@ -112,6 +121,8 @@ public class FlightModelControllerTest {
                             .content("{\"flightManufacturerName\": \"boeing\",\"flightModelNumber\": \"737e\",\"seatCapacity\": \"300\",\"seatRowCount\": \"60\",\"seatColCount\": \"-5\"}"))
                             .andExpect(status().isBadRequest());
     }
+
+    
 
     
 
