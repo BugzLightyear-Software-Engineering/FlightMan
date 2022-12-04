@@ -1,4 +1,5 @@
 package com.flightman.flightmanapi.integration.controller;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.ArrayList;
@@ -34,109 +35,119 @@ import org.springframework.util.Base64Utils;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = BookingController.class)
 @ActiveProfiles
-public class BookingControllerIntegrationTest{
-    @Autowired
-    private MockMvc mockMvc;
-    
-    @MockBean
-    private BookingRepository bookingRepository;
+public class BookingControllerIntegrationTest {
+        @Autowired
+        private MockMvc mockMvc;
 
-    @MockBean
-    private FlightRepository flightRepository;
+        @MockBean
+        private BookingRepository bookingRepository;
 
-    @MockBean
-    private UserRepository userRepository;
-    
-    @MockBean
-    private BookingService bookingService;
+        @MockBean
+        private FlightRepository flightRepository;
 
-    private Airport source = new Airport("SourceName", "SN", "Lat", "Long");
-    private Airport dest = new Airport("DestName", "DN", "Lat", "Long");
-    private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
-    private Time departure_time = new Time(100);
-    private Time arrival_time = new Time(500);
-    private Flight flight = new Flight(source, dest, model, departure_time,arrival_time, null, 100);
+        @MockBean
+        private UserRepository userRepository;
 
-    private String user = "abhilash";
-    private String password = "securedpasswordofsrishti";
+        @MockBean
+        private BookingService bookingService;
 
-    @Test
-    public void getBooking() throws Exception {
-        List<Booking> created = new ArrayList<Booking>();
-        created.add(new Booking());
-        given(bookingService.get(null)).willReturn(created);
-        mockMvc.perform(
-                        get("/api/bookings")
-                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
-                        .accept(MediaType.ALL)).andExpect(status().isOk());
-    }
+        private Airport source = new Airport("SourceName", "SN", "Lat", "Long");
+        private Airport dest = new Airport("DestName", "DN", "Lat", "Long");
+        private FlightModel model = new FlightModel("MName", "123a", 120, 20, 6);
+        private Time departure_time = new Time(100);
+        private Time arrival_time = new Time(500);
+        private Flight flight = new Flight(source, dest, model, departure_time, arrival_time, null, 100);
 
-    // @Test
-    // public void createBooking_1() throws Exception {
-    //     given(bookingService.book(any(), any(), any(), any(), any(), any())).willReturn(new Booking());
-    //     mockMvc.perform(
-    //                     post("/api/bookings")
-    //                     .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
-    //                     .contentType(MediaType.APPLICATION_JSON)
-    //                     .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\": \"1\",\"useRewardPoints\": \"true\", \"date\": \"01-01-2022\"}"))
-    //                     .andExpect(status().isOk());
-    // }
+        private String user = "abhilash";
+        private String password = "securedpasswordofsrishti";
 
-    @Test
-    public void deleteBooking() throws Exception {
-        given(bookingService.deleteBooking(any(), any())).willReturn(true);
-        mockMvc.perform(
-                        delete("/api/bookings")
-                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"bookingId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\"}"))
-                        .andExpect(status().isOk());
-    }
+        @Test
+        public void getBooking() throws Exception {
+                List<Booking> created = new ArrayList<Booking>();
+                created.add(new Booking());
+                given(bookingService.get(null)).willReturn(created);
+                mockMvc.perform(
+                                get("/api/bookings")
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .accept(MediaType.ALL))
+                                .andExpect(status().isOk());
+        }
 
-    @Test
-    public void createBooking_2() throws Exception {
-        int initial = 100;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+        // @Test
+        // public void createBooking_1() throws Exception {
+        // given(bookingService.book(any(), any(), any(), any(), any(),
+        // any())).willReturn(new Booking());
+        // mockMvc.perform(
+        // post("/api/bookings")
+        // .header(HttpHeaders.AUTHORIZATION, "Basic " +
+        // Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
+        // .contentType(MediaType.APPLICATION_JSON)
+        // .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\":
+        // \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\":
+        // \"1\",\"useRewardPoints\": \"true\", \"date\": \"01-01-2022\"}"))
+        // .andExpect(status().isOk());
+        // }
 
-        when(userRepository.findByUserId(any())).thenReturn(user);
-        when(flightRepository.findByFlightId(any())).thenReturn(flight);
+        @Test
+        public void createBooking_2() throws Exception {
+                int initial = 100;
+                User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0,
+                                initial);
 
-        when(userRepository.save(any())).thenReturn(true);
-        when(bookingRepository.save(any())).thenReturn(true);
-        when(flightRepository.save(any())).thenReturn(true);
+                when(userRepository.findByUserId(any())).thenReturn(user);
+                when(flightRepository.findByFlightId(any())).thenReturn(flight);
 
-        mockMvc.perform(
-                        post("/api/bookings")
-                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\": \"1\",\"useRewardPoints\": \"true\", \"date\": \"01-01-2022\"}"));
-    }
+                when(userRepository.save(any())).thenReturn(true);
+                when(bookingRepository.save(any())).thenReturn(true);
+                when(flightRepository.save(any())).thenReturn(true);
 
-    @Test
-    public void createBooking_3() throws Exception {
-        int initial = 50;
-        User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0, initial);
+                mockMvc.perform(
+                                post("/api/bookings")
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\": \"1\",\"useRewardPoints\": \"true\", \"date\": \"01-01-2022\"}"));
+        }
 
-        when(userRepository.findByUserId(any())).thenReturn(user);
-        when(flightRepository.findByFlightId(any())).thenReturn(flight);
+        @Test
+        public void createBooking_3() throws Exception {
+                int initial = 50;
+                User user = new User("First", "Last", "123456789", "email@email.com", "ABC456789", "Address", 0,
+                                initial);
 
-        when(userRepository.save(any())).thenReturn(true);
-        when(bookingRepository.save(any())).thenReturn(true);
-        when(flightRepository.save(any())).thenReturn(true);
+                when(userRepository.findByUserId(any())).thenReturn(user);
+                when(flightRepository.findByFlightId(any())).thenReturn(flight);
 
-        mockMvc.perform(
-                        post("/api/bookings")
-                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\": \"1\",\"useRewardPoints\": \"false\", \"date\": \"01-01-2022\"}"));
-    }
+                when(userRepository.save(any())).thenReturn(true);
+                when(bookingRepository.save(any())).thenReturn(true);
+                when(flightRepository.save(any())).thenReturn(true);
 
-    @Test
-    public void userCheckIn() throws Exception {
-        given(bookingService.checkInUser(UUID.fromString("7a9223a4-820e-42d8-922b-162cea9e5f6e"))).willReturn("Successfully checked in");
-        mockMvc.perform(
-                        post("/api/bookings/id/{id}/usercheckin", UUID.fromString("7a9223a4-820e-42d8-922b-162cea9e5f6e") )
-                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString((this.user + ":" + this.password).getBytes())))
-                        .andExpect(status().isOk());
-    }
+                mockMvc.perform(
+                                post("/api/bookings")
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes()))
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .content("{\"userId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"flightId\": \"7a9223a4-820e-42d8-922b-162cea9e5f6e\",\"seatNumber\": \"1\",\"useRewardPoints\": \"false\", \"date\": \"01-01-2022\"}"));
+        }
+
+        @Test
+        public void userCheckIn() throws Exception {
+                given(bookingService.checkInUser(UUID.fromString("7a9223a4-820e-42d8-922b-162cea9e5f6e")))
+                                .willReturn("Successfully checked in");
+                mockMvc.perform(
+                                post("/api/bookings/id/{id}/usercheckin",
+                                                UUID.fromString("7a9223a4-820e-42d8-922b-162cea9e5f6e"))
+                                                .header(HttpHeaders.AUTHORIZATION,
+                                                                "Basic " + Base64Utils.encodeToString(
+                                                                                (this.user + ":" + this.password)
+                                                                                                .getBytes())))
+                                .andExpect(status().isOk());
+        }
 }

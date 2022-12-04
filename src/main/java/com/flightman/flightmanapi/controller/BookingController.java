@@ -80,21 +80,19 @@ public class BookingController {
                         d = dateFor.parse(date);
                         date = dateFor.format(d);
                         if (d.before(new Date())) {
-                                return new ResponseEntity<>("Invalid Date", HttpStatus.BAD_REQUEST);
+                                return new ResponseEntity<>(
+                                                "The date of booking is in the past! Please supply a valid date.",
+                                                HttpStatus.BAD_REQUEST);
                         }
                 } catch (Exception e) {
-                        return new ResponseEntity<>("Invalid Date", HttpStatus.BAD_REQUEST);
+                        return new ResponseEntity<>("Invalid date supplied", HttpStatus.BAD_REQUEST);
                 }
                 Booking booking = this.bookingService.book(userId, flightId, seatNumber, date, useRewardPoints);
-                if (booking != null) {
-                        final HttpHeaders httpHeaders = new HttpHeaders();
-                        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-                        ClassToJsonString cls = new ClassToJsonString(booking);
-                        return new ResponseEntity<>(cls.getJsonString(), httpHeaders,
-                                        HttpStatus.CREATED);
-                }
-                return new ResponseEntity<>("Could not create booking",
-                                HttpStatus.INTERNAL_SERVER_ERROR);
+                final HttpHeaders httpHeaders = new HttpHeaders();
+                httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+                ClassToJsonString cls = new ClassToJsonString(booking);
+                return new ResponseEntity<>(cls.getJsonString(), httpHeaders,
+                                HttpStatus.CREATED);
         }
 
         @PostMapping("/bookings/id/{id}/usercheckin")
@@ -103,6 +101,16 @@ public class BookingController {
                 return new ResponseEntity<>(checkedIn, HttpStatus.OK);
         }
 
+        /*
+         * Method that checks-in a user's luggage for a specific flight booking.
+         * Returns 400 if input params are invalid.
+         * If failure occurs during check-in despite input fields being valid, returns
+         * HTTP 503
+         */
+        @ApiOperation(value = "Luggage Check-In", notes = "Takes in the booking ID, luggage count, and total weight of the luggage and checks-in the same.")
+        @ApiResponses({ @ApiResponse(code = 200, message = "Luggage check-in was successful."),
+                        @ApiResponse(code = 400, message = "The supplied paramters were invalid"),
+                        @ApiResponse(code = 503, message = "The check-in service is temporarily unavailable") })
         @PostMapping("/bookings/id/{id}/luggagecheckin")
         public ResponseEntity<String> luggageCheckIn(@PathVariable("id") String bookingId,
                         @RequestParam(required = true) Integer count,
@@ -119,25 +127,18 @@ public class BookingController {
                         return new ResponseEntity<>("Luggage has been already checked in!",
                                         HttpStatus.BAD_REQUEST);
                 }
-                if (count < 0 || count > 2) {
-                        return new ResponseEntity<>("Only 0 to 2 luggages are allowed",
+                if (count <= 0 || count > 2) {
+                        return new ResponseEntity<>("Only 1 to 2 luggages are allowed",
                                         HttpStatus.BAD_REQUEST);
                 }
-                if (totalWeight < 0 || totalWeight > 46) {
+                if (totalWeight <= 0 || totalWeight > 46) {
                         return new ResponseEntity<>("Both luggages can weigh only upto 46 kgs",
                                         HttpStatus.BAD_REQUEST);
                 }
-                try {
-                        if (Boolean.TRUE.equals(this.bookingService.checkInLuggage(bookingId, count, totalWeight))) {
-                                return new ResponseEntity<>("Luggage checked In Successfully!", HttpStatus.OK);
-                        }
-                        return new ResponseEntity<>("Unable to check in luggage!", HttpStatus.OK);
-                } catch (Exception e) {
-                        logger.error(e.getStackTrace());
-                        logger.error(e);
-                        return new ResponseEntity<>("There was a error with the luggage checkin process!",
-                                        HttpStatus.INTERNAL_SERVER_ERROR);
+                if (Boolean.TRUE.equals(this.bookingService.checkInLuggage(bookingId, count, totalWeight))) {
+                        return new ResponseEntity<>("Luggage checked In Successfully!", HttpStatus.OK);
                 }
+                return new ResponseEntity<>("Unable to check in luggage!", HttpStatus.SERVICE_UNAVAILABLE);
         }
 
         @ApiOperation(value = "Delete a booking", notes = "Delete a booking for a user")
@@ -145,14 +146,16 @@ public class BookingController {
                         @ApiResponse(code = 400, message = "Incorrect or invalid data"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during booking deletion") })
         @DeleteMapping("/bookings")
-        public ResponseEntity<Boolean> deleteBooking(String bookingId, String userId) {
-                try {
-                        Boolean ret = this.bookingService.deleteBooking(bookingId, userId);
-                        return new ResponseEntity<>(ret, HttpStatus.OK);
-                } catch (Exception e) {
-                        logger.error(e.getStackTrace());
-                        logger.error(e);
-                        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        public ResponseEntity<String> deleteBooking(String bookingId, String userId) {
+                if (bookingId == null || bookingId.equals("")
+                                || Boolean.TRUE.equals(!this.bookingService.validateBooking(bookingId))) {
+                        return new ResponseEntity<>("Invalid Booking ID", HttpStatus.BAD_REQUEST);
                 }
+                if (Boolean.FALSE.equals(this.bookingService.validateUser(userId))) {
+                        return new ResponseEntity<>("Invalid User ID", HttpStatus.BAD_REQUEST);
+                }
+                Boolean ret = this.bookingService.deleteBooking(bookingId, userId);
+                return new ResponseEntity<>(Boolean.TRUE.equals(ret) ? "Successfully cancelled booking"
+                                : "Could not cancel booking", HttpStatus.OK);
         }
 }
