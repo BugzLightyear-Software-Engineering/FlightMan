@@ -28,7 +28,7 @@ public class Luggage {
         @ApiModelProperty(notes = "Total weight of all the  bags")
         private float weight;
 
-        public Luggage(Integer count, float weight) {
+        public Luggage(final Integer count, final float weight) {
                 this.count = count;
                 this.weight = weight;
         }

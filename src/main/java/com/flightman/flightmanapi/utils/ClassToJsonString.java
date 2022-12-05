@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ClassToJsonString {
         Object obj;
 
-        public ClassToJsonString(Object obj) {
+        public ClassToJsonString(final Object obj) {
                 this.obj = obj;
         }
 

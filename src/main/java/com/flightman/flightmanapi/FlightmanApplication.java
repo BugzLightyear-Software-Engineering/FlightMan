@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @EnableWebMvc
 public class FlightmanApplication {
 
-        public static void main(String[] args) {
+        public static void main(final String[] args) {
                 SpringApplication.run(FlightmanApplication.class, args);
         }
 
         @GetMapping("/")
-        public String hello(@RequestParam(value = "name", defaultValue = "Authorized User") String name) {
+        public String hello(@RequestParam(value = "name", defaultValue = "Authorized User") final String name) {
                 return String.format("Hello %s!", name);
         }
 

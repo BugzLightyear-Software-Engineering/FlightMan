@@ -33,7 +33,7 @@ public class FlightService {
                 return flightRepository.findAll();
         }
 
-        public Boolean validateAirport(UUID airportId) {
+        public Boolean validateAirport(final UUID airportId) {
                 Airport a = airportRepository.findByAirportId(airportId);
                 if (a != null) {
                         return true;
@@ -41,7 +41,7 @@ public class FlightService {
                 return false;
         }
 
-        public Boolean validateFlightModel(Integer modelId) {
+        public Boolean validateFlightModel(final Integer modelId) {
                 FlightModel m = flightModelRepository.findByFlightModelId(modelId);
                 if (m != null) {
                         return true;
@@ -49,7 +49,7 @@ public class FlightService {
                 return false;
         }
 
-        public List<Flight> getFlights(String sourceAbv, String destAbv) {
+        public List<Flight> getFlights(final String sourceAbv, final String destAbv) {
                 List<Flight> flightList;
                 if (sourceAbv == null && destAbv == null) {
                         flightList = flightRepository.findAll();
@@ -70,11 +70,12 @@ public class FlightService {
                 return flightList;
         }
 
-        public Flight save(Flight flight) {
+        public Flight save(final Flight flight) {
                 return flightRepository.save(flight);
         }
 
-        public Flight update(UUID flightId, Time departureTime, Time estArrivalTime, Integer flightModelId) {
+        public Flight update(final UUID flightId, final Time departureTime, final Time estArrivalTime,
+                        final Integer flightModelId) {
                 Flight f = flightRepository.findByFlightId(flightId);
                 if (f != null) {
                         if (departureTime != null) {
@@ -95,7 +96,7 @@ public class FlightService {
 
         }
 
-        public Integer deleteFlightById(UUID id) {
+        public Integer deleteFlightById(final UUID id) {
                 Flight f = this.flightRepository.findByFlightId(id);
                 this.bookingRepository.deleteByFlight(f);
                 return this.flightRepository.deleteByFlightId(id);

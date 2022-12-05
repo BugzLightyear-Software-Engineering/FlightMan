@@ -19,23 +19,23 @@ public class UserService {
                 return (List<User>) userRepository.findAll();
         }
 
-        public User getUserById(UUID id) {
+        public User getUserById(final UUID id) {
                 return this.userRepository.findByUserId(id);
         }
 
-        public User getUserByEmail(String email) {
+        public User getUserByEmail(final String email) {
                 return this.userRepository.findByEmail(email);
         }
 
-        public Boolean deleteUserById(UUID id) {
+        public Boolean deleteUserById(final UUID id) {
                 return this.userRepository.deleteById(id) != null ? true : false;
         }
 
-        public Boolean deleteUserByEmail(String email) {
+        public Boolean deleteUserByEmail(final String email) {
                 return this.userRepository.deleteByEmail(email) != null ? true : false;
         }
 
-        public Boolean saveUser(User user) {
+        public Boolean saveUser(final User user) {
                 return this.userRepository.save(user) != null;
         }
 }

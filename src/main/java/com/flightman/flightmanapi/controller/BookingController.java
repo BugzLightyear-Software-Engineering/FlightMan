@@ -44,7 +44,7 @@ public class BookingController {
                         @ApiResponse(code = 400, message = "No bookings where found for this user"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during booking detail retrieval") })
         @GetMapping("/bookings")
-        public ResponseEntity<List<Booking>> getBookings(@RequestParam(required = false) UUID userId) {
+        public ResponseEntity<List<Booking>> getBookings(@RequestParam(required = false) final UUID userId) {
                 List<Booking> bookingsList = bookingService.get(userId);
                 return new ResponseEntity<>(bookingsList, HttpStatus.OK);
         }
@@ -58,8 +58,9 @@ public class BookingController {
         @ApiResponses({ @ApiResponse(code = 201, message = "The created booking is successfully returned. If there are no bookings, an empty list is returned."),
                         @ApiResponse(code = 500, message = "There was an unexpected problem while creating bookings") })
         @PostMapping("/bookings")
-        public ResponseEntity<String> createBooking(String userId, String flightId,
-                        @RequestParam(required = false) String seatNumber, String date, Boolean useRewardPoints)
+        public ResponseEntity<String> createBooking(final String userId, final String flightId,
+                        @RequestParam(required = false) final String seatNumber, final String date,
+                        final Boolean useRewardPoints)
                         throws JsonProcessingException {
                 Date d;
                 if (Boolean.FALSE.equals(this.bookingService.validateUser(userId))) {
@@ -74,7 +75,6 @@ public class BookingController {
                 try {
                         SimpleDateFormat dateFor = new SimpleDateFormat("MM-dd-yyyy");
                         d = dateFor.parse(date);
-                        date = dateFor.format(d);
                         if (d.before(new Date())) {
                                 return new ResponseEntity<>(
                                                 "The date of booking is in the past! Please supply a valid date.",
@@ -92,7 +92,7 @@ public class BookingController {
         }
 
         @PostMapping("/bookings/id/{id}/usercheckin")
-        public ResponseEntity<String> userCheckIn(@PathVariable("id") UUID bookingId) {
+        public final ResponseEntity<String> userCheckIn(@PathVariable("id") final UUID bookingId) {
                 String checkedIn = this.bookingService.checkInUser(bookingId);
                 return new ResponseEntity<>(checkedIn, HttpStatus.OK);
         }
@@ -108,9 +108,9 @@ public class BookingController {
                         @ApiResponse(code = 400, message = "The supplied paramters were invalid"),
                         @ApiResponse(code = 503, message = "The check-in service is temporarily unavailable") })
         @PostMapping("/bookings/id/{id}/luggagecheckin")
-        public ResponseEntity<String> luggageCheckIn(@PathVariable("id") String bookingId,
-                        @RequestParam(required = true) Integer count,
-                        @RequestParam(required = true) float totalWeight) {
+        public ResponseEntity<String> luggageCheckIn(@PathVariable("id") final String bookingId,
+                        @RequestParam(required = true) final Integer count,
+                        @RequestParam(required = true) final float totalWeight) {
                 if (bookingId == null || bookingId.equals("")
                                 || Boolean.TRUE.equals(!this.bookingService.validateBooking(bookingId))) {
                         return new ResponseEntity<>("Invalid Booking ID", HttpStatus.BAD_REQUEST);
@@ -142,7 +142,7 @@ public class BookingController {
                         @ApiResponse(code = 400, message = "Incorrect or invalid data"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during booking deletion") })
         @DeleteMapping("/bookings")
-        public ResponseEntity<String> deleteBooking(String bookingId, String userId) {
+        public final ResponseEntity<String> deleteBooking(final String bookingId, final String userId) {
                 if (bookingId == null || bookingId.equals("")
                                 || Boolean.TRUE.equals(!this.bookingService.validateBooking(bookingId))) {
                         return new ResponseEntity<>("Invalid Booking ID", HttpStatus.BAD_REQUEST);

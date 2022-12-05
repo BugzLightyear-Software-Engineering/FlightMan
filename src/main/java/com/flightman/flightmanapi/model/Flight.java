@@ -61,8 +61,9 @@ public class Flight {
         @Column(name = "cost")
         private int cost;
 
-        public Flight(Airport sourceAirport, Airport destAirport, FlightModel flightModel, Time departureTime,
-                        Time estArrivalTime, Time delayTime, int cost) {
+        public Flight(final Airport sourceAirport, final Airport destAirport, final FlightModel flightModel,
+                        final Time departureTime,
+                        final Time estArrivalTime, final Time delayTime, final int cost) {
                 this.sourceAirport = sourceAirport;
                 this.destAirport = destAirport;
                 this.flightModel = flightModel;
