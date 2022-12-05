@@ -75,7 +75,7 @@ public class BookingController {
                 try {
                         SimpleDateFormat dateFor = new SimpleDateFormat("MM-dd-yyyy");
                         d = dateFor.parse(date);
-                        if (d.before(new Date())) {
+                        if (d.before(new Date(new Date().getTime() - (1000 * 60 * 60 * 24)))) {
                                 return new ResponseEntity<>(
                                                 "The date of booking is in the past! Please supply a valid date.",
                                                 HttpStatus.BAD_REQUEST);
