@@ -20,10 +20,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
         List<Booking> findByUser(User user);
 
         @Modifying
-		@Query(value = "DELETE FROM Booking WHERE bookingId = :id")
-		Integer deleteById(@Param("id") UUID id);
+        @Query(value = "DELETE FROM Booking WHERE bookingId = :id")
+        Integer deleteById(@Param("id") UUID id);
 
         List<Booking> findByFlightAndFlightDate(Flight f, Date d);
+
         Booking findByBookingId(UUID id);
 
         Long deleteByFlight(Flight flight);

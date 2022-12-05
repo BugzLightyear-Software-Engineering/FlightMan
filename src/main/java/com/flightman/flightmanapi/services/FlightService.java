@@ -17,86 +17,87 @@ import com.flightman.flightmanapi.repositories.FlightRepository;
 
 @Service
 public class FlightService {
-    @Autowired 
-    private FlightRepository flightRepository;
+        @Autowired
+        private FlightRepository flightRepository;
 
-    @Autowired
-    private FlightModelRepository flightModelRepository;
+        @Autowired
+        private FlightModelRepository flightModelRepository;
 
-    @Autowired
-    private AirportRepository airportRepository;
+        @Autowired
+        private AirportRepository airportRepository;
 
-    @Autowired
-    private BookingRepository bookingRepository;
-    
-    public List<Flight> getAllFlights() {
-        return flightRepository.findAll();
-    }
+        @Autowired
+        private BookingRepository bookingRepository;
 
-    public Boolean validateAirport(UUID airportId) {
-        Airport a = airportRepository.findByAirportId(airportId);
-        if (a != null) {
-                return true;
-        }
-        return false;
-    }
-
-    public Boolean validateFlightModel(Integer modelId) {
-        FlightModel m = flightModelRepository.findByFlightModelId(modelId);
-        if (m != null) {
-                return true;
-        }
-        return false;
-    }
-
-    public List<Flight> getFlights(String sourceAbv, String destAbv){
-        List<Flight> flightList;
-        if(sourceAbv == null && destAbv == null){
-            flightList = flightRepository.findAll();
-        } 
-    
-        else if ( destAbv == null){
-            flightList = flightRepository.findBySourceAirportAirportAbvName(sourceAbv);
+        public List<Flight> getAllFlights() {
+                return flightRepository.findAll();
         }
 
-        else if ( sourceAbv == null){
-            flightList = flightRepository.findByDestAirportAirportAbvName(destAbv);
-        }
- 
-        else{
-            flightList = flightRepository.findBySourceAirportAirportAbvNameAndDestAirportAirportAbvName(sourceAbv, destAbv);
-        }
-        return flightList;
-    }
-
-    public Flight save(Flight flight) {
-        return flightRepository.save(flight);
-    }
-
-    public Flight update(UUID flightId, Time departureTime, Time estArrivalTime, Integer flightModelId) {
-        Flight f = flightRepository.findByFlightId(flightId);
-        if(f != null){
-            if(departureTime != null){
-                f.setDepartureTime(departureTime);
-            }
-            if(estArrivalTime != null){
-                f.setEstArrivalTime(estArrivalTime);
-            }
-            if(flightModelId != null){
-                FlightModel m = flightModelRepository.findByFlightModelId(flightModelId);
-                if(m != null){
-                    f.setFlightModel(m);
+        public Boolean validateAirport(UUID airportId) {
+                Airport a = airportRepository.findByAirportId(airportId);
+                if (a != null) {
+                        return true;
                 }
-            }
-            return flightRepository.save(f);
+                return false;
         }
-        return null;
-            
-    }
 
-    public Integer deleteFlightById(UUID id) {
-        Flight f = this.flightRepository.findByFlightId(id);
-        this.bookingRepository.deleteByFlight(f);
-        return this.flightRepository.deleteByFlightId(id);
-    }
+        public Boolean validateFlightModel(Integer modelId) {
+                FlightModel m = flightModelRepository.findByFlightModelId(modelId);
+                if (m != null) {
+                        return true;
+                }
+                return false;
+        }
+
+        public List<Flight> getFlights(String sourceAbv, String destAbv) {
+                List<Flight> flightList;
+                if (sourceAbv == null && destAbv == null) {
+                        flightList = flightRepository.findAll();
+                }
+
+                else if (destAbv == null) {
+                        flightList = flightRepository.findBySourceAirportAirportAbvName(sourceAbv);
+                }
+
+                else if (sourceAbv == null) {
+                        flightList = flightRepository.findByDestAirportAirportAbvName(destAbv);
+                }
+
+                else {
+                        flightList = flightRepository.findBySourceAirportAirportAbvNameAndDestAirportAirportAbvName(
+                                        sourceAbv, destAbv);
+                }
+                return flightList;
+        }
+
+        public Flight save(Flight flight) {
+                return flightRepository.save(flight);
+        }
+
+        public Flight update(UUID flightId, Time departureTime, Time estArrivalTime, Integer flightModelId) {
+                Flight f = flightRepository.findByFlightId(flightId);
+                if (f != null) {
+                        if (departureTime != null) {
+                                f.setDepartureTime(departureTime);
+                        }
+                        if (estArrivalTime != null) {
+                                f.setEstArrivalTime(estArrivalTime);
+                        }
+                        if (flightModelId != null) {
+                                FlightModel m = flightModelRepository.findByFlightModelId(flightModelId);
+                                if (m != null) {
+                                        f.setFlightModel(m);
+                                }
+                        }
+                        return flightRepository.save(f);
+                }
+                return null;
+
+        }
+
+        public Integer deleteFlightById(UUID id) {
+                Flight f = this.flightRepository.findByFlightId(id);
+                this.bookingRepository.deleteByFlight(f);
+                return this.flightRepository.deleteByFlightId(id);
+        }
 }

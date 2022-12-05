@@ -12,30 +12,30 @@ import com.flightman.flightmanapi.repositories.UserRepository;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+        @Autowired
+        private UserRepository userRepository;
 
-    public List<User> getAllUsers() {
-        return (List<User>) userRepository.findAll();
-    }
+        public List<User> getAllUsers() {
+                return (List<User>) userRepository.findAll();
+        }
 
-    public User getUserById(UUID id) {
-        return this.userRepository.findByUserId(id);
-    }
+        public User getUserById(UUID id) {
+                return this.userRepository.findByUserId(id);
+        }
 
-    public User getUserByEmail(String email) {
-        return this.userRepository.findByEmail(email);
-    }
+        public User getUserByEmail(String email) {
+                return this.userRepository.findByEmail(email);
+        }
 
-    public Boolean deleteUserById(UUID id) {
-        return this.userRepository.deleteById(id) != null ? true : false;
-    }
+        public Boolean deleteUserById(UUID id) {
+                return this.userRepository.deleteById(id) != null ? true : false;
+        }
 
-    public Boolean deleteUserByEmail(String email) {
-        return this.userRepository.deleteByEmail(email) != null ? true : false;
-    }
+        public Boolean deleteUserByEmail(String email) {
+                return this.userRepository.deleteByEmail(email) != null ? true : false;
+        }
 
-    public Boolean saveUser(User user) {
-        return this.userRepository.save(user) != null;
-    }
+        public Boolean saveUser(User user) {
+                return this.userRepository.save(user) != null;
+        }
 }

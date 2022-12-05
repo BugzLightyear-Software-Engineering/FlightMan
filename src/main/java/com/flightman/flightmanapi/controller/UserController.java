@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/api")
 @RestController
-@Api(description = "Set of endpoints for Creating, Finding, and Deleting Users.")
+@Api("Set of endpoints for Creating, Finding, and Deleting Users.")
 public class UserController {
 
         @Autowired
@@ -42,7 +42,7 @@ public class UserController {
         public ResponseEntity<List<User>> getUsers() {
                 try {
                         List<User> usersList = userService.getAllUsers();
-                        if (usersList.size() > 0)
+                        if (!usersList.isEmpty())
                                 return new ResponseEntity<>(usersList, HttpStatus.OK);
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 } catch (Exception e) {
@@ -97,7 +97,7 @@ public class UserController {
         @PostMapping("/user")
         public ResponseEntity<UUID> createUser(@RequestBody User user) {
                 try {
-                        if (this.userService.saveUser(user))
+                        if (Boolean.TRUE.equals(this.userService.saveUser(user)))
                                 return new ResponseEntity<>(user.getUserId(), HttpStatus.OK);
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 } catch (Exception e) {
@@ -114,7 +114,7 @@ public class UserController {
         @PutMapping("/user")
         public ResponseEntity<Boolean> updateUser(@RequestBody User user) {
                 try {
-                        if (this.userService.saveUser(user))
+                        if (Boolean.TRUE.equals(this.userService.saveUser(user)))
                                 return new ResponseEntity<>(true, HttpStatus.OK);
                         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 } catch (Exception e) {
@@ -132,7 +132,7 @@ public class UserController {
         @DeleteMapping("/user/id/{id}")
         public ResponseEntity<Boolean> deleteUserById(@PathVariable("id") UUID id) {
                 try {
-                        if (this.userService.deleteUserById(id))
+                        if (Boolean.TRUE.equals(this.userService.deleteUserById(id)))
                                 return new ResponseEntity<>(true, HttpStatus.OK);
                         return new ResponseEntity<>(false, HttpStatus.OK);
                 } catch (Exception e) {
@@ -150,7 +150,7 @@ public class UserController {
         @DeleteMapping("/user/email/{email}")
         public ResponseEntity<Boolean> deleteUserByEmail(@PathVariable("email") String email) {
                 try {
-                        if (this.userService.deleteUserByEmail(email))
+                        if (Boolean.TRUE.equals(this.userService.deleteUserByEmail(email)))
                                 return new ResponseEntity<>(true, HttpStatus.OK);
                         return new ResponseEntity<>(false, HttpStatus.OK);
                 } catch (Exception e) {
