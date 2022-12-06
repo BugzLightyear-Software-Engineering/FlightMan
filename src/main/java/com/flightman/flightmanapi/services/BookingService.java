@@ -225,7 +225,7 @@ public class BookingService {
                         if (Boolean.TRUE.equals(b.getUserCheckIn())) {
                                 return "User is checked in already!";
                         } else {
-                                if (getTimeToFlightDeparture(b) < 2) {
+                                if (Boolean.TRUE.equals(validateCheckInTime(bookingId.toString()))) {
                                         b.setUserCheckIn(true);
                                         this.bookingRepository.save(b);
                                         return "Successfully checked in";

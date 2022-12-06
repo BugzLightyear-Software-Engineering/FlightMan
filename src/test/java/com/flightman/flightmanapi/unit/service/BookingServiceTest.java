@@ -296,7 +296,7 @@ public class BookingServiceTest {
                 expected.setBookingId(UUID.randomUUID());
                 when(bookingRepository.findByBookingId(expected.getBookingId())).thenReturn(expected);
                 String s = bookingService.checkInUser(expected.getBookingId());
-                assert (s == "Error occurred");
+                assert (s == "Cannot check in right now");
 
                 UUID notInDB = UUID.randomUUID();
                 when(bookingRepository.findByBookingId(notInDB)).thenReturn(null);

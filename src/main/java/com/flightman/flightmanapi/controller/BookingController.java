@@ -43,7 +43,7 @@ public class BookingController {
          */
         @ApiOperation(value = "Get All Bookings for a given user ID", notes = "Returns all the bookings for a user")
         @ApiResponses({ @ApiResponse(code = 200, message = "Booking details are successfully retrieved"),
-                        @ApiResponse(code = 400, message = "No bookings where found for this user"),
+                        @ApiResponse(code = 400, message = "No bookings were found for this user"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during booking detail retrieval") })
         @GetMapping("/bookings")
         public ResponseEntity<List<Booking>> getBookings(@RequestParam(required = false) final UUID userId) {
@@ -89,8 +89,9 @@ public class BookingController {
                 final HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                 ClassToJsonString cls = new ClassToJsonString(booking);
-                return new ResponseEntity<>(cls.getJsonString(), httpHeaders,
-                                HttpStatus.CREATED);
+                return new ResponseEntity<>(booking != null ? cls.getJsonString() : "Not enough reward points!",
+                                httpHeaders,
+                                booking != null ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST);
         }
 
         @PostMapping("/bookings/id/{id}/usercheckin")
