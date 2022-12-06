@@ -60,16 +60,26 @@ public class BookingService {
          * Method that validates if user exists
          */
         public Boolean validateUser(final String userId) {
-                User u = this.userRepository.findByUserId(UUID.fromString(userId));
-                return u != null;
+                try {
+                        User u = this.userRepository.findByUserId(UUID.fromString(userId));
+                        return u != null;
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+                return false;
         }
 
         /*
          * Method that validates if flight exists
          */
         public Boolean validateFlight(final String flightId) {
-                Flight f = this.flightRepository.findByFlightId(UUID.fromString(flightId));
-                return f != null;
+                try {
+                        Flight f = this.flightRepository.findByFlightId(UUID.fromString(flightId));
+                        return f != null;
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+                return false;
         }
 
         /*

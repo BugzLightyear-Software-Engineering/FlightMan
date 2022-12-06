@@ -61,8 +61,9 @@ public class Booking {
         @ApiModelProperty(notes = "Has the user checked in")
         private Boolean userCheckIn;
 
-        public Booking(User user, Flight flight, String seatNumber, Boolean paymentStatus, Boolean useRewardPoints,
-                        Date date) {
+        public Booking(final User user, final Flight flight, final String seatNumber, final Boolean paymentStatus,
+                        final Boolean useRewardPoints,
+                        final Date date) {
                 this.user = user;
                 this.flight = flight;
                 this.seatNumber = seatNumber;

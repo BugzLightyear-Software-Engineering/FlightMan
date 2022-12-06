@@ -17,11 +17,11 @@ public class FlightModelService {
                 return flightModelRepository.findAll();
         }
 
-        public FlightModel save(FlightModel flightModel) {
+        public FlightModel save(final FlightModel flightModel) {
                 return flightModelRepository.save(flightModel);
         }
 
-        public Integer deleteModelById(Integer id) {
+        public Integer deleteModelById(final Integer id) {
                 return this.flightModelRepository.deleteByFlightModelId(id);
         }
 }

@@ -19,7 +19,7 @@ public class AirportService {
          * Method that returns a list of all airports if airport name is not supplied,
          * else returns airports whose name contains the supplied string.
          */
-        public List<Airport> find(String airportName) {
+        public List<Airport> find(final String airportName) {
                 List<Airport> airportsList = new ArrayList<Airport>();
                 if (airportName == null)
                         this.airportRepository.findAll().forEach(airportsList::add);
@@ -31,7 +31,7 @@ public class AirportService {
         /*
          * Method that saves an Airport object to the database.
          */
-        public Boolean saveAirport(Airport airport) {
+        public Boolean saveAirport(final Airport airport) {
                 this.airportRepository.save(airport);
                 return true;
         }

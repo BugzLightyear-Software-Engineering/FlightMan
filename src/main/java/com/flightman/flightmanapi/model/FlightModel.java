@@ -46,8 +46,9 @@ public class FlightModel {
         @ApiModelProperty(notes = "The number of columns of seats")
         private Integer seatColCount;
 
-        public FlightModel(String flightManufacturerName, String flightModelNumber, Integer seatCapacity,
-                        Integer seatRowCount, Integer seatColCount) {
+        public FlightModel(final String flightManufacturerName, final String flightModelNumber,
+                        final Integer seatCapacity,
+                        final Integer seatRowCount, final Integer seatColCount) {
                 this.flightManufacturerName = flightManufacturerName;
                 this.flightModelNumber = flightModelNumber;
                 this.seatCapacity = seatCapacity;

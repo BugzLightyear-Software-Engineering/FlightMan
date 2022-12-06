@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -92,7 +94,7 @@ public class BookingController {
         }
 
         @PostMapping("/bookings/id/{id}/usercheckin")
-        public final ResponseEntity<String> userCheckIn(@PathVariable("id") final UUID bookingId) {
+        public ResponseEntity<String> userCheckIn(@PathVariable("id") final UUID bookingId) {
                 String checkedIn = this.bookingService.checkInUser(bookingId);
                 return new ResponseEntity<>(checkedIn, HttpStatus.OK);
         }
@@ -141,16 +143,17 @@ public class BookingController {
         @ApiResponses({ @ApiResponse(code = 200, message = "Booking was successfully deleted"),
                         @ApiResponse(code = 400, message = "Incorrect or invalid data"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during booking deletion") })
+        @Transactional
         @DeleteMapping("/bookings")
-        public final ResponseEntity<String> deleteBooking(final String bookingId, final String userId) {
+        public ResponseEntity<String> deleteBooking(final String bookingId, final String userId) {
                 if (bookingId == null || bookingId.equals("")
-                                || Boolean.TRUE.equals(!this.bookingService.validateBooking(bookingId))) {
+                                || Boolean.TRUE.equals(!bookingService.validateBooking(bookingId))) {
                         return new ResponseEntity<>("Invalid Booking ID", HttpStatus.BAD_REQUEST);
                 }
-                if (Boolean.FALSE.equals(this.bookingService.validateUser(userId))) {
+                if (Boolean.FALSE.equals(bookingService.validateUser(userId))) {
                         return new ResponseEntity<>("Invalid User ID", HttpStatus.BAD_REQUEST);
                 }
-                Boolean ret = this.bookingService.deleteBooking(bookingId, userId);
+                Boolean ret = bookingService.deleteBooking(bookingId, userId);
                 return new ResponseEntity<>(Boolean.TRUE.equals(ret) ? "Successfully cancelled booking"
                                 : "Could not cancel booking", HttpStatus.OK);
         }

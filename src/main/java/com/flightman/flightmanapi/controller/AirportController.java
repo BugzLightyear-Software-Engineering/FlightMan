@@ -43,7 +43,7 @@ public class AirportController {
                         @ApiResponse(code = 400, message = "The supplied airport name was not found on the server"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during airport detail retrieval") })
         @GetMapping("/airports")
-        public ResponseEntity<String> getAirports(@RequestParam(required = false) String airportName)
+        public ResponseEntity<String> getAirports(@RequestParam(required = false) final String airportName)
                         throws JsonProcessingException {
                 List<Airport> airportsList;
                 airportsList = airportService.find(airportName);
@@ -68,7 +68,7 @@ public class AirportController {
                         @ApiResponse(code = 400, message = "The supplied parameters are invalid and the airport cannot be created"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during the creation of airport") })
         @PostMapping("/airports")
-        public ResponseEntity<String> createAirport(@RequestBody Airport airport) {
+        public ResponseEntity<String> createAirport(@RequestBody final Airport airport) {
                 if (Float.valueOf(airport.getLatitude()) < -90 || Float.valueOf(airport.getLatitude()) > 90
                                 || Float.valueOf(airport.getLongitude()) < -180
                                 || Float.valueOf(airport.getLongitude()) > 180) {

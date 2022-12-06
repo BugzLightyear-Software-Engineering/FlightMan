@@ -65,8 +65,8 @@ public class User {
         @ApiModelProperty(notes = "How many reward points/miles does this user have")
         private int rewardsMiles;
 
-        public User(String firstName, String lastName, String phoneNumber, String email,
-                        String passportNumber, String address, Integer diet, int rewardsMiles) {
+        public User(final String firstName, final String lastName, final String phoneNumber, final String email,
+                        final String passportNumber, final String address, final Integer diet, final int rewardsMiles) {
                 this.firstName = firstName;
                 this.lastName = lastName;
                 this.phoneNumber = phoneNumber;

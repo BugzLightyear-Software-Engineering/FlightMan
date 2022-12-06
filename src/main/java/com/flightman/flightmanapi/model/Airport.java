@@ -36,7 +36,8 @@ public class Airport {
         @ApiModelProperty(notes = "Longitude of the airport", example = "2.2221")
         private String longitude;
 
-        public Airport(String airportName, String airportAbvName, String latitude, String longitude) {
+        public Airport(final String airportName, final String airportAbvName, final String latitude,
+                        final String longitude) {
                 this.airportName = airportName;
                 this.airportAbvName = airportAbvName;
                 this.latitude = latitude;

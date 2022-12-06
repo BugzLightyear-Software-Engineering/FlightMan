@@ -57,7 +57,7 @@ public class UserController {
                         @ApiResponse(code = 400, message = "The supplied user was not found on the server"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during user detail retrieval") })
         @GetMapping("/user/id/{id}")
-        public ResponseEntity<User> getUserById(@PathVariable("id") UUID id) {
+        public ResponseEntity<User> getUserById(@PathVariable("id") final UUID id) {
                 try {
                         User user = this.userService.getUserById(id);
 
@@ -76,7 +76,7 @@ public class UserController {
                         @ApiResponse(code = 400, message = "The supplied user was not found on the server"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during user detail retrieval") })
         @GetMapping("/user/email/{email}")
-        public ResponseEntity<User> getUserByEmail(@PathVariable("email") String email) {
+        public ResponseEntity<User> getUserByEmail(@PathVariable("email") final String email) {
                 try {
                         User user = this.userService.getUserByEmail(email);
 
@@ -95,7 +95,7 @@ public class UserController {
                         @ApiResponse(code = 400, message = "The user already exists"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during user creation") })
         @PostMapping("/user")
-        public ResponseEntity<UUID> createUser(@RequestBody User user) {
+        public ResponseEntity<UUID> createUser(@RequestBody final User user) {
                 try {
                         if (Boolean.TRUE.equals(this.userService.saveUser(user)))
                                 return new ResponseEntity<>(user.getUserId(), HttpStatus.OK);
@@ -112,7 +112,7 @@ public class UserController {
                         @ApiResponse(code = 400, message = "The supplied user was not found on the server"),
                         @ApiResponse(code = 500, message = "There was an unexpected problem during user updation") })
         @PutMapping("/user")
-        public ResponseEntity<Boolean> updateUser(@RequestBody User user) {
+        public ResponseEntity<Boolean> updateUser(@RequestBody final User user) {
                 try {
                         if (Boolean.TRUE.equals(this.userService.saveUser(user)))
                                 return new ResponseEntity<>(true, HttpStatus.OK);
@@ -130,7 +130,7 @@ public class UserController {
                         @ApiResponse(code = 500, message = "There was an unexpected problem during user deletion") })
         @Transactional
         @DeleteMapping("/user/id/{id}")
-        public ResponseEntity<Boolean> deleteUserById(@PathVariable("id") UUID id) {
+        public ResponseEntity<Boolean> deleteUserById(@PathVariable("id") final UUID id) {
                 try {
                         if (Boolean.TRUE.equals(this.userService.deleteUserById(id)))
                                 return new ResponseEntity<>(true, HttpStatus.OK);
@@ -148,7 +148,7 @@ public class UserController {
                         @ApiResponse(code = 500, message = "There was an unexpected problem during user deletion") })
         @Transactional
         @DeleteMapping("/user/email/{email}")
-        public ResponseEntity<Boolean> deleteUserByEmail(@PathVariable("email") String email) {
+        public ResponseEntity<Boolean> deleteUserByEmail(@PathVariable("email") final String email) {
                 try {
                         if (Boolean.TRUE.equals(this.userService.deleteUserByEmail(email)))
                                 return new ResponseEntity<>(true, HttpStatus.OK);
